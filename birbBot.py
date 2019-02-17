@@ -9,6 +9,7 @@ import random
 import voiceLines
 import recognizedInput
 import serverInfo
+import roster
 
 from passwords import adminPassword
 
@@ -135,6 +136,68 @@ def retrieveVoiceCommand(message, msgAuthor, msgAuthorID, cmd):
     return msg
 
 
+def processRosterCommand(message, author, roster):
+    rosterName = message.content.split()[0]
+    cmd = message.content.lower().split()[1]  # change command to 2nd word typed, as 1st is the roster name
+    msg = ""
+
+    if cmd == "setSlots":
+        roster.setSlots(message.content.lower().split()[2])
+
+    elif cmd == "join":
+        if roster.registerPlayer(author):
+            pass
+        else:
+            if roster.waitlistPlayer(author):
+                pass
+            else:
+                msg = "Registered List and Waiting List are both full"
+                return msg
+
+    elif cmd == "register":
+        if roster.isAdmin(author):
+            newPlayerAsList = message.content.split()[2:]
+            newPlayer = "".join(newPlayerAsList)
+            if roster.registerPlayer(newPlayer):
+                pass
+            else:
+                if roster.waitlistPlayer(newPlayer):
+                    pass
+                else:
+                    msg = "Registered List and Waiting List are both full"
+                    return msg
+        else:
+            msg = "you must be admin of <" + str(roster) + "> to register players this way. " \
+                                                           "If you meant to add yourself, use !" + str(roster) + " join"
+
+    elif cmd == "waitList":
+        if roster.isAdmin(author):
+            newPlayerAsList = message.content.split()[2:]
+            newPlayer = "".join(newPlayerAsList)
+            if roster.waitlistPlayer(newPlayer):
+                pass
+            else:
+                msg = "Waiting list is already full"
+                return msg
+        elif author == message.content.split()[2:][-1:]:  # check if message author is the person they are trying to waitList
+            if roster.waitlistPlayer(author):
+                pass
+            else:
+                msg = "Waiting List is already full"
+                return msg
+
+    elif cmd == "show" or cmd == "display":
+        msg = roster.displayPlayers()
+
+    elif cmd == "alert":
+        msg = roster.alertPlayers()
+
+
+
+    return msg
+
+
+
 @client.event
 async def on_message(message):
     # we do not want the bot to reply to itself
@@ -171,12 +234,32 @@ async def on_message(message):
                 # runs if command is server info command
                 msg = retreiveServerInfo(message, cmd)
 
+
+            elif cmd == "!newRoster":
+                rosterSize = message.content.lower().split()[1]
+                newRosterName = message.content.lower().split()[2]
+                if newRosterName not in recognizedInput.rosters:
+                    recognizedInput.rosters[newRosterName] = roster.Roster(newRosterName, rosterSize, message.author)
+                else:
+                    msg = "roster <" + str(newRosterName) + "> already exists! Please try again with a different name"
+
+            elif cmd in recognizedInput.rosters:
+                # runs if command on existing roster
+                try:
+                    msg = processRosterCommand(message, message.author,
+                                               recognizedInput.rosters[message.content.lower().split()[0]])
+                except:
+                    msg = "Something went wrong, please be sure you input the command correctly"
+
+
             elif cmd in recognizedInput.messageCommandDict:
-                # runs if neither voice nor server command
+                # runs if neither voice nor server nor roster command
                 if cmd != "help":
                     msg = recognizedInput.messageCommandDict[cmd]
                 else:
                     await client.send_message(message.author, recognizedInput.messageCommandDict[cmd])
+
+
 
 
         else:
