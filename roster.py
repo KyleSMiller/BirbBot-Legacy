@@ -1,9 +1,10 @@
 
 
 class Roster():
-    def __init__(self, name, size):
+    def __init__(self, name, size, admin):
         self.__name = str(name)
         self.__slots = int(size)
+        self.__admin = str(admin)
         self.__registeredPlayers = [""] * self.__slots
         self.__waitList = [""] * (self.__slots // 2)
 
@@ -16,6 +17,12 @@ class Roster():
 
     def getWaitList(self):
         return self.__waitList
+
+
+    def isAdmin(self, author):
+        if author == self.__admin:
+            return True
+        return False
 
 
     def setSlots(self, newSlots):
