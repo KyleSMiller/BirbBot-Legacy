@@ -7,6 +7,17 @@ class Roster():
         self.__playSlots = [""] * self.__slots
         self.__waitList = [""] * (self.__slots // 2)
 
+
+    def getName(self):
+        return self.__name
+
+    def getPlaySlots(self):
+        return self.__playSlots
+
+    def getWaitList(self):
+        return self.__waitList
+
+
     def setSlots(self, newSlots):
         self.__slots = newSlots
 
@@ -29,18 +40,20 @@ class Roster():
             slotsToRemove = (len(self.__waitList) - (newSlots // 2))
             self.__waitList = self.__waitList[:(slotsToRemove * -1)]
 
+
     def registerPlayer(self, player):
-        for i in self.__playSlots:
-            if i != "":
-                self.__playSlots.append(str(player))
+        for i, j in enumerate(self.__playSlots):
+            if j != "":
+                self.__playSlots[i] = str(player)
                 return True
             continue
         return False
 
+
     def waitlistPlayer(self, player):
-        for i in self.__waitList:
-            if i != "":
-                self.__waitList.append(str(player))
+        for i, j in enumerate(self.__waitList):
+            if j != "":
+                self.__waitList[i] = str(player)
                 return True
             continue
         return False
