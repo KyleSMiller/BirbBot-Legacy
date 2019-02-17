@@ -21,16 +21,9 @@ birbBotNames = [
     ]
 
 
-# serverLines = [
-#     "!gw",
-#     "!gw map",
-#     "!gw population",
-#     "!gw players",
-#     "!gmv",
-#     "!gmv map",
-#     "!gmv population",
-#     "!gmv players",
-#     ]
+rosters = [
+
+]
 
 
 voices = [
