@@ -21,9 +21,9 @@ birbBotNames = [
     ]
 
 
-rosters = [
+rosters = {
 
-]
+}
 
 
 voices = [
