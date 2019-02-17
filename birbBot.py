@@ -13,7 +13,7 @@ import serverInfo
 from passwords import adminPassword
 
 botTokentxt = open("botToken.txt")
-TOKEN = botTokentxt.readline()
+TOKEN = botTokentxt.readline().strip()
 
 client = discord.Client()
 
