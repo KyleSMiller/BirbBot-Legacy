@@ -151,16 +151,16 @@ def processRosterCommand(message, author, authorID, roster):
         msg = roster.alertPlayers()
 
     elif cmd == "join":
-        roster.attemptRegistery(player=author[:-5], playerID=authorID)
+        roster.attemptRegistery(player=author, playerID=authorID)
 
     elif cmd == "register":
-        if roster.isAdmin():
+        if roster.isAdmin(str(author)):
             # check the order of the name, ID arguments so it accepts them both ways
             if message.content.split()[2].startswith("<@"):
                 playerID = message.content.split()[2]
                 try:
                     playerName = message.content.split()[3]
-                    roster.attemptRegistery(player=playerName, playerID=playerID)
+                    roster.attemptRegistery(player=playerName, playerID=playerID, playerFromAuthor=False)
                 except:
                     msg = ("You must provide a name for the player as well, otherwise they will be alerted every time the "
                            "roster is viewed! ex: !" + rosterName + " register @Alan#1234 Alan")
@@ -169,21 +169,33 @@ def processRosterCommand(message, author, authorID, roster):
                     if message.content.split()[3].startswith("<@"):
                         playerName = message.content.split()[2]
                         playerID = message.content.split()[3]
-                        roster.attemptRegistery(player=playerName, playerID=playerID)
+                        roster.attemptRegistery(player=playerName, playerID=playerID, playerFromAuthor=False)
                     else:
                         msg = ("You must provide a vaild @ with the name. ex: !" + rosterName + " register @Alan#1234 Alan")
                 except:
                     # runs if no ID is given, in which case the Name will be used as the ID
                     playerName = message.content.split()[2]
-                    roster.attemptRegistery(player=playerName)
+                    roster.attemptRegistery(player=playerName, playerFromAuthor=False)
         else:
             msg = ("You must be the roster's creator to use this command! If you wish to register yourself, use !"
                    + rosterName + " join")
 
+
     elif cmd == "remove":
-        if roster.isAdmin():
+        if roster.isAdmin(str(author)):
             playerName = message.content.split()[2]
             roster.removePlayer(playerName)
+        else:
+            msg = ("You must be the roster's creator to use this command! If you wish to register yourself, use !"
+             + rosterName + " join")
+
+    elif cmd == "leave":
+        roster.removePlayer(str(author)[:-5])
+
+    elif cmd == "delete":
+        for key in list(recognizedInput.rosters.keys()):
+            if recognizedInput.rosters[key] == roster:
+                del recognizedInput.rosters[key]
 
 
 
@@ -231,12 +243,24 @@ async def on_message(message):
 
 
             elif cmd == "newroster":
+                # try:
                 rosterSize = message.content.lower().split()[1]
                 newRosterName = message.content.lower().split()[2]
+                # construct a new roster
                 if newRosterName not in recognizedInput.rosters:
                     recognizedInput.rosters[newRosterName] = roster.Roster(newRosterName, rosterSize, message.author)
+                    # check that the roster is valid
+                    if recognizedInput.rosters[newRosterName].validRoster == "Name error":
+                        del recognizedInput.rosters[newRosterName]
+                        msg = "You cannot use a name that is already reserved for another command!"
+                    elif recognizedInput.rosters[newRosterName].validRoster == "Size error":
+                        msg = ("Roster must be between size 2 and 20. Defaulting to size 10. Use setSlot to change size.\n"
+                               "ex: !exampleRoster setSlots 5")
+
                 else:
                     msg = "roster <" + str(newRosterName) + "> already exists! Please try again with a different name"
+                # except:
+                #     msg = "You must supply a roster size and name! ex: !newRoster 10 exampleRoster"
 
 
             elif cmd in recognizedInput.rosters:

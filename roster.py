@@ -4,11 +4,12 @@ from recognizedInput import messageCommandDict, hiddenCommandDict
 class Roster():
     def __init__(self, name, size, admin):
 
-        self.validRoster = self.__processInput(name, size)
-
         self.__name = str(name)
         self.__slots = int(size)
         self.__admin = str(admin)
+
+        self.validRoster = self.__processInput(name, size)
+
         self.__registeredPlayers = ["OPEN SLOT"] * self.__slots
         self.__registeredPlayerIDs = [""] * self.__slots
         self.__waitList = ["OPEN SLOT"] * (self.__slots // 2)
@@ -38,6 +39,7 @@ class Roster():
         if name in list(messageCommandDict.keys()) or name in list(hiddenCommandDict.keys()):
             return "Name error"
         elif int(size) <= 1 or int(size) > 20:
+            self.__slots = 10
             return "Size error"
         else:
             return "No error"
