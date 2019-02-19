@@ -11,9 +11,9 @@ class Roster():
         self.validRoster = self.__processInput(name, size)
 
         self.__registeredPlayers = ["OPEN SLOT"] * self.__slots
-        self.__registeredPlayerIDs = [""] * self.__slots
+        self.__registeredPlayerIDs = ["OPEN SLOT"] * self.__slots
         self.__waitList = ["OPEN SLOT"] * (self.__slots // 2)
-        self.__waitListIDs = [""] * (self.__slots // 2)
+        self.__waitListIDs = ["OPEN SLOT"] * (self.__slots // 2)
 
 
     def getName(self):
@@ -46,36 +46,43 @@ class Roster():
 
 
     def setSlots(self, newSlots):
-        self.__slots = newSlots
+        if newSlots >= 2 or newSlots <= 20:
+            self.__slots = newSlots
 
-        # add slots
-        if self.__slots > len(self.__registeredPlayers):
-            for i in range(0, self.__slots):
-                self.__registeredPlayers.append("")
-                if i % 2 == 0:
-                    self.__waitList.append("")
+            # add slots
+            if self.__slots > len(self.__registeredPlayers):
+                for i in range(0, self.__slots):
+                    self.__registeredPlayers.append("OPEN SLOT")
+                    if i % 2 == 0:
+                        self.__waitList.append("OPEN SLOT")
 
-        # subtract slots
-        elif self.__slots < len(self.__registeredPlayers):
-            slotsToRemove = (len(self.__registeredPlayers) - self.__slots)
+            # subtract slots
+            elif self.__slots < len(self.__registeredPlayers):
+                slotsToRemove = (len(self.__registeredPlayers) - self.__slots)
 
-            # move players at the end of the playSlots list to the beginning of the waitList
-            newWaitListPlayers = self.__registeredPlayers[:slotsToRemove]
-            self.__waitList = [newWaitListPlayers] + self.__waitList
+                # move players at the end of the playSlots list to the beginning of the waitList
+                newWaitListPlayers = self.__registeredPlayers[:slotsToRemove]
+                self.__waitList = [newWaitListPlayers] + self.__waitList
 
-            # subtract slots from waitlist
-            slotsToRemove = (len(self.__waitList) - (newSlots // 2))
-            self.__waitList = self.__waitList[:(slotsToRemove * -1)]
+                # subtract slots from waitlist
+                slotsToRemove = (len(self.__waitList) - (newSlots // 2))
+                self.__waitList = self.__waitList[:(slotsToRemove * -1)]
 
 
     def registerPlayer(self, player, playerID="", playerFromAuthor=True):
+        print(playerFromAuthor)
         if playerFromAuthor:
             playerName = str(player)[:-5]
         else:
             playerName = str(player)
 
+        # check if player is already registered
+        if player in self.__registeredPlayers or playerID in self.__registeredPlayerIDs\
+                or player in self.__waitList or playerID in self.__waitListIDs:
+            return False
+
         for i, j in enumerate(self.__registeredPlayers):
-            if j == "OPEN SLOT" and j != str(player):
+            if j == "OPEN SLOT" and str(player):
                 self.__registeredPlayers[i] = playerName
                 if playerID == "":  # no player ID provided
                     self.__registeredPlayerIDs[i] = playerName
@@ -91,8 +98,13 @@ class Roster():
         else:
             playerName = str(player)
 
+        # check if player is already registered
+        if player in self.__registeredPlayers or playerID in self.__registeredPlayerIDs \
+                or player in self.__waitList or playerID in self.__waitListIDs:
+            return False
+
         for i, j in enumerate(self.__waitList):
-            if j == "OPEN SLOT" and j != str(player):
+            if j == "OPEN SLOT":
                 self.__waitList[i] = playerName
                 if playerID == "":  # no player ID provided
                     self.__waitListIDs[i] = playerName
@@ -103,7 +115,7 @@ class Roster():
         return False
 
     def attemptRegistery(self, player, playerID="", playerFromAuthor=True):
-        if self.registerPlayer(player, playerID):
+        if self.registerPlayer(player, playerID, playerFromAuthor):
             return "R"
         elif self.waitlistPlayer(player, playerID, playerFromAuthor):
             return "W"
@@ -140,12 +152,12 @@ class Roster():
 
     def displayPlayers(self):
         # see all registered players without alerting them
-        outPut = "**__" + str(self.__name) + "__**\n**REGISTERED**"
+        outPut = "**__" + str(self.__name) + "__**\n**REGISTERED**\n"
         for i in self.__registeredPlayers:
-            outPut += "\n" + str(i)
-        outPut += "\n-------------------------\n**WAITING LIST**"
+            outPut += str(i) + "\n"
+        outPut += "-------------------------\n**WAITING LIST**\n"
         for i in self.__waitList:
-            outPut += "\n" + str(i)
+            outPut += str(i) + "\n"
         return outPut
 
     def alertPlayers(self):
