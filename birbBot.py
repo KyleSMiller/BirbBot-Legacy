@@ -189,7 +189,6 @@ def processRosterCommand(message, author, authorID, roster):
             msg = ("You must be the roster's creator to use this command! If you wish to register yourself, use !"
                    + rosterName + " join")
 
-
     elif cmd == "remove":
         if roster.isAdmin(str(author)):
             playerName = message.content.split()[2]
@@ -266,6 +265,7 @@ async def on_message(message):
                             msg = ("Roster must be between size 2 and 20. Defaulting to size 10. Use setSlot to change size.\n"
                                    "ex: !exampleRoster setSlots 5")
                         elif recognizedInput.rosters[newRosterName].validRoster == ">:(":
+                            del recognizedInput.rosters[newRosterName]
                             msg = "You aren't as clever as you think, {0.author.mention}"
                     else:
                         msg = "roster <" + str(newRosterName) + "> already exists! Please try again with a different name"

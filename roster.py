@@ -48,12 +48,12 @@ class Roster():
 
 
     def setSlots(self, newSlots):
-        if newSlots >= 2 or newSlots <= 20:
+        if newSlots >= 2 and newSlots <= 20:
             self.__slots = newSlots
 
             # add slots
             if self.__slots > len(self.__registeredPlayers):
-                for i in range(0, self.__slots):
+                for i in range(len(self.__registeredPlayers), self.__slots):
                     self.__registeredPlayers.append("OPEN SLOT")
                     if i % 2 == 0:
                         self.__waitList.append("OPEN SLOT")
@@ -64,11 +64,17 @@ class Roster():
 
                 # move players at the end of the playSlots list to the beginning of the waitList
                 newWaitListPlayers = self.__registeredPlayers[:slotsToRemove]
-                self.__waitList = [newWaitListPlayers] + self.__waitList
+                for i in newWaitListPlayers:
+                    self.__waitList.insert(0, i)
+
+                # subtract slots from registered List
+                self.__registeredPlayers = self.__registeredPlayers[:slotsToRemove * -1]
+                self.__registeredPlayerIDs = self.__registeredPlayerIDs[:slotsToRemove * -1]
 
                 # subtract slots from waitlist
                 slotsToRemove = (len(self.__waitList) - (newSlots // 2))
                 self.__waitList = self.__waitList[:(slotsToRemove * -1)]
+                self.__waitListIDs = self.__waitListIDs[:(slotsToRemove * -1)]
 
 
     def registerPlayer(self, player, playerID="", playerFromAuthor=True):
@@ -166,10 +172,10 @@ class Roster():
 
     def alertPlayers(self):
         # alert all registered players
-        outPut = "**__" + str(self.__name) + "__**\nREGISTERED"
+        outPut = "**__" + str(self.__name) + "__**\n**REGISTERED**\n"
         for i in self.__registeredPlayerIDs:
-            outPut += "\n" + str(i)
-        outPut += "-------------------------\nWAITING LIST"
+            outPut += str(i) + "\n"
+        outPut += "-------------------------\n**WAITING LIST**\n"
         for i in self.__waitListIDs:
-            outPut += "\n" + i
+            outPut += str(i) + "\n"
         return outPut
