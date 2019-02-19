@@ -1,7 +1,11 @@
+from recognizedInput import messageCommandDict, hiddenCommandDict
 
 
 class Roster():
     def __init__(self, name, size, admin):
+
+        self.validRoster = self.__processInput(name, size)
+
         self.__name = str(name)
         self.__slots = int(size)
         self.__admin = str(admin)
@@ -20,11 +24,23 @@ class Roster():
     def getWaitList(self):
         return self.__waitList
 
+    def getAdmin(self):
+        return self.__admin
+
 
     def isAdmin(self, author):
         if author == self.__admin:
             return True
         return False
+
+
+    def __processInput(self, name, size):
+        if name in list(messageCommandDict.keys()) or name in list(hiddenCommandDict.keys()):
+            return "Name error"
+        elif int(size) <= 1 or int(size) > 20:
+            return "Size error"
+        else:
+            return "No error"
 
 
     def setSlots(self, newSlots):
@@ -50,34 +66,44 @@ class Roster():
             self.__waitList = self.__waitList[:(slotsToRemove * -1)]
 
 
-    def registerPlayer(self, player, playerID=""):
+    def registerPlayer(self, player, playerID="", playerFromAuthor=True):
+        if playerFromAuthor:
+            playerName = str(player)[:-5]
+        else:
+            playerName = str(player)
+
         for i, j in enumerate(self.__registeredPlayers):
             if j == "OPEN SLOT" and j != str(player):
-                self.__registeredPlayers[i] = str(player)
+                self.__registeredPlayers[i] = playerName
                 if playerID == "":  # no player ID provided
-                    self.__registeredPlayerIDs[i] = player
+                    self.__registeredPlayerIDs[i] = playerName
                 else:
-                    self.__registeredPlayerIDs[i] = playerID
+                    self.__registeredPlayerIDs[i] = str(playerID)
                 return True
             continue
         return False
 
-    def waitlistPlayer(self, player, playerID=""):
+    def waitlistPlayer(self, player, playerID="", playerFromAuthor=True):
+        if playerFromAuthor:
+            playerName = str(player)[:-5]
+        else:
+            playerName = str(player)
+
         for i, j in enumerate(self.__waitList):
             if j == "OPEN SLOT" and j != str(player):
-                self.__waitList[i] = str(player)
+                self.__waitList[i] = playerName
                 if playerID == "":  # no player ID provided
-                    self.__waitListIDs[i] = player
+                    self.__waitListIDs[i] = playerName
                 else:
-                    self.__waitListIDs[i] = playerID
+                    self.__waitListIDs[i] = str(playerID)
                 return True
             continue
         return False
 
-    def attemptRegistery(self, player, playerID=""):
+    def attemptRegistery(self, player, playerID="", playerFromAuthor=True):
         if self.registerPlayer(player, playerID):
             return "R"
-        elif self.waitlistPlayer(player, playerID):
+        elif self.waitlistPlayer(player, playerID, playerFromAuthor):
             return "W"
         else:
             return "X"
@@ -90,9 +116,9 @@ class Roster():
             except:
                 playerIndex = self.__registeredPlayerIDs.index(player)
             self.__registeredPlayers.pop(playerIndex)
-            self.__registeredPlayers.index(playerIndex)
-            self.__registeredPlayers.append("")
-            self.__registeredPlayerIDs.append("")
+            self.__registeredPlayerIDs.pop(playerIndex)
+            self.__registeredPlayers.append("OPEN SLOT")
+            self.__registeredPlayerIDs.append("OPEN SLOT")
             return True
 
         elif player in self.__waitList or player in self.__waitListIDs:
@@ -102,8 +128,8 @@ class Roster():
                 playerIndex = self.__registeredPlayerIDs.index(player)
             self.__waitList.pop(playerIndex)
             self.__waitListIDs.pop(playerIndex)
-            self.__waitList.append("")
-            self.__waitListIDs.append("")
+            self.__waitList.append("OPEN SLOT")
+            self.__waitListIDs.append("OPEN SLOT")
             return True
 
         return False
