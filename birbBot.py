@@ -136,7 +136,7 @@ def retrieveVoiceCommand(message, msgAuthor, msgAuthorID, cmd):
     return msg
 
 
-def processRosterCommand(message, author, roster):
+def processRosterCommand(message, author, authorID, roster):
     rosterName = message.content.split()[0]
     cmd = message.content.lower().split()[1]  # change command to 2nd word typed, as 1st is the roster name
     msg = ""
@@ -144,53 +144,49 @@ def processRosterCommand(message, author, roster):
     if cmd == "setSlots":
         roster.setSlots(message.content.lower().split()[2])
 
-    elif cmd == "join":
-        if roster.registerPlayer(author):
-            pass
-        else:
-            if roster.waitlistPlayer(author):
-                pass
-            else:
-                msg = "Registered List and Waiting List are both full"
-                return msg
-
-    elif cmd == "register":
-        if roster.isAdmin(author):
-            newPlayerAsList = message.content.split()[2:]
-            newPlayer = "".join(newPlayerAsList)
-            if roster.registerPlayer(newPlayer):
-                pass
-            else:
-                if roster.waitlistPlayer(newPlayer):
-                    pass
-                else:
-                    msg = "Registered List and Waiting List are both full"
-                    return msg
-        else:
-            msg = "you must be admin of <" + str(roster) + "> to register players this way. " \
-                                                           "If you meant to add yourself, use !" + str(roster) + " join"
-
-    elif cmd == "waitList":
-        if roster.isAdmin(author):
-            newPlayerAsList = message.content.split()[2:]
-            newPlayer = "".join(newPlayerAsList)
-            if roster.waitlistPlayer(newPlayer):
-                pass
-            else:
-                msg = "Waiting list is already full"
-                return msg
-        elif author == message.content.split()[2:][-1:]:  # check if message author is the person they are trying to waitList
-            if roster.waitlistPlayer(author):
-                pass
-            else:
-                msg = "Waiting List is already full"
-                return msg
-
     elif cmd == "show" or cmd == "display":
         msg = roster.displayPlayers()
 
     elif cmd == "alert":
         msg = roster.alertPlayers()
+
+    elif cmd == "join":
+        roster.attemptRegistery(player=author[:-5], playerID=authorID)
+
+    elif cmd == "register":
+        if roster.isAdmin():
+            # check the order of the name, ID arguments so it accepts them both ways
+            if message.content.split()[2].startswith("<@"):
+                playerID = message.content.split()[2]
+                try:
+                    playerName = message.content.split()[3]
+                    roster.attemptRegistery(player=playerName, playerID=playerID)
+                except:
+                    msg = ("You must provide a name for the player as well, otherwise they will be alerted every time the "
+                           "roster is viewed! ex: !" + rosterName + " register @Alan#1234 Alan")
+            else:
+                try:
+                    if message.content.split()[3].startswith("<@"):
+                        playerName = message.content.split()[2]
+                        playerID = message.content.split()[3]
+                        roster.attemptRegistery(player=playerName, playerID=playerID)
+                    else:
+                        msg = ("You must provide a vaild @ with the name. ex: !" + rosterName + " register @Alan#1234 Alan")
+                except:
+                    # runs if no ID is given, in which case the Name will be used as the ID
+                    playerName = message.content.split()[2]
+                    roster.attemptRegistery(player=playerName)
+        else:
+            msg = ("You must be the roster's creator to use this command! If you wish to register yourself, use !"
+                   + rosterName + " join")
+
+    elif cmd == "remove":
+        if roster.isAdmin():
+            playerName = message.content.split()[2]
+            roster.removePlayer(playerName)
+
+
+
 
 
 
@@ -209,7 +205,6 @@ async def on_message(message):
 
     # direct message commands
     if str(message.channel.type) == "private":
-        print(message.content)
         if message.content.startswith("!shutdown " + str(adminPassword)):
             await client.send_message(message.author, "shutting down")
             print("BirbBot shut down by remote command")
@@ -235,7 +230,7 @@ async def on_message(message):
                 msg = retreiveServerInfo(message, cmd)
 
 
-            elif cmd == "!newRoster":
+            elif cmd == "newroster":
                 rosterSize = message.content.lower().split()[1]
                 newRosterName = message.content.lower().split()[2]
                 if newRosterName not in recognizedInput.rosters:
@@ -243,13 +238,14 @@ async def on_message(message):
                 else:
                     msg = "roster <" + str(newRosterName) + "> already exists! Please try again with a different name"
 
+
             elif cmd in recognizedInput.rosters:
                 # runs if command on existing roster
-                try:
-                    msg = processRosterCommand(message, message.author,
-                                               recognizedInput.rosters[message.content.lower().split()[0]])
-                except:
-                    msg = "Something went wrong, please be sure you input the command correctly"
+                # try:
+                msg = processRosterCommand(message, message.author, "<@" + message.author.id + ">",
+                                           recognizedInput.rosters[message.content.lower().split()[0][1:]])
+                # except:
+                #     msg = "Something went wrong, please be sure you input the command correctly"
 
 
             elif cmd in recognizedInput.messageCommandDict:
