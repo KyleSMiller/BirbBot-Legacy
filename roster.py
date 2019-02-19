@@ -41,6 +41,8 @@ class Roster():
         elif int(size) <= 1 or int(size) > 20:
             self.__slots = 10
             return "Size error"
+        elif name == "@everyone" or name == "@here":
+            return ">:("
         else:
             return "No error"
 
@@ -70,7 +72,6 @@ class Roster():
 
 
     def registerPlayer(self, player, playerID="", playerFromAuthor=True):
-        print(playerFromAuthor)
         if playerFromAuthor:
             playerName = str(player)[:-5]
         else:
@@ -115,6 +116,9 @@ class Roster():
         return False
 
     def attemptRegistery(self, player, playerID="", playerFromAuthor=True):
+        if player == "@everyone" or player == "@here":
+            return ">:("
+
         if self.registerPlayer(player, playerID, playerFromAuthor):
             return "R"
         elif self.waitlistPlayer(player, playerID, playerFromAuthor):
