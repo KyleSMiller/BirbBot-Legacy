@@ -189,10 +189,10 @@ messageCommandDict = {
                   "```Command                          | Result\n"
                   "--------------------------------------------------------\n"
                   "!<rosterName> join               | Join the most recent roster. Specify name to join a specific roster\n"
-                  "!<rosterName> leave              | Leave the most recent roster. Specify name to join a specific roster\n\n"
+                  "!<rosterName> leave              | Leave the most recent roster. Specify name to join a specific roster```\n\n"
                    
                   "**__CREATOR COMMANDS__**\n"
-                  "Command                       | Result\n"
+                  "```Command                       | Result\n"
                   "--------------------------------------------------------\n"
                   "!newRoster [size] [name]         | Create a new roster of the specified size with the specified name\n"
                   "![rosterName] show               | Display the specified roster\n"
