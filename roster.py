@@ -45,7 +45,7 @@ class Roster():
 
     def setSlots(self, newSlots):
         if newSlots >= 2 and newSlots <= 20:
-            self.__slots = newSlots
+            self.__slots = newSlots + 1
 
             # add slots
             if self.__slots > len(self.__registeredPlayers):
@@ -53,7 +53,7 @@ class Roster():
                     self.__registeredPlayers.append("OPEN SLOT")
 
             # subtract slots
-            elif self.__slots < len(self.__registeredPlayers):
+            elif self.__slots - 1 < len(self.__registeredPlayers):
                 slotsToRemove = (len(self.__registeredPlayers) - self.__slots)
 
                 # subtract slots from registered List
@@ -61,11 +61,7 @@ class Roster():
                 self.__registeredPlayerIDs = self.__registeredPlayerIDs[:slotsToRemove * -1]
 
 
-    def registerPlayer(self, player, playerID="", playerFromAuthor=True):
-        if playerFromAuthor:
-            playerName = str(player)[:-5]
-        else:
-            playerName = str(player)
+    def registerPlayer(self, player, playerID=""):
 
         # check if player is already registered
         if player in self.__registeredPlayers or playerID in self.__registeredPlayerIDs:
@@ -73,9 +69,9 @@ class Roster():
 
         for i, j in enumerate(self.__registeredPlayers):
             if j == "OPEN SLOT" and str(player):
-                self.__registeredPlayers[i] = playerName
+                self.__registeredPlayers[i] = player
                 if playerID == "":  # no player ID provided
-                    self.__registeredPlayerIDs[i] = playerName
+                    self.__registeredPlayerIDs[i] = player
                 else:
                     self.__registeredPlayerIDs[i] = str(playerID)
                 return True
@@ -83,11 +79,11 @@ class Roster():
         return False
 
 
-    def attemptRegistery(self, player, playerID="", playerFromAuthor=True):
+    def attemptRegistery(self, player, playerID=""):
         if player == "@everyone" or player == "@here":
             return ">:("
 
-        if self.registerPlayer(player, playerID, playerFromAuthor):
+        if self.registerPlayer(player, playerID):
             return "R"
         else:
             return "X"
@@ -116,6 +112,8 @@ class Roster():
         outPut += "-------------------------\n**WAITING LIST**\n"
         for i in range(len(self.__registeredPlayers) - self.__waitListSlots, len(self.__registeredPlayers)):
             outPut += str(self.__registeredPlayers[i]) + "\n"
+        outPut += "\n**Use \"!" + self.__name + " join\" to add your name to the roster, or use \"!" + self.__name + \
+                  " leave\" to remove your name. Use \"!rosterHelp\" to see a full list of roster commands.**"
         return outPut
 
     def alertPlayers(self):

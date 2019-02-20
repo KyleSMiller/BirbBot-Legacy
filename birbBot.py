@@ -140,7 +140,7 @@ def processRosterCommand(message, author, authorID, roster):
     rosterName = message.content.split()[0]
     cmd = message.content.lower().split()[1]  # change command to 2nd word typed, as 1st is the roster name
     msg = ""
-    reaction = ""
+    registerStatus = ""
 
     if cmd == "setslots":
         try:
@@ -155,7 +155,7 @@ def processRosterCommand(message, author, authorID, roster):
         msg = roster.alertPlayers()
 
     elif cmd == "join":
-        registerStatus = roster.attemptRegistery(player=author, playerID=authorID)
+        registerStatus = roster.attemptRegistery(player=author.display_name, playerID=authorID)
 
     elif cmd == "register":
         if roster.isAdmin(str(author)):
@@ -164,7 +164,7 @@ def processRosterCommand(message, author, authorID, roster):
                 playerID = message.content.split()[2]
                 try:
                     playerName = message.content.split()[3]
-                    registerStatus = roster.attemptRegistery(player=playerName, playerID=playerID, playerFromAuthor=False)
+                    registerStatus = roster.attemptRegistery(player=playerName, playerID=playerID)
                     if registerStatus == ">:(":
                         msg = "You aren't as clever as you think, {0.author.mention}"
                 except:
@@ -175,7 +175,7 @@ def processRosterCommand(message, author, authorID, roster):
                     if message.content.split()[3].startswith("<@"):
                         playerName = message.content.split()[2]
                         playerID = message.content.split()[3]
-                        registerStatus = roster.attemptRegistery(player=playerName, playerID=playerID, playerFromAuthor=False)
+                        registerStatus = roster.attemptRegistery(player=playerName, playerID=playerID)
                         if registerStatus == ">:(":
                             msg = "You aren't as clever as you think, {0.author.mention}"
                     else:
@@ -183,7 +183,7 @@ def processRosterCommand(message, author, authorID, roster):
                 except:
                     # runs if no ID is given, in which case the Name will be used as the ID
                     playerName = message.content.split()[2]
-                    registerStatus = roster.attemptRegistery(player=playerName, playerID="", playerFromAuthor=False)
+                    registerStatus = roster.attemptRegistery(player=playerName, playerID="")
                     if registerStatus == ">:(":
                         msg = "I'm going to assume that was a mistake, {0.author.mention} >:("
         else:
@@ -199,14 +199,18 @@ def processRosterCommand(message, author, authorID, roster):
              + rosterName + " join")
 
     elif cmd == "leave":
-        roster.removePlayer(str(author)[:-5])
+        left = roster.removePlayer(str(author)[:-5])
+        if left:
+            registerStatus = "R"
+        else:
+            registerStatus = "X"
 
     elif cmd == "delete":
         for key in list(recognizedInput.rosters.keys()):
             if recognizedInput.rosters[key] == roster:
                 del recognizedInput.rosters[key]
 
-    return (msg, reaction)
+    return (msg, registerStatus)
 
 
 
@@ -219,7 +223,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    msgAuthor = str(message.author)[:-5].lower()
+    msgAuthor = str(message.author.display_name)
     msgAuthorID = "<@" + message.author.id + ">"
 
     # direct message commands
@@ -255,47 +259,63 @@ async def on_message(message):
                     newRosterName = message.content.split()[2]
                     # construct a new roster
                     if newRosterName not in recognizedInput.rosters:
-                        recognizedInput.rosters[newRosterName] = roster.Roster(newRosterName, rosterSize, message.author)
+                        recognizedInput.rosters[newRosterName.lower()] = roster.Roster(newRosterName, rosterSize, message.author)
                         # check that the roster is valid
-                        if recognizedInput.rosters[newRosterName].validRoster == "Name error":
-                            del recognizedInput.rosters[newRosterName]
+                        if recognizedInput.rosters[newRosterName.lower()].validRoster == "Name error":
+                            del recognizedInput.rosters[newRosterName.lower()]
                             msg = "You cannot use a name that is already reserved for another command!"
-                        elif recognizedInput.rosters[newRosterName].validRoster == "Size error":
+                        elif recognizedInput.rosters[newRosterName.lower()].validRoster == "Size error":
                             msg = ("Roster must be between size 2 and 20, creating roster with default size 10."
                                    " Use setSlot if you want to change size after initial roster creation.\n"
                                    "ex: !exampleRoster setSlots 5")
-                        elif recognizedInput.rosters[newRosterName].validRoster == ">:(":
-                            del recognizedInput.rosters[newRosterName]
+                        elif recognizedInput.rosters[newRosterName.lower()].validRoster == ">:(":
+                            del recognizedInput.rosters[newRosterName.lower()]
                             msg = "You aren't as clever as you think, {0.author.mention}"
                     else:
                         msg = ("roster \"" + str(newRosterName) + "\" already exists! Please try again with a different "
                                "name, or use \"!" + str(newRosterName) + " delete\" to delete an unwanted roster")
                     # track the most recently created roster as the default
-                    recognizedInput.rosters["__default__"] = newRosterName
+                    msg = recognizedInput.rosters[newRosterName.lower()].displayPlayers()
+                    recognizedInput.rosters["__default__"] = newRosterName.lower()
                 except:
                     msg = "You must supply a roster size and name! ex: !newRoster 10 exampleRoster"
 
 
             elif cmd in recognizedInput.rosters:
                 # runs if command on existing roster
-                # try:
-                msg = processRosterCommand(message, message.author, "<@" + message.author.id + ">",
-                                           recognizedInput.rosters[message.content.lower().split()[0][1:]])
-                # except:
-                #     msg = "Something went wrong, please be sure you input the command correctly"
+                try:
+                    rosterProcessTuple = processRosterCommand(message, message.author, "<@" + message.author.id + ">",
+                                               recognizedInput.rosters[message.content.lower().split()[0][1:]])
+                    msg = rosterProcessTuple[0]
+                    emoji = rosterProcessTuple[1]
+                    if emoji == "R":
+                        await client.add_reaction(message, "✅")
+                    elif emoji == "X":
+                        await client.add_reaction(message, "❌")
+                except:
+                    msg = "Something went wrong, please be sure you input the command correctly"
 
             # process !join to mean "join the most recently created roster"
             elif cmd == "join":
                 try:
-                    registerStatus = recognizedInput.rosters[recognizedInput.rosters["__default__"]].attemptRegistery(
-                        message.author, "<@" + message.author.id + ">")
+                    registered = recognizedInput.rosters[recognizedInput.rosters["__default__"]].attemptRegistery(
+                        message.author.display_name, "<@" + message.author.id + ">")
+                    if registered:
+                        await client.add_reaction(message, "✅")
+                    elif registered:
+                        await client.add_reaction(message, "❌")
                 except:
                     msg = "There is currently no default roster, please use !\"<rosterName> join\" instead"
+
             # process !leave to mean "leave the most recently created roster"
             elif cmd == "leave":
                 try:
-                    registerStatus = recognizedInput.rosters[recognizedInput.rosters["__default__"]].removePlayer(
+                    left = recognizedInput.rosters[recognizedInput.rosters["__default__"]].removePlayer(
                         "<@" + message.author.id + ">")
+                    if left:
+                        await client.add_reaction(message, "✅")
+                    elif not left:
+                        await client.add_reaction(message, "❌")
                 except:
                     msg = "There is currently no default roster, please use !\"<rosterName> join\" instead"
 
