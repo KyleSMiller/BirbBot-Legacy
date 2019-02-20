@@ -22,6 +22,8 @@ birbBotNames = [
 
 
 rosters = {
+    # random characters to prevent it from being used by other users
+    "__default__": ""  # will store the default roster used in !join
 
 }
 

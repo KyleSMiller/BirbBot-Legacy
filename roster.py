@@ -2,6 +2,7 @@ from recognizedInput import messageCommandDict, hiddenCommandDict
 
 
 class Roster():
+
     def __init__(self, name, size, admin):
 
         self.__name = str(name)
@@ -21,10 +22,8 @@ class Roster():
     def getPlaySlots(self):
         return self.__registeredPlayers
 
-
     def getAdmin(self):
         return self.__admin
-
 
     def isAdmin(self, author):
         if author == self.__admin:
@@ -52,7 +51,6 @@ class Roster():
             if self.__slots > len(self.__registeredPlayers):
                 for i in range(len(self.__registeredPlayers), self.__slots):
                     self.__registeredPlayers.append("OPEN SLOT")
-
 
             # subtract slots
             elif self.__slots < len(self.__registeredPlayers):
@@ -108,7 +106,6 @@ class Roster():
             return True
 
         return False
-
 
 
     def displayPlayers(self):
