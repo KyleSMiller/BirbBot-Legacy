@@ -177,7 +177,39 @@ messageCommandDict = {
             "!gw checkFor admins   --->   \"There are currently admins on Gracious Welcome!\"\n"
             "!taunt  --->   \"Your wife is a hobby horse!\"\n"
             "!thank Malric   --->   \"Malric, thank you brother!\"\n"
-            "!respect agathaVan Baron Von Moorland    --->   \"Baron Von Moorland, I dare say you matched even my own skills\""
+            "!respect agathaVan Baron Von Moorland    --->   \"Baron Von Moorland, I dare say you matched even my own skills\"\n\n"
+            "**__Use !rosterHelp if you wanted documentation for roster commands**",
+
+    "rosterhelp": "__**BIRB BOT ROSTER COMMAND DOCUMENTATION**__\n"
+                  "<> : signifies optional parameter\n"
+                  "[]: signifies required parameter\n"
+                  "__*Do not include brackets when entering command*__\n\n"
+
+                  "**__BASIC COMMANDS__**\n"
+                  "```Command                          | Result\n"
+                  "--------------------------------------------------------\n"
+                  "!<rosterName> join               | Join the most recent roster. Specify name to join a specific roster\n"
+                  "!<rosterName> leave              | Leave the most recent roster. Specify name to join a specific roster\n\n"
+                   
+                  "**__CREATOR COMMANDS__**\n"
+                  "Command                       | Result\n"
+                  "--------------------------------------------------------\n"
+                  "!newRoster [size] [name]         | Create a new roster of the specified size with the specified name\n"
+                  "![rosterName] show               | Display the specified roster\n"
+                  "![rosterName] alert              | Alert all members of the specified roster\n"
+                  "__**CREATOR-ONLY COMMANDS**__    | __These commands cannot be used by anyone but the person who created the roster__\n"
+                  "![rosterName] setSlots [size]    | Change the roster size to the newly specified size\n"
+                  "![rosterName] register [name][@] | Register a new member that is not yourself. An [@] must be provided for \"!alert\" to alert them\n"
+                  "![rosterName] remove [name]||[@] | Remove a member that is not yourself. Name or [@] is accepted\n"
+                  "![rosterName] delete             | Permanently delete the specified roster\n\n```"
+    
+                  "\n**Examples:**\n"
+                  "!newRoster 5 exampleRoster   --->   creates a new roster named \"exampleRoster\" of size 5\n"
+                  "!newRoster join   --->   join newRoster\n"
+                  "!exampleRoster register Birb @birb#1234   --->   registers a new member named Birb with an @ of @birb#1234\n"
+                  "!exampleRoster register Birb   --->   registers a new member named Birb that will not be alerted\n"
+                  "!exampleRoster remove Birb   --->   removes Birb from the roster. Also works provided the @\n"
+                  "!exampleRoster setSlots 10   --->   changes the roster size to 10 with 5 waiting list slots"
 }
 
 hiddenCommandDict = {

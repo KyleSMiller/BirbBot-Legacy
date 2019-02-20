@@ -322,7 +322,7 @@ async def on_message(message):
 
             elif cmd in recognizedInput.messageCommandDict:
                 # runs if neither voice nor server nor roster command
-                if cmd != "help":
+                if cmd != "help" and cmd != "rosterhelp":
                     msg = recognizedInput.messageCommandDict[cmd]
                 else:
                     await client.send_message(message.author, recognizedInput.messageCommandDict[cmd])
