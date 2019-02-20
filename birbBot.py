@@ -140,7 +140,7 @@ def processRosterCommand(message, author, authorID, roster):
     rosterName = message.content.split()[0]
     cmd = message.content.lower().split()[1]  # change command to 2nd word typed, as 1st is the roster name
     msg = ""
-    registerStatus = ""
+    reaction = ""
 
     if cmd == "setslots":
         try:
@@ -155,7 +155,7 @@ def processRosterCommand(message, author, authorID, roster):
         msg = roster.alertPlayers()
 
     elif cmd == "join":
-        registerStatus = roster.attemptRegistery(player=author.display_name, playerID=authorID)
+        reaction = roster.attemptRegistery(player=author.display_name, playerID=authorID)
 
     elif cmd == "register":
         if roster.isAdmin(str(author)):
@@ -164,8 +164,8 @@ def processRosterCommand(message, author, authorID, roster):
                 playerID = message.content.split()[2]
                 try:
                     playerName = message.content.split()[3]
-                    registerStatus = roster.attemptRegistery(player=playerName, playerID=playerID)
-                    if registerStatus == ">:(":
+                    reaction = roster.attemptRegistery(player=playerName, playerID=playerID)
+                    if reaction == ">:(":
                         msg = "You aren't as clever as you think, {0.author.mention}"
                 except:
                     msg = ("You must provide a plaintext name for the player, or else they will be alerted every time the "
@@ -175,16 +175,16 @@ def processRosterCommand(message, author, authorID, roster):
                     if message.content.split()[3].startswith("<@"):
                         playerName = message.content.split()[2]
                         playerID = message.content.split()[3]
-                        registerStatus = roster.attemptRegistery(player=playerName, playerID=playerID)
-                        if registerStatus == ">:(":
+                        reaction = roster.attemptRegistery(player=playerName, playerID=playerID)
+                        if reaction == ">:(":
                             msg = "You aren't as clever as you think, {0.author.mention}"
                     else:
                         msg = ("You must provide a vaild @ with the name. ex: !" + rosterName + " register @Alan#1234 Alan")
                 except:
                     # runs if no ID is given, in which case the Name will be used as the ID
                     playerName = message.content.split()[2]
-                    registerStatus = roster.attemptRegistery(player=playerName, playerID="")
-                    if registerStatus == ">:(":
+                    reaction = roster.attemptRegistery(player=playerName, playerID="")
+                    if reaction == ">:(":
                         msg = "I'm going to assume that was a mistake, {0.author.mention} >:("
         else:
             msg = ("You must be the roster's creator to use this command! If you wish to register yourself, use !"
@@ -193,7 +193,11 @@ def processRosterCommand(message, author, authorID, roster):
     elif cmd == "remove":
         if roster.isAdmin(str(author)):
             playerName = message.content.split()[2]
-            roster.removePlayer(playerName)
+            left = roster.removePlayer(playerName)
+            if left:
+                reaction = "R"
+            else:
+                reaction = "X"
         else:
             msg = ("You must be the roster's creator to use this command! If you wish to register yourself, use !"
              + rosterName + " join")
@@ -201,16 +205,19 @@ def processRosterCommand(message, author, authorID, roster):
     elif cmd == "leave":
         left = roster.removePlayer(str(author)[:-5])
         if left:
-            registerStatus = "R"
+            reaction = "R"
         else:
-            registerStatus = "X"
+            reaction = "X"
 
     elif cmd == "delete":
         for key in list(recognizedInput.rosters.keys()):
             if recognizedInput.rosters[key] == roster:
                 del recognizedInput.rosters[key]
+                reaction = "R"
+            else:
+                reaction = "X"
 
-    return (msg, registerStatus)
+    return (msg, reaction)
 
 
 
