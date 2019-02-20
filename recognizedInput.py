@@ -197,7 +197,7 @@ messageCommandDict = {
                   "!newRoster [size] [name]         | Create a new roster of the specified size with the specified name\n"
                   "![rosterName] show               | Display the specified roster\n"
                   "![rosterName] alert              | Alert all members of the specified roster\n"
-                  "__**CREATOR-ONLY COMMANDS**__    | __These commands cannot be used by anyone but the person who created the roster__\n"
+                  "CREATOR-ONLY COMMANDS            | These commands cannot be used by anyone but the person who created the roster\n"
                   "![rosterName] setSlots [size]    | Change the roster size to the newly specified size\n"
                   "![rosterName] register [name][@] | Register a new member that is not yourself. An [@] must be provided for \"!alert\" to alert them\n"
                   "![rosterName] remove [name]||[@] | Remove a member that is not yourself. Name or [@] is accepted\n"
