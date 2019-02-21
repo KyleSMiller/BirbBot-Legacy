@@ -32,12 +32,12 @@ class Roster():
 
 
     def __processInput(self, name, size):
-        if name in list(messageCommandDict.keys()) or name in list(hiddenCommandDict.keys()):
+        if name in list(messageCommandDict.keys()) or name in list(hiddenCommandDict.keys()) or name.lower() == "newroster":
             return "Name error"
         elif int(size) <= 1 or int(size) > 20:
             self.__slots = 10
             return "Size error"
-        elif name == "@everyone" or name == "@here":
+        elif "@everyone" in name or "@here" in name:
             return ">:("
         else:
             return "No error"

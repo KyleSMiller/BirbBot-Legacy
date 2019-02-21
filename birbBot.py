@@ -143,10 +143,13 @@ def processRosterCommand(message, author, authorID, roster):
     reaction = ""
 
     if cmd == "setslots":
-        try:
-            roster.setSlots(int(message.content.lower().split()[2]))
-        except:
-            msg = "invalid slot count"
+        if roster.isAdmin(str(author)):
+            try:
+                roster.setSlots(int(message.content.lower().split()[2]))
+            except:
+                msg = "invalid slot count"
+        else:
+            msg = ("You must be the roster's creator to use this command!")
 
     elif cmd == "show" or cmd == "display":
         msg = roster.displayPlayers()
@@ -262,11 +265,14 @@ async def on_message(message):
 
             elif cmd == "newroster":
                 try:
-                    rosterSize = message.content.lower().split()[1]
+                    rosterSize = int(message.content.lower().split()[1])
                     newRosterName = message.content.split()[2]
                     # construct a new roster
                     if newRosterName not in recognizedInput.rosters:
                         recognizedInput.rosters[newRosterName.lower()] = roster.Roster(newRosterName, rosterSize, message.author)
+                        # track the most recently created roster as the default
+                        msg = recognizedInput.rosters[newRosterName.lower()].displayPlayers()
+                        recognizedInput.rosters["__default__"] = newRosterName.lower()
                         # check that the roster is valid
                         if recognizedInput.rosters[newRosterName.lower()].validRoster == "Name error":
                             del recognizedInput.rosters[newRosterName.lower()]
@@ -281,9 +287,6 @@ async def on_message(message):
                     else:
                         msg = ("roster \"" + str(newRosterName) + "\" already exists! Please try again with a different "
                                "name, or use \"!" + str(newRosterName) + " delete\" to delete an unwanted roster")
-                    # track the most recently created roster as the default
-                    msg = recognizedInput.rosters[newRosterName.lower()].displayPlayers()
-                    recognizedInput.rosters["__default__"] = newRosterName.lower()
                 except:
                     msg = "You must supply a roster size and name! ex: !newRoster 10 exampleRoster"
 
