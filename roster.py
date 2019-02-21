@@ -80,7 +80,7 @@ class Roster():
 
 
     def attemptRegistery(self, player, playerID=""):
-        if player == "@everyone" or player == "@here":
+        if "@everyone" in player or "@here" in player:
             return ">:("
 
         if self.registerPlayer(player, playerID):
