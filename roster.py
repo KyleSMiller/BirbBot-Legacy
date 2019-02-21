@@ -45,7 +45,8 @@ class Roster():
 
     def setSlots(self, newSlots):
         if newSlots >= 2 and newSlots <= 20:
-            self.__slots = newSlots + 1
+            self.__waitListSlots = ((newSlots + 1) // 2)
+            self.__slots = newSlots + self.__waitListSlots
 
             # add slots
             if self.__slots > len(self.__registeredPlayers):
