@@ -145,9 +145,14 @@ def processRosterCommand(message, author, authorID, roster):
     if cmd == "setslots":
         if roster.isAdmin(str(author)):
             try:
-                roster.setSlots(int(message.content.lower().split()[2]))
+                setSlot = roster.setSlots(int(message.content.lower().split()[2]))
+                if setSlot:
+                    reaction = "R"
+                else:
+                    reaction = "X"
+                    msg = "Roster size must be at least 2 and at most 20"
             except:
-                msg = "invalid slot count"
+                msg = "invalid slot count. Must be a positive integer between 2 and 20"
         else:
             msg = ("You must be the roster's creator to use this command!")
 
@@ -155,7 +160,11 @@ def processRosterCommand(message, author, authorID, roster):
         msg = roster.displayPlayers()
 
     elif cmd == "alert":
-        msg = roster.alertPlayers()
+        if roster.isAdmin(str(author)):
+            msg = roster.alertPlayers()
+        else:
+            msg = "You must be the roster's creator to use this command! If you wanted to view the roster, use !" + \
+                  str(rosterName) + " show"
 
     elif cmd == "join":
         reaction = roster.attemptRegistery(player=author.display_name, playerID=authorID)
@@ -213,12 +222,15 @@ def processRosterCommand(message, author, authorID, roster):
             reaction = "X"
 
     elif cmd == "delete":
-        for key in list(recognizedInput.rosters.keys()):
-            if recognizedInput.rosters[key] == roster:
-                del recognizedInput.rosters[key]
-                reaction = "R"
-            else:
-                reaction = "X"
+        if roster.isAdmin(str(author)):
+            for key in list(recognizedInput.rosters.keys()):
+                if recognizedInput.rosters[key] == roster:
+                    del recognizedInput.rosters[key]
+                    reaction = "R"
+                else:
+                    reaction = "X"
+        else:
+            msg = "You must be the roster's creator to use this command!"
 
     return (msg, reaction)
 
@@ -293,16 +305,16 @@ async def on_message(message):
 
             elif cmd in recognizedInput.rosters:
                 # runs if command on existing roster
-                try:
-                    rosterProcessTuple = processRosterCommand(message, message.author, "<@" + message.author.id + ">",
-                                               recognizedInput.rosters[message.content.lower().split()[0][1:]])
-                    msg = rosterProcessTuple[0]
-                    emoji = rosterProcessTuple[1]
-                    if emoji == "R":
-                        await client.add_reaction(message, "✅")
-                    elif emoji == "X":
-                        await client.add_reaction(message, "❌")
-                except:
+                # try:
+                rosterProcessTuple = processRosterCommand(message, message.author, "<@" + message.author.id + ">",
+                                           recognizedInput.rosters[message.content.lower().split()[0][1:]])
+                msg = rosterProcessTuple[0]
+                emoji = rosterProcessTuple[1]
+                if emoji == "R":
+                    await client.add_reaction(message, "✅")
+                elif emoji == "X":
+                    await client.add_reaction(message, "❌")
+                # except:
                     msg = "Something went wrong, please be sure you input the command correctly"
 
             # process !join to mean "join the most recently created roster"
@@ -320,12 +332,16 @@ async def on_message(message):
             # process !leave to mean "leave the most recently created roster"
             elif cmd == "leave":
                 try:
-                    left = recognizedInput.rosters[recognizedInput.rosters["__default__"]].removePlayer(
-                        "<@" + message.author.id + ">")
+                    left = recognizedInput.rosters[recognizedInput.rosters["__default__"]].removePlayer(message.author.display_name)
                     if left:
                         await client.add_reaction(message, "✅")
                     elif not left:
-                        await client.add_reaction(message, "❌")
+                        left2 = recognizedInput.rosters[recognizedInput.rosters["__default__"]].removePlayer(
+                            "<@" + message.author.id + ">")
+                        if left2:
+                            await client.add_reaction(message, "✅")
+                        else:
+                            await client.add_reaction(message, "❌")
                 except:
                     msg = "There is currently no default roster, please use !\"<rosterName> join\" instead"
 

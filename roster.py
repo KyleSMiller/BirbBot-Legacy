@@ -60,6 +60,9 @@ class Roster():
                 # subtract slots from registered List
                 self.__registeredPlayers = self.__registeredPlayers[:slotsToRemove * -1]
                 self.__registeredPlayerIDs = self.__registeredPlayerIDs[:slotsToRemove * -1]
+            return True
+        else:
+            return False
 
 
     def registerPlayer(self, player, playerID=""):
