@@ -136,6 +136,37 @@ def retrieveVoiceCommand(message, msgAuthor, msgAuthorID, cmd):
     return msg
 
 
+def createRoster(message, author):
+    rosterSize = int(message.content.lower().split()[1])
+    newRosterName = message.content.split()[2]
+
+    # construct a new roster
+    if newRosterName not in recognizedInput.rosters:
+        recognizedInput.rosters[newRosterName.lower()] = roster.Roster(newRosterName, rosterSize, author)
+
+        # track the most recently created roster as the default
+        msg = recognizedInput.rosters[newRosterName.lower()].displayPlayers()
+        recognizedInput.rosters["__default__"] = newRosterName.lower()
+
+        # check that the roster is valid
+        if recognizedInput.rosters[newRosterName.lower()].validRoster == "Name error":
+            del recognizedInput.rosters[newRosterName.lower()]
+            msg = "You cannot use a name that is already reserved for another command!"
+        elif recognizedInput.rosters[newRosterName.lower()].validRoster == "Size error":
+            msg = ("Roster must be between size 2 and 20, creating roster with default size 10."
+                   " Use setSlot if you want to change size after initial roster creation.\n"
+                   "ex: !exampleRoster setSlots 5")
+        elif recognizedInput.rosters[newRosterName.lower()].validRoster == ">:(":
+            del recognizedInput.rosters[newRosterName.lower()]
+            msg = "You aren't as clever as you think, {0.author.mention}"
+
+    else:
+        msg = ("roster \"" + str(newRosterName) + "\" already exists! Please try again with a different "
+                                                  "name, or use \"!" + str(
+            newRosterName) + " delete\" to delete an unwanted roster")
+    return msg
+
+
 def processRosterCommand(message, author, authorID, roster):
     rosterName = message.content.split()[0]
     cmd = message.content.lower().split()[1]  # change command to 2nd word typed, as 1st is the roster name
@@ -277,44 +308,23 @@ async def on_message(message):
 
             elif cmd == "newroster":
                 try:
-                    rosterSize = int(message.content.lower().split()[1])
-                    newRosterName = message.content.split()[2]
-                    # construct a new roster
-                    if newRosterName not in recognizedInput.rosters:
-                        recognizedInput.rosters[newRosterName.lower()] = roster.Roster(newRosterName, rosterSize, message.author)
-                        # track the most recently created roster as the default
-                        msg = recognizedInput.rosters[newRosterName.lower()].displayPlayers()
-                        recognizedInput.rosters["__default__"] = newRosterName.lower()
-                        # check that the roster is valid
-                        if recognizedInput.rosters[newRosterName.lower()].validRoster == "Name error":
-                            del recognizedInput.rosters[newRosterName.lower()]
-                            msg = "You cannot use a name that is already reserved for another command!"
-                        elif recognizedInput.rosters[newRosterName.lower()].validRoster == "Size error":
-                            msg = ("Roster must be between size 2 and 20, creating roster with default size 10."
-                                   " Use setSlot if you want to change size after initial roster creation.\n"
-                                   "ex: !exampleRoster setSlots 5")
-                        elif recognizedInput.rosters[newRosterName.lower()].validRoster == ">:(":
-                            del recognizedInput.rosters[newRosterName.lower()]
-                            msg = "You aren't as clever as you think, {0.author.mention}"
-                    else:
-                        msg = ("roster \"" + str(newRosterName) + "\" already exists! Please try again with a different "
-                               "name, or use \"!" + str(newRosterName) + " delete\" to delete an unwanted roster")
+                    msg = createRoster(message, message.author)
                 except:
                     msg = "You must supply a roster size and name! ex: !newRoster 10 exampleRoster"
 
 
             elif cmd in recognizedInput.rosters:
                 # runs if command on existing roster
-                # try:
-                rosterProcessTuple = processRosterCommand(message, message.author, "<@" + message.author.id + ">",
-                                           recognizedInput.rosters[message.content.lower().split()[0][1:]])
-                msg = rosterProcessTuple[0]
-                emoji = rosterProcessTuple[1]
-                if emoji == "R":
-                    await client.add_reaction(message, "✅")
-                elif emoji == "X":
-                    await client.add_reaction(message, "❌")
-                # except:
+                try:
+                    rosterProcessTuple = processRosterCommand(message, message.author, "<@" + message.author.id + ">",
+                                               recognizedInput.rosters[message.content.lower().split()[0][1:]])
+                    msg = rosterProcessTuple[0]
+                    emoji = rosterProcessTuple[1]
+                    if emoji == "R":
+                        await client.add_reaction(message, "✅")
+                    elif emoji == "X":
+                        await client.add_reaction(message, "❌")
+                except:
                     msg = "Something went wrong, please be sure you input the command correctly"
 
             # process !join to mean "join the most recently created roster"
