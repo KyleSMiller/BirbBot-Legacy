@@ -141,39 +141,44 @@ def openRoster():
     # create roster from saved rosters
     savedRosters = open("savedRosters.txt")
 
-    playerData = ["", ""]
+    playerData = []
     name = ""
     size = 0
     admin = "Raysparks#1042"
 
     rosterCount = 0
+    rosterList = []
 
     # count the number of rosters in the file
     for line in savedRosters:
-        if line.startswith("__end__"):
-            rosterCount += 1
+        if line == "":  # ignore empty file
+            return
+        elif line.startswith("__end__"):
+            rosterList.append([])
 
-    rosterList = [[name, size, admin, playerData]] * rosterCount
+    savedRosters.close()
+    savedRosters = open("savedRosters.txt")
+
     currentRoster = 0
 
     # store read data in a multidimensional list
     for line in savedRosters:
-        if line.startswith("name="):
-            name = line.split("=")[1]
-            rosterList[currentRoster][0] = name
-        elif line.startswith("size="):
+        if line[:5] == "name=":
+            name = line.split("=")[1].strip()
+            rosterList[currentRoster].append(name)
+        elif line[:5] == "size=":
             size = int(line.split("=")[1])
-            rosterList[currentRoster][1] = size
-        elif line.startswith("admin="):
-            admin = line.split("=")[1]
-            rosterList[currentRoster][2] = admin
-        elif line.startswith("__end__"):
+            rosterList[currentRoster].append(size)
+        elif line[:6] == "admin=":
+            admin = line.split("=")[1].strip()
+            rosterList[currentRoster].append(admin)
+        elif line[:3] == (":-:"):
+            playerName = line.split(",")[0][3:]
+            playerID = line.split(",")[1].strip()
+            playerData = [[playerName, playerID]]
+            rosterList[currentRoster].append(playerData)
+        elif line[:7] == "__end__":
             currentRoster += 1
-        else:
-            playerName = line.split(",")[0]
-            playerID = line.split(",")[1]
-            playerData = [playerName, playerID]
-            rosterList[currentRoster][3] = playerData
 
     savedRosters.close()
 
@@ -188,21 +193,24 @@ def saveRosters():
     # save all relevant roster data to .txt file
     rosterSaveFile = open("savedRosters.txt", "w")
 
-    for rosterToSave in recognizedInput.rosters:
-        name = recognizedInput.rosters[rosterToSave].getName()
-        size = len(recognizedInput.rosters[rosterToSave].getPlaySlots())
-        admin = recognizedInput.rosters[rosterToSave].getAdmin()
-        playerName = recognizedInput.rosters[rosterToSave].getPlaySlots()
-        playerID = recognizedInput.rosters[rosterToSave].getIDs()
+    for rosterToSave in recognizedInput.rosters.values():
+        try:
+            if type(rosterToSave) == str or type(rosterToSave) == None:  # ignore __default__ roster
+                continue
+            name = rosterToSave.getName()
+            size = int(rosterToSave.getSlots())
+            admin = rosterToSave.getAdmin()
+            playerName = rosterToSave.getPlaySlots()
+            playerID = rosterToSave.getIDs()
 
-        rosterSaveFile.write("name=" + str(name) + "\n")
-        rosterSaveFile.write("size=" + str(size) + "\n")
-        rosterSaveFile.write("admin=" + str(admin) + "\n")
-        for i in range(len(playerName)):
-            rosterSaveFile.write(str(playerName[i]) + "," + str(playerID[i]) + "\n")
-        rosterSaveFile.write("__end__\n")
-
-
+            rosterSaveFile.write("name=" + str(name) + "\n")
+            rosterSaveFile.write("size=" + str(size) + "\n")
+            rosterSaveFile.write("admin=" + str(admin) + "\n")
+            for i in range(len(playerName)):
+                rosterSaveFile.write(":-:" + str(playerName[i]) + "," + str(playerID[i]) + "\n")
+            rosterSaveFile.write("__end__\n")
+        except:  # ignore empty files
+            pass
 
     rosterSaveFile.close()
 
@@ -333,6 +341,7 @@ def processRosterCommand(message, author, authorID, roster):
             reaction = "X"
             msg = "You must be the roster's creator to use this command!"
 
+    saveRosters()
     return (msg, reaction)
 
 
@@ -381,6 +390,7 @@ async def on_message(message):
             elif cmd == "newroster":
                 try:
                     msg = createRoster(message, message.author)
+                    saveRosters()
                 except:
                     msg = "You must supply a roster size and name! ex: !newRoster 10 exampleRoster"
 

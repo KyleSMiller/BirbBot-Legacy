@@ -22,6 +22,12 @@ class Roster():
     def getPlaySlots(self):
         return self.__registeredPlayers
 
+    def getSlots(self):
+        return self.__slots
+
+    def getWaitSlots(self):
+        return self.__waitListSlots
+
     def getIDs(self):
         return self.__registeredPlayerIDs
 
@@ -55,6 +61,7 @@ class Roster():
             if self.__slots > len(self.__registeredPlayers):
                 for i in range(len(self.__registeredPlayers), self.__slots):
                     self.__registeredPlayers.append("OPEN SLOT")
+                    self.__registeredPlayerIDs.append("OPEN SLOT")
 
             # subtract slots
             elif self.__slots - 1 < len(self.__registeredPlayers):
