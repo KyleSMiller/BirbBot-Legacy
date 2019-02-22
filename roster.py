@@ -22,6 +22,9 @@ class Roster():
     def getPlaySlots(self):
         return self.__registeredPlayers
 
+    def getIDs(self):
+        return self.__registeredPlayerIDs
+
     def getAdmin(self):
         return self.__admin
 

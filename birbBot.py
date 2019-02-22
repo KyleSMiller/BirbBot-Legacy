@@ -136,6 +136,77 @@ def retrieveVoiceCommand(message, msgAuthor, msgAuthorID, cmd):
     return msg
 
 
+
+def openRoster():
+    # create roster from saved rosters
+    savedRosters = open("savedRosters.txt")
+
+    playerData = ["", ""]
+    name = ""
+    size = 0
+    admin = "Raysparks#1042"
+
+    rosterCount = 0
+
+    # count the number of rosters in the file
+    for line in savedRosters:
+        if line.startswith("__end__"):
+            rosterCount += 1
+
+    rosterList = [[name, size, admin, playerData]] * rosterCount
+    currentRoster = 0
+
+    # store read data in a multidimensional list
+    for line in savedRosters:
+        if line.startswith("name="):
+            name = line.split("=")[1]
+            rosterList[currentRoster][0] = name
+        elif line.startswith("size="):
+            size = int(line.split("=")[1])
+            rosterList[currentRoster][1] = size
+        elif line.startswith("admin="):
+            admin = line.split("=")[1]
+            rosterList[currentRoster][2] = admin
+        elif line.startswith("__end__"):
+            currentRoster += 1
+        else:
+            playerName = line.split(",")[0]
+            playerID = line.split(",")[1]
+            playerData = [playerName, playerID]
+            rosterList[currentRoster][3] = playerData
+
+    savedRosters.close()
+
+    # create roster objects from read data
+    for newRoster in rosterList:
+        recognizedInput.rosters[newRoster[0].lower()] = roster.Roster(newRoster[0], newRoster[1], newRoster[2])
+        for player in newRoster[3]:
+            recognizedInput.rosters[newRoster[0].lower()].registerPlayer(player[0], player[1])
+
+
+def saveRosters():
+    # save all relevant roster data to .txt file
+    rosterSaveFile = open("savedRosters.txt", "w")
+
+    for rosterToSave in recognizedInput.rosters:
+        name = recognizedInput.rosters[rosterToSave].getName()
+        size = len(recognizedInput.rosters[rosterToSave].getPlaySlots())
+        admin = recognizedInput.rosters[rosterToSave].getAdmin()
+        playerName = recognizedInput.rosters[rosterToSave].getPlaySlots()
+        playerID = recognizedInput.rosters[rosterToSave].getIDs()
+
+        rosterSaveFile.write("name=" + str(name) + "\n")
+        rosterSaveFile.write("size=" + str(size) + "\n")
+        rosterSaveFile.write("admin=" + str(admin) + "\n")
+        for i in range(len(playerName)):
+            rosterSaveFile.write(str(playerName[i]) + "," + str(playerID[i]) + "\n")
+        rosterSaveFile.write("__end__\n")
+
+
+
+    rosterSaveFile.close()
+
+
 def createRoster(message, author):
     rosterSize = int(message.content.lower().split()[1])
     newRosterName = message.content.split()[2]
@@ -266,6 +337,8 @@ def processRosterCommand(message, author, authorID, roster):
 
 
 
+# read from the roster save file and open all existing rosters
+openRoster()
 
 
 
