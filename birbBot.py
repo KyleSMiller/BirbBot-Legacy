@@ -153,7 +153,7 @@ def createRoster(message, author):
             del recognizedInput.rosters[newRosterName.lower()]
             msg = "You cannot use a name that is already reserved for another command!"
         elif recognizedInput.rosters[newRosterName.lower()].validRoster == "Size error":
-            msg = ("Roster must be between size 2 and 20, creating roster with default size 10."
+            msg = ("Roster must be between size 2 and 20 -- **creating your roster with default size 10.**"
                    " Use setSlot if you want to change size after initial roster creation.\n"
                    "ex: !exampleRoster setSlots 5")
         elif recognizedInput.rosters[newRosterName.lower()].validRoster == ">:(":
