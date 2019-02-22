@@ -258,9 +258,8 @@ def processRosterCommand(message, author, authorID, roster):
                 if recognizedInput.rosters[key] == roster:
                     del recognizedInput.rosters[key]
                     reaction = "R"
-                else:
-                    reaction = "X"
         else:
+            reaction = "X"
             msg = "You must be the roster's creator to use this command!"
 
     return (msg, reaction)
