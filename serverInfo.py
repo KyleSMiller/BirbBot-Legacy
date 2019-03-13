@@ -113,12 +113,25 @@ class ServerInfo:
             self.__page = requests.get(self.__address)
             self.__tree = html.fromstring(self.__page.content)
             self.getServerName(False)
-        # get ("active players/max players")
-        populationRaw = self.__tree.xpath("/html/body/div[2]/div[2]/div/h3/tt/text()")
-        self.__population = str(populationRaw[0])
-        # get the number of players on
-        self.__playerCount = self.__population.split("/")[0][1:]
-        return ("**" + str(self.__serverName) + " has __" + str(self.__population) + "__ people currently playing.**")
+            # get ("active players/max players")
+            populationRaw = self.__tree.xpath("/html/body/div[2]/div[2]/div/h3/tt/text()")
+            self.__population = str(populationRaw[0])
+            # get the number of players on from the xpath data, as the member variable for players cannot be
+            # guaranteed to be up-to-date when only the population is queried
+            self.__playerCount = self.__population.split("/")[0][1:]
+            return ("**" + str(self.__serverName) + " has __" +
+                    str(self.__population) + "__ people currently playing.**")
+        else:
+            # get max players
+            maxPlayers = self.__tree.xpath("/html/body/div[2]/div[2]/div/h3/tt/text()")
+            maxPlayers = maxPlayers[0].split("/")[1][:-1]  # extract the max players from the (#/#) format
+            # get the number of players currently online
+            self.__playerCount = len(self.__playerList)
+            # format the population
+            self.__population = "(" + str(self.__playerCount) + "/" + str(maxPlayers) + ")"
+            return ("**" + str(self.__serverName) + " has __" +
+                    str(self.__population) + "__ people currently playing.**")
+
 
     def getAll(self):
         try:
@@ -142,7 +155,7 @@ class ServerInfo:
                     return ("**" + str(self.__serverName) + " appears to be offline!**")
         except:
             return ("Something went wrong! Either " + str(self.__serverName) +
-                    " is offline, or Raysparks is an idiot. Probably both.")
+                    " is offline, or Raysparks is an idiot. Probably the latter.")
 
 
     def isCrashed(self, sendRequest=True):
@@ -150,9 +163,7 @@ class ServerInfo:
         if sendRequest:
             self.___serverListPage = requests.get(self.__usServers)
             self.__serverListTree = html.fromstring(self.___serverListPage.content)
-        print(self.__serverName)
         serverStatus = self.__serverListTree.xpath("//a[text()='" + self.__serverName + "']/@href")
-        print(serverStatus)
         # will return an empty list if server is not online
         if serverStatus == []:
             return True
