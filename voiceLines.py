@@ -21,6 +21,9 @@ class Voice:
             return random.choice(self.getRespect())
         elif lineType == "thank":
             return random.choice(self.getThank())
+        else:
+            return "something went wrong while processing the command, please alert Raysparks. " \
+                   "<exception: getResponse error \"unknown lineType\">"
 
 
 class AgathaArcher(Voice):
