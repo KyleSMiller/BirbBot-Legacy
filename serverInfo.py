@@ -55,7 +55,8 @@ class ServerInfo:
             "ducksauce",
             "P",
             "Thaedius",
-            "Marlop"
+            "Marlop",
+            "ムgòn ワominus ❁"
         ]
 
 
