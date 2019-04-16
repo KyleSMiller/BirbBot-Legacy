@@ -10,6 +10,7 @@ import voiceLines
 import recognizedInput
 import serverInfo
 import roster
+import VoiceCommandReader
 
 from passwords import adminPassword
 
@@ -29,28 +30,6 @@ respect = voiceLines.Respect()
 thank = voiceLines.Thank()
 birbSnark = voiceLines.BirbBotSnark()
 error = voiceLines.Error()
-
-
-
-def checkName(name, authorName, msgAuthorID, cmd):
-    # check if the name listed in the message is a name with a special response
-    if name.lower() == authorName or name.lower() == msgAuthorID:
-        # runs if user tries command on themselves
-        return (True, recognizedInput.selfResponseDict[str(cmd) + " self"])
-    elif name.lower() in recognizedInput.specialResponseNames:
-        # runs if user tries command on special response name
-        response = recognizedInput.specialResponseNames[name.lower()][recognizedInput.voiceLineCommands.index(cmd)]
-        if callable(response):
-            return (True, response())
-        else:
-            return (True, response)
-    elif name.lower() in recognizedInput.forbiddenNames and cmd != "taunt":
-        return (True, "no")
-    else:
-        if name != "":
-            return (False, name + ", ")
-        else:
-            return (False, name)
 
 
 def retreiveServerInfo(message, cmd):
@@ -101,41 +80,6 @@ def retreiveServerInfo(message, cmd):
             # runs if get all info from both server command is given
             msg = recognizedInput.messageCommandDict["ms"][0]() + "\n\n" + recognizedInput.messageCommandDict["ms"][1]()
     return msg
-
-
-def retrieveVoiceCommand(message, msgAuthor, msgAuthorID, cmd):
-    voice = "no voice"
-    name = ""
-    try:
-        # runs if voice or name is given
-        if message.content.lower().split()[1] in recognizedInput.voices:
-            voice = message.content.lower().split()[1]
-            # get name if voice is given
-            for i, j in enumerate(message.content.lower().split()):
-                if i != 0 and i != 1:
-                    name += str(j).capitalize()
-                    if i != len(message.content.lower().split()) - 1:
-                        name += " "
-        else:
-            # get name if no voice is given
-            for i, j in enumerate(message.content.lower().split()):
-                if i != 0:
-                    name += str(j).capitalize()
-                    if i != len(message.content.lower().split()) - 1:
-                        name += " "
-    except:
-        # runs if no name or voice is given
-        pass
-
-    # check if name is special response name
-    nameCheck = checkName(name, msgAuthor.lower(), msgAuthorID, cmd.lower())
-    msg = nameCheck[1]
-    if not nameCheck[0]:
-        # runs if name is not identified as special response name
-        msg += random.choice(recognizedInput.messageCommandDict[cmd].getResponse(voice))
-    return msg
-
-
 
 def openRoster():
     # create roster from saved rosters
@@ -376,8 +320,15 @@ async def on_message(message):
 
     if message.content.startswith("!"):
         # get all necessary information from a command
-        cmd = message.content.lower().split()[0][1:]
+        cmd = message.content.lower().split()[0][1:]  # get the first word and remove the "!"
         msg = ""
+
+        if cmd == "taunt" or cmd == "respect" or cmd == "thank":
+            voiceCommandReader = VoiceCommandReader.VoiceCommandReader(message, msgAuthor, msgAuthorID, cmd)
+            msg = voiceCommandReader.retrieveVoiceCommand(recognizedInput.voices)
+
+
+
 
         if cmd not in recognizedInput.voiceLineCommands:
             # runs if command is not a voice command
