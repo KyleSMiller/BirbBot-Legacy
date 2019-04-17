@@ -8,12 +8,10 @@ gw  : Gracious Welcome
 Command                    | Result
 --------------------------------------------------------
 ![server]                  | Return server info
-![server]map               | Return map of specified server
-![server]pop               | Return population of specified server
-![server]players           | Return player list os specified server
-![server]checkfor <name>   | Search for player or group
+!ms                        | Return info from all Moorland Skirmishers servers
+!checkfor [name]           | Search for player or group across all servers
                            |
-!hello                     | Say hello back to the sender
+!hello                     | Say hello
 !help                      | Directs you to documentation
 !taunt <class> <name>      | Say a taunt. If class specified, use class taunt. If name specified, direct insult at name
 !respect <class> <name>    | Say a respect line. If class is specified, use class taunt. If name is specified, direct insult at name

@@ -150,19 +150,16 @@ dmCommands = {  # commands that will result in a DM response
             "--------------------------------------------------------\n"
             "!hello                     | Say hello\n"
             "![server]                  | Return server info\n"
-            "![server] map              | Return map\n"
-            "![server] pop              | Return population\n"
-            "![server] players          | Return player list\n"
-            "![server] checkfor [name]  | Search for player or group\n"
+            "!ms                        | Return info from all Moorland Skirmishers servers\n"
+            "!checkfor [name]           | Search for player or group\n"
 
             "!taunt <class> <name>      | Say a taunt line\n"
             "!respect <class> <name>    | Say a respect line\n"
             "!thank <class> <name>      | Say a thanks line ``` \n"
 
             "\n__**Server Names**__\n"
-            "**gmv** : Gracious Map Votes\n"
-            "**gw** : Gracious Welcome\n"
-            "**ms** : Both servers"
+            "**64** : Main 64 slot Chivalry server\n"
+            "**62** : Secondary 62 slot Chivalry server\n"
 
             "\n__**Class Names**__\n"
             "agathaMAA\n"
@@ -186,14 +183,15 @@ dmCommands = {  # commands that will result in a DM response
             "Report any bugs found to Raysparks\n"
 
             "\n__**Examples**__\n"
-            "!gmv map   --->   \"Gracious Map Votes is playing **aocffa-moor_p**\"\n"
-            "!gw checkFor admins   --->   \"There are currently admins on Gracious Welcome!\"\n"
+            "!ms \"Mooland Skirmishers: Gracious Welcome is playing aocffa-moor_p with a population... \""
+            "!checkFor admins   --->   \"There are currently admins on Gracious Welcome!\"\n"
             "!taunt  --->   \"Your wife is a hobby horse!\"\n"
             "!thank Malric   --->   \"Malric, thank you brother!\"\n"
             "!respect agathaVan Baron Von Moorland    --->   \"Baron Von Moorland, I dare say you matched even my own skills\"\n\n"
-            "**__Use !rosterHelp if you wanted documentation for roster commands**",
+            "Note: Roster commands have been depreciated at this time and will not function. Let Raysparks know if you want to see their return",
 
-    "rosterhelp": "__**BIRB BOT ROSTER COMMAND DOCUMENTATION**__\n"
+    "rosterhelp": "__**THESE COMMANDS HAVE BEEN DEPRECIATED DUE TO GENERAL BUGGINESS AND LACK OF USE**__\n\n"
+                  "__**BIRB BOT ROSTER COMMAND DOCUMENTATION**__\n"
                   "<> : signifies optional parameter\n"
                   "[]: signifies required parameter\n"
                   "__*Do not include brackets when entering command*__\n\n"
@@ -225,9 +223,7 @@ dmCommands = {  # commands that will result in a DM response
                   "!exampleRoster setSlots 10   --->   changes the roster size to 10 with 5 waiting list slots"
 }
 
-hiddenCommandDict = {
-    # only holds hidden commands that do not begin with "![cmd]"
-    # input: output
+hiddenCommandDict = {  # commands that do not begin with "!"
     "come hither": "come hither",
     "good bot": "*happy birb noises*",
     "best bot": "*happy birb noises*",
