@@ -3,10 +3,6 @@
 import voiceLines
 import serverInfo
 
-# create server info objects :: gracious map votes, gracious welcome
-gw = serverInfo.ServerInfo("GW")
-gmv = serverInfo.ServerInfo("GMV")
-
 birbBotNames = [
     "birbbot",
     "birb bot",
@@ -34,7 +30,7 @@ voices = {
     "masonvan": voiceLines.MasonVanguard(),
     "masonvanguard": voiceLines.MasonVanguard(),
     "masonknight": voiceLines.MasonKnight(),
-    "unused": voiceLines.UnusedVoice()
+    "unused": voiceLines.UnusedVoice(),
 }
 
 
@@ -95,7 +91,7 @@ specialResponseNames = {
               "respect": "https://www.youtube.com/watch?v=dfr4PrFxm0s",
               "thank": "https://www.youtube.com/watch?v=dfr4PrFxm0s"
               },
-    "@everyone": {"taunt": "What if instead everyone taunts you for thinking something this simple would work, {0.author.mention}?",
+    "@everyone": {"taunt": "What if instead, everyone taunts you for thinking something this simple would work, {0.author.mention}?",
                   "respect": "We appreciate the sentiment, but this might not be the best way to show it, {0.author.mention}",
                   "thank": "You could better show your thankfulness by writing us each personal thank you letters, don't you think, {0.author.mention}?"
                   },

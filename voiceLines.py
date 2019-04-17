@@ -418,6 +418,10 @@ class UnusedVoice(Voice):
             "Only unused taunts exist. try: \"!taunt unused\""
         ]
 
+
+allVoices = [AgathaArcher(), AgathaManAtArms(), AgathaVanguard(), AgathaKnight(),
+             MasonArcher(), MasonManAtArms(), MasonVanguard(), MasonKnight()]
+
 class NoOneHere:
 
     def __init__(self):
@@ -462,7 +466,7 @@ class BirbBotSnark:
             "I'll whip your ass, {0.author.mention}",
             "{0.author.mention} *angry birb noises*",
             "This is going to HR, {0.author.mention}",
-            "Ask not for whom the ban hammer comes, {0.author.mention}, it comes for thee."
+            "Ask not for whom the ban hammer comes, {0.author.mention}. It comes for thee."
         ]
 
 

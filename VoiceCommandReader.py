@@ -1,6 +1,6 @@
 import random
 import recognizedInput
-from voiceLines import BirbBotSnark
+from voiceLines import BirbBotSnark, allVoices
 
 class VoiceCommandReader:
 
@@ -28,15 +28,17 @@ class VoiceCommandReader:
             voice = None
             name = None
 
-        if voice != None:
-            msg = name + ", "
-        else:
-            msg = ""
+        msg = ""
 
         if self.__isSpecialResponseName(name):
             msg += self.__getSpecialResponse(name, voices, voice)
         else:
-            msg += voices[voice].getResponse(voice)
+            if name != None and name != "":
+                msg = name + ", "
+            if voice != None:
+                msg += voices[voice].getResponse(self.__command)
+            else:
+                msg += random.choice(allVoices).getResponse(self.__command)
         return msg
 
 
