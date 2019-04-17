@@ -30,8 +30,8 @@ class VoiceCommandReader:
 
         msg = ""
 
-        if self.__isSpecialResponseName(name):
-            msg += self.__getSpecialResponse(name, voices, voice)
+        if self.__isSpecialResponseName(name.lower()):
+            msg += self.__getSpecialResponse(name.lower(), voices, voice)
         else:
             if name != None and name != "":
                 msg = name + ", "
