@@ -7,12 +7,6 @@ import serverInfo
 gw = serverInfo.ServerInfo("GW")
 gmv = serverInfo.ServerInfo("GMV")
 
-
-taunts = voiceLines.Taunts()
-respects = voiceLines.Respect()
-thanks = voiceLines.Thank()
-snarks = voiceLines.BirbBotSnark()
-
 birbBotNames = [
     "birbbot",
     "birb bot",
@@ -27,18 +21,21 @@ rosters = {
 
 }
 
+#TODO: voices in dictionary with value as public access response list
 
-voices = [
-    "agathamaa",
-    "agathaarcher",
-    "agathavan",
-    "agathaknight",
-    "masonmaa",
-    "masonarcher",
-    "masonvan",
-    "masonknight",
-    "unused"
-    ]
+voices = {
+    "agathaarcher": voiceLines.AgathaArcher(),
+    "agathamaa": voiceLines.AgathaManAtArms(),
+    "agathavan": voiceLines.AgathaVanguard(),
+    "agathavanguard": voiceLines.AgathaVanguard(),
+    "agathaknight": voiceLines.AgathaKnight(),
+    "masonarcher": voiceLines.MasonArcher(),
+    "masonmaa": voiceLines.MasonManAtArms(),
+    "masonvan": voiceLines.MasonVanguard(),
+    "masonvanguard": voiceLines.MasonVanguard(),
+    "masonknight": voiceLines.MasonKnight(),
+    "unused": voiceLines.UnusedVoice()
+}
 
 
 feintLines = [
@@ -71,25 +68,48 @@ forbiddenNames = [
     "donald trump",
     "trump",
     "donaldtrump",
-    "realdonaldtrump"
-    ]
+    "realdonaldtrump",
+    "jordan peterson",
+    "jordanpeterston",
+    "jordan_peterson"
+]
 
 
 specialResponseNames = {
-    # index 0 for taunt, index 1 for respect, index 2 for thank
-    "birbbot": [snarks.getResponse, "Thank you, {0.author.mention} :hearts:", "You are very welcome, {0.author.mention} :hugging:"],
-    "birb bot": [snarks.getResponse, "Thank you, {0.author.mention} :hearts:", "You are very welcome, {0.author.mention} :hugging:"],
-    "birb_bot": [snarks.getResponse, "Thank you, {0.author.mention} :hearts:", "You are very welcome, {0.author.mention} :hugging:"],
-    "<@511403822418231296>": [snarks.getResponse, "Thank you, {0.author.mention} :hearts:", "You are very welcome, {0.author.mention} :hugging:"],
-    "women": ["You're trash, {0.author.mention}, learn some respect", "https://www.youtube.com/watch?v=dfr4PrFxm0s", "https://www.youtube.com/watch?v=dfr4PrFxm0s"],
-    "@everyone": ["You can't use me to spam the server for you, dipshit", "You can't use me to spam the server for you, dipshit", "You can't use me to spam the server for you, dipshit"],
-    "@here": ["I'm not gonna do that", "I'm not gonna do that", "I'm not gonna do that"]
+    "birbbot": {"taunt": voiceLines.BirbBotSnark(),
+                "respect": "Thank you, {0.author.mention} :hearts:",
+                "thank": "You are very welcome, {0.author.mention} :hugging:"
+                },
+    "birb bot": {"taunt": voiceLines.BirbBotSnark(),
+                 "respect": "Thank you, {0.author.mention} :hearts:",
+                 "thank": "You are very welcome, {0.author.mention} :hugging:"
+                 },
+    "birb_bot": {"taunt": voiceLines.BirbBotSnark(),
+                 "respect": "Thank you, {0.author.mention} :hearts:",
+                 "thank": "You are very welcome, {0.author.mention} :hugging:"
+                 },
+    "<@511403822418231296>": {"taunt": voiceLines.BirbBotSnark(),
+                              "respect": "Thank you, {0.author.mention} :hearts:",
+                              "thank": "You are very welcome, {0.author.mention} :hugging:"},
+    "women": {"taunt": "You're trash, {0.author.mention}, learn some respect.",
+              "respect": "https://www.youtube.com/watch?v=dfr4PrFxm0s",
+              "thank": "https://www.youtube.com/watch?v=dfr4PrFxm0s"
+              },
+    "@everyone": {"taunt": "What if instead everyone taunts you for thinking something this simple would work, {0.author.mention}?",
+                  "respect": "We appreciate the sentiment, but this might not be the best way to show it, {0.author.mention}",
+                  "thank": "You could better show your thankfulness by writing us each personal thank you letters, don't you think, {0.author.mention}?"
+                  },
+    "@here": {"taunt": "What if instead everyone taunts you for thinking something this simple would work, {0.author.mention}?",
+              "respect": "We appreciate the sentiment, but this might not be the best way to show it, {0.author.mention}",
+              "thank": "You could better show your thankfulness by writing us each personal thank you letters, don't you think, {0.author.mention}?"
+              }
 }
 
+
 selfResponseDict = {
-    "taunt self": "Are you feeling okay, {0.author.mention}?",
-    "thank self": "Don't flatter yourself, {0.author.mention}",
-    "respect self": "I would, but the chat is too full of your ego for me to send a message right now, {0.author.mention}",
+    "taunt": "Are you feeling okay, {0.author.mention}?",
+    "thank": "Don't flatter yourself, {0.author.mention}",
+    "respect": "I would, but the chat is too full of your ego for me to send a message right now, {0.author.mention}",
     "forbiddenName": "No"
 }
 
@@ -100,26 +120,20 @@ voiceLineCommands = [
     "thank"
 ]
 
-serverCommands = [
-    "gw",
-    "gmv",
-    "64",
-    "62",
+recognizedServers = {
+    "64": serverInfo.ServerInfo("http://refactor.jp/chivalry/?serverId=1194830", "66.151.138.224:3170", "Gracious Welcome"),
+    "62": serverInfo.ServerInfo("http://refactor.jp/chivalry/?serverId=1301262", "66.151.138.198:6000", "Gracious Secondary")
+}
+
+allInfoCommands = [  # commands that will return all server info
     "ms"
 ]
 
-messageCommandDict = {
-    # voice line commands here
-    "taunt": taunts,
-    "respect": respects,
-    "thank": thanks,
-    # server info commands here
-    "gw": [[gw, gw.getAll, "Gracious Welcome"], ["map", gw.getMap], ["pop", gw.getPopulation], ["players", gw.getPlayerList], ["checkfor"]],
-    "64": [[gw, gw.getAll, "Gracious Welcome"], ["map", gw.getMap], ["pop", gw.getPopulation], ["players", gw.getPlayerList], ["checkfor"]],
-    "gmv": [[gmv, gmv.getAll, "Gracious Map Votes"], ["map", gmv.getMap], ["pop", gmv.getPopulation], ["players", gmv.getPlayerList], ["checkfor"]],
-    "62": [[gmv, gmv.getAll, "Gracious Map Votes"], ["map", gmv.getMap], ["pop", gmv.getPopulation], ["players", gmv.getPlayerList], ["checkfor"]],
-    "ms": [gw.getAll, gmv.getAll],
-    # general one-response commands here
+checkForCommands = [  # commands that will activate the checkfor feature
+    "checkfor",
+]
+
+messageCommands = {  # general one-response commands
     "hello": "Hello, {0.author.mention}",
     "scream": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
     "f10": "I'm calling the police, {0.author.mention}",
@@ -127,7 +141,10 @@ messageCommandDict = {
     "quadfeint": "Sorry, this move is usable only by god himself",
     "sheildjump": "Reported for hacks",
     "z4" : "KILL THOSE ARCHERS!",
-    # DM commands here
+    "help": "Documentation has been DMed to you. If you did not receive it, please open your DMs to non-friends"
+}
+
+dmCommands = {  # commands that will result in a DM response
     "help": "__**BIRB BOT COMMAND DOCUMENTATION**__\n"
             "<> : signifies optional parameter\n"
             "[]: signifies required parameter\n"
