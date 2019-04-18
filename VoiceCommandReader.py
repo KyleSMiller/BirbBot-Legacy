@@ -30,6 +30,7 @@ class VoiceCommandReader:
 
         msg = ""
 
+        # determine if special response is needed
         if self.__isSpecialResponseName(name.lower()):
             msg += self.__getSpecialResponse(name.lower(), voices, voice)
         else:

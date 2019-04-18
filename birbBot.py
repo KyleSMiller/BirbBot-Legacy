@@ -5,7 +5,7 @@
 # Work with Python 3.5
 import discord
 import recognizedInput
-import VoiceCommandReader
+from VoiceCommandReader import VoiceCommandReader
 from ServerInfoCommandReader import ServerInfoCommandReader
 
 from passwords import adminPassword
@@ -14,6 +14,10 @@ botTokentxt = open("botToken.txt")
 TOKEN = botTokentxt.readline().strip()
 
 client = discord.Client()
+
+
+COMMAND_SYMBOL = "!"  # character that signifies the start of a BirbBot command
+
 
 @client.event
 async def on_message(message):
@@ -38,13 +42,12 @@ async def on_message(message):
         #     await client.send_message(targetChannel, msg)
 
 
-    if message.content.startswith("!"):
-        # get all necessary information from a command
+    if message.content.startswith(COMMAND_SYMBOL):
         cmd = message.content.lower().split()[0][1:]  # get the first word and remove the "!"
         msg = ""
 
         if cmd in recognizedInput.voiceLineCommands:
-            voiceCommandReader = VoiceCommandReader.VoiceCommandReader(message, msgAuthor, msgAuthorID, cmd)
+            voiceCommandReader = VoiceCommandReader(message, msgAuthor, msgAuthorID, cmd)
             msg = voiceCommandReader.retrieveVoiceCommand(recognizedInput.voices)
 
         elif cmd in recognizedInput.recognizedServers:
@@ -66,7 +69,7 @@ async def on_message(message):
         if msg != "":
             try:
                 await client.send_message(message.channel, msg.format(message))
-            except:
+            except KeyError:  # if message contains text between {braces} that causes errors with .format()
                 await client.send_message(message.channel, msg)
 
 
