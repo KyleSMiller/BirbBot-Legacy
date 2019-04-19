@@ -1,8 +1,7 @@
 # BirbBot
-# Get info from Gracious Welcome and Gracious Map Votes
-
-
+# Discord bot for the Moorland Skirmishers: Gracious Welcome server
 # Work with Python 3.5
+
 import discord
 import recognizedInput
 from VoiceCommandReader import VoiceCommandReader
@@ -43,7 +42,7 @@ async def on_message(message):
 
 
     if message.content.startswith(COMMAND_SYMBOL):
-        cmd = message.content.lower().split()[0][1:]  # get the first word and remove the "!"
+        cmd = message.content.lower().split()[0][len(COMMAND_SYMBOL):]  # get the first word and remove COMMAND_SYMBOL
         msg = ""
 
         if cmd in recognizedInput.voiceLineCommands:
@@ -75,7 +74,6 @@ async def on_message(message):
 
     # hidden commands
     elif message.content.lower() in recognizedInput.hiddenCommandDict:
-        # runs when hidden command is used
         msg = recognizedInput.hiddenCommandDict[message.content.lower()]
         await client.send_message(message.channel, msg)
 
