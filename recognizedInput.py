@@ -117,8 +117,10 @@ voiceLineCommands = [
 ]
 
 recognizedServers = {
-    "64": serverInfo.ServerInfo("http://refactor.jp/chivalry/?serverId=1194830", "66.151.138.224:3170", "Gracious Welcome"),
-    "62": serverInfo.ServerInfo("http://refactor.jp/chivalry/?serverId=1301262", "66.151.138.198:6000", "Gracious Secondary")
+    "main": serverInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=24", "66.151.138.224:3170", "Gracious Welcome"),
+    "64": serverInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=24", "66.151.138.224:3170", "Gracious Welcome"),
+    "test": serverInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=25", "66.151.138.224:3175", "Moorland Map Testing"),
+    "mord": serverInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=17", "66.151.138.224:13301", "Moordhau Skirmishers")
 }
 
 allInfoCommands = [  # commands that will return all server info
