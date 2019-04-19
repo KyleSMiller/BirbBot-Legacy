@@ -7,15 +7,18 @@ from recognizedInput import recognizedServers
 class ServerInfoCommandReader:
 
     @staticmethod
-    def retrieveAllInfo():
-        msg = ""
-        for server in recognizedServers:
-            msg += ServerInfoCommandReader.retrieveServerInfo(server) + "\n"
-
-    @staticmethod
     def retrieveServerInfo(target):
         targetServer = recognizedServers[target]
         msg = targetServer.getAll()
+        return msg
+
+    @staticmethod
+    def retrieveAllInfo():
+        msg = "**__CHIVALRY: MEDIEVAL WARFARE SEVERS**__\n"
+        msg += recognizedServers["main"].getAll() + "\n"
+        msg += recognizedServers["test"].getAll() + "\n"
+        msg += "**__MORDHAU SERVERS**__\n"
+        msg += recognizedServers["mord"].getAll() + "\n"
         return msg
 
     @staticmethod
@@ -23,7 +26,7 @@ class ServerInfoCommandReader:
         nameList = message.content.split()[1:]
         name = " ".join(nameList)
         if name == "@everyone" or name == "@here":
-            return "try harder, {0.author.mention}"
+            return "Try harder, {0.author.mention}"
         for server in recognizedServers:
             if server.checkFor(name):
                 return str(name) + " is on " + server.getName()
