@@ -73,7 +73,7 @@ class ServerInfo:
         map = self.__getMap()
         playerCount = self.__getPlayerCount()
         playerList = self.__getPlayerList()
-        serverInfo = self.__formatInfo(serverName, map, playerCount, playerList)
+        serverInfo = self.__formatInfo()
         return serverInfo
 
     def checkFor(self, player):
@@ -170,21 +170,16 @@ class ServerInfo:
         pass
 
 
-    def __formatInfo(self, serverName, map, playerCount, playerList):
+    def __formatInfo(self):
         """
         Format all the retrieved server info into a response for BirbBot
-        :param serverName  the name of the server
-        :param map         the map the server is playing
-        :playerCount       the (#/#) formatted string of players on the server
-        :playerList        list of all players currently on the server
         :return String     the formatted server info response that BirbBot will present
         """
-        formattedInfo = ("**__" + str(serverName) + "__ is playing __"
-                         + str(map) + "__ with a population of __"
-                         + str(playerCount) + "__**\n")
+        formattedInfo = ("**__" + str(self.__serverName) + "__ is playing __"
+                         + str(self.__map) + "__ with a population of __"
+                         + str(self.__population) + "__**\n")
         if self.__getCurrentPlayers() != 0:
-            for player in playerList:
-                formattedInfo += "|  " + player + "  |"
+            formattedInfo += str(self.__playerList)
         else:
             formattedInfo += NoOneHere().getResponse()
 
