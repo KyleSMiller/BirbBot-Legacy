@@ -61,6 +61,9 @@ async def on_message(message):
         elif cmd in recognizedInput.messageCommands:
             msg = recognizedInput.messageCommands[cmd]
 
+        elif cmd in recognizedInput.multiResponseCommands:
+            msg = recognizedInput.multiResponseCommands[cmd].getResponse()
+
         elif cmd in recognizedInput.dmCommands:
             await client.send_message(message.author, recognizedInput.dmCommands[cmd])
 

@@ -16,9 +16,6 @@ rosters = {
     "__default__": ""  # will store the default roster used in !join
 
 }
-
-#TODO: voices in dictionary with value as public access response list
-
 voices = {
     "agathaarcher": voiceLines.AgathaArcher(),
     "agathamaa": voiceLines.AgathaManAtArms(),
@@ -117,10 +114,10 @@ voiceLineCommands = [
 ]
 
 recognizedServers = {
-    "main": serverInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=24", "66.151.138.224:3170", "Gracious Welcome"),
-    "64": serverInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=24", "66.151.138.224:3170", "Gracious Welcome"),
-    "test": serverInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=25", "66.151.138.224:3175", "Moorland Map Testing"),
-    "mord": serverInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=17", "66.151.138.224:13301", "Moordhau Skirmishers")
+    "main": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=24", "66.151.138.224:3170", "Gracious Welcome"),
+    "64": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=24", "66.151.138.224:3170", "Gracious Welcome"),
+    "test": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=25", "66.151.138.224:3175", "Moorland Map Testing"),
+    "mord": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=17", "66.151.138.224:13301", "Moordhau Skirmishers")
 }
 
 allInfoCommands = [  # commands that will return all server info
@@ -133,13 +130,17 @@ checkForCommands = [  # commands that will activate the checkfor feature
 
 messageCommands = {  # general one-response commands
     "hello": "Hello, {0.author.mention}",
+    "goodnight": "Goodnight, {0.author.mention}",
     "scream": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "screm": ":screm:",
+    "kiss": ":kissing_heart:",
+    "arrest": ":police_car:",
     "f10": "I'm calling the police, {0.author.mention}",
     "c": "AAAARRRRRRRRRRRGGGGGGGGGGGGGGG",
     "quadfeint": "Sorry, this move is usable only by god himself",
     "sheildjump": "Reported for hacks",
-    "z4" : "KILL THOSE ARCHERS!",
-    "help": "Documentation has been DMed to you. If you did not receive it, please open your DMs to non-friends"
+    "z4": "KILL THOSE ARCHERS!",
+    "help": "Documentation has been sent to you. If you did not receive it, please make your DM's public"
 }
 
 dmCommands = {  # commands that will result in a DM response
@@ -232,5 +233,17 @@ hiddenCommandDict = {  # commands that do not begin with "!"
     "fantastic bot": "*happy birb noises*",
     "amazing bot": "*happy birb noises*",
     "great bot": "*happy birb noises*",
-    "what is malric": "a dude!"
+    "what is malric": "a dude!",
+    "goodnight birbbot": "goodnight, {0.author.mention}",
+    "goodnight birb bot": "goodnight, {0.author.mention}",
+    "goodnight birb_bot": "goodnight, {0.author.mention}",
+    "goodnight <@511403822418231296>" : "goodnight, {0.author.mention}",
+    "goodnight, birbbot": "goodnight, {0.author.mention}",
+    "goodnight, birb bot": "goodnight, {0.author.mention}",
+    "goodnight, birb_bot": "goodnight, {0.author.mention}",
+    "goodnight, <@511403822418231296>" : "goodnight, {0.author.mention}"
+}
+
+multiResponseCommands = {  # commands that have more than one possible response
+    "!hello": voiceLines.Hello()
 }
