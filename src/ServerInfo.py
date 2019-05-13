@@ -26,7 +26,7 @@ class ServerInfo:
         self.__population = ""
         self.__playerList = None
 
-        self.__chivAdmins = [
+        self.__admins = [
             "Baron voŋ Moorland",
             "Raysparks",
             "Sir Boring",
@@ -40,7 +40,7 @@ class ServerInfo:
             "Beständig",
             "bone",
             "flask",
-            "『Ushiki』",
+            "『Sushiki』",
             "Walkin",
             "Eggplant",
             "Tez",
@@ -50,7 +50,7 @@ class ServerInfo:
             "P",
             "Thaedius",
             "Marlop",
-            "ムgòn ワominus ❁"
+            "ムgòn Đominus"
         ]
 
 
@@ -76,20 +76,30 @@ class ServerInfo:
         serverInfo = self.__formatInfo()
         return serverInfo
 
-    def checkFor(self, player):
+    def isInServer(self, player):
         """
         Check the server for a specific player
         :param player  The player to check the server for
         :return        True if player is currently connected to server, False if not currently connected
         """
-        pass
+        if "•҉" in player:  # remove the moorlands flowery from name
+            floweryPosition = player.find("҉")
+            strippedPlayer = player[:floweryPosition] + player[floweryPosition + 1:]
+            return self.__playerList.checkFor(strippedPlayer)
+        if "❊" in player:  # remove mordhau flowery from name
+            floweryPosition = player.find("❊")
+            strippedPlayer = player[:floweryPosition] + player[floweryPosition + 1:]
+            return self.__playerList.checkFor(strippedPlayer)
 
-    def checkForAdmin(self):
+    def isAdminInServer(self):
         """
         Check the server for an administrator
         :return  True if an admin is currently connected, False if none are currently connected
         """
-        pass
+        for admin in self.__admins:
+            if self.__playerList.checkFor(admin):
+                return True
+        return False
 
     def __login(self, username, password):
         """

@@ -17,6 +17,10 @@ class PlayerList:
     def __str__(self):
         return self.__playerList
 
+    def checkFor(self, player):
+        # check if player is in the player list
+        return player in self.__players
+
     def __simpleFormatPlayerList(self):
         for playerNum, player in enumerate(self.__players):
             if playerNum % 4 == 0 and playerNum != 0:
