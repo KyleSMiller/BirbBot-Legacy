@@ -1,4 +1,4 @@
-import serverInfo
+import ServerInfo
 from recognizedInput import recognizedServers
 
 # Gracious Welcome:  66.151.138.224:3170  "http://refactor.jp/chivalry/?serverId=1194830"

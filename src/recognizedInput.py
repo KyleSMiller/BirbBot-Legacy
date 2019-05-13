@@ -1,7 +1,7 @@
 # store lists of recognized input and other lists birbBot checks but doesn't say (mostly)
 
 import voiceLines
-import serverInfo
+import ServerInfo
 
 birbBotNames = [
     "birbbot",

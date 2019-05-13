@@ -1,5 +1,5 @@
 from voiceLines import NoOneHere
-from passwords import queryLoginUsername, queryLoginPassword
+from resources.passwords import queryLoginUsername, queryLoginPassword
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By

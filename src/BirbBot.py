@@ -7,7 +7,7 @@ import recognizedInput
 from VoiceCommandReader import VoiceCommandReader
 from ServerInfoCommandReader import ServerInfoCommandReader
 
-from passwords import adminPassword
+from resources.passwords import adminPassword
 
 botTokentxt = open("botToken.txt")
 TOKEN = botTokentxt.readline().strip()
