@@ -241,7 +241,16 @@ hiddenCommandDict = {  # commands that do not begin with "!"
     "goodnight, birbbot": "goodnight, {0.author.mention}",
     "goodnight, birb bot": "goodnight, {0.author.mention}",
     "goodnight, birb_bot": "goodnight, {0.author.mention}",
-    "goodnight, <@511403822418231296>" : "goodnight, {0.author.mention}"
+    "goodnight, <@511403822418231296>" : "goodnight, {0.author.mention}",
+    "i love you birbbot": "I love you too, {0.author.mention}",
+    "i love you birb bot": "I love you too, {0.author.mention}",
+    "i love you birb_bot": "I love you too, {0.author.mention}",
+    "i love you <@511403822418231296>": "I love you too, {0.author.mention}",
+    "i love you, birbbot": "I love you too, {0.author.mention}",
+    "i love you, birb bot": "I love you too, {0.author.mention}",
+    "i love you, birb_bot": "I love you too, {0.author.mention}",
+    "i love you, <@511403822418231296>": "I love you too, {0.author.mention}"
+
 }
 
 multiResponseCommands = {  # commands that have more than one possible response
