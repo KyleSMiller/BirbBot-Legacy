@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from bs4 import BeautifulSoup
+from lxml import html
 
 
 # Gracious Welcome:  66.151.138.224:3170  "http://refactor.jp/chivalry/?serverId=1194830"
@@ -61,9 +61,13 @@ class ServerInfo:
         """
         session = self.__login(queryLoginUsername, queryLoginPassword)
         # wait for the login to process before searching for data to scrape
-
         WebDriverWait(session, 3).until(EC.presence_of_element_located((By.ID, "ContentPlaceHolder1_div")))
-        self.__getPageSource(session)
+        pageSource = session.page_source  # store in placeholder variable first, cant be directly made into html object
+        self.__pageSource = html.fromstring(pageSource)
+
+        print(self.__pageSource.xpath("//*[@id='ContentPlaceHolder1_div']/div/text()")[0])  # no server access
+
+        session.close()
         # gather all relevant server info and return it after it is formatted
         serverName = self.__getServerName()
         map = self.__getMap()
@@ -107,10 +111,6 @@ class ServerInfo:
         loginButton.click()
 
         return browser
-
-    def __getPageSource(self, page):
-        pageSource = BeautifulSoup(page.page_source, "lxml")
-        print(pageSource)
 
     def __isOnline(self):
         """
