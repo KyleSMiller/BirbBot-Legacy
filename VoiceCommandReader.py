@@ -11,12 +11,12 @@ class VoiceCommandReader:
         self.__command = command
 
 
-    """
-    Retrieve a voice line response from a command flagged as a voice line command
-    :param voices  A dictionary of recognized voices and responses
-    :return        the response voice line
-    """
     def retrieveVoiceCommand(self, voices):
+        """
+        Retrieve a voice line response from a command flagged as a voice line command
+        :param voices  A dictionary of recognized voices and responses
+        :return        the response voice line
+        """
         # extract the desired voice and name from the command
         if len(self.__message.content.lower().split()) > 1:  # if more than the base command is provided
             voice = (self.__message.content.lower().split()[1] if self.__message.content.lower().split()[1] in voices.keys()
@@ -44,12 +44,12 @@ class VoiceCommandReader:
 
 
 
-    """
-    Check if the voice command target name is a special response name
-    :param name  the name to check
-    :return      boolean of if name is a name with a special response
-    """
     def __isSpecialResponseName(self, name):
+        """
+        Check if the voice command target name is a special response name
+        :param name  the name to check
+        :return      boolean of if name is a name with a special response
+        """
         if name == self.__author or name == self.__authorID:
             return True
         elif name in recognizedInput.specialResponseNames.keys():
@@ -59,14 +59,14 @@ class VoiceCommandReader:
         else:
             return False
 
-    """
-    Retrieve the special response for the provided name
-    :param name    the name to get the special response for
-    :param voices  A dictionary of recognized voices and responses
-    :param voice   the requested voice to get a response in
-    :return        the special response for the provided name
-    """
     def __getSpecialResponse(self, name, voices, voice):
+        """
+        Retrieve the special response for the provided name
+        :param name    the name to get the special response for
+        :param voices  A dictionary of recognized voices and responses
+        :param voice   the requested voice to get a response in
+        :return        the special response for the provided name
+        """
         if name == self.__author or name == self.__authorID:
             return recognizedInput.selfResponseDict[self.__command]
         elif name in recognizedInput.specialResponseNames.keys():
