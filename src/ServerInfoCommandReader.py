@@ -14,12 +14,25 @@ class ServerInfoCommandReader:
 
     @staticmethod
     def retrieveAllInfo():
+        """
+        Retrieve the information from all moorlands servers, sharing the same login session
+        :return: String  The formatted information from all moorlands servers
+        """
         msg = "**__CHIVALRY: MEDIEVAL WARFARE SEVERS**__\n"
-        msg += recognizedServers["bigChiv"].getAll() + "\n"
-        msg += recognizedServers["smallChiv"].getAll() + "\n\n"
+        msg += recognizedServers["bigChiv"].getAll(shareSession=True) + "\n"
+
+        recognizedServers["smallChiv"].setSession(recognizedServers["bigChiv"].getSession())
+        msg += recognizedServers["smallChiv"].getAll(shareSession=True) + "\n\n"
+
         msg += "**__MORDHAU SERVERS**__\n"
-        msg += recognizedServers["bigMord"].getAll() + "\n"
-        msg += recognizedServers["smallMord"].getAll() + "\n"
+
+        recognizedServers["bigMord"].setSession(recognizedServers["bigChiv"].getSession())
+        msg += recognizedServers["bigMord"].getAll(shareSession=True) + "\n"
+
+        recognizedServers["smallMord"].setSession(recognizedServers["bigChiv"].getSession())
+        msg += recognizedServers["smallMord"].getAll(shareSession=True) + "\n"
+
+        recognizedServers["bigChiv"].closeSession()  # this will handle closing all sessions
         return msg
 
     @staticmethod

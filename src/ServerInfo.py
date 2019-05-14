@@ -16,15 +16,17 @@ noOneHere = NoOneHere()
 
 class ServerInfo:
 
-    def __init__(self, queryAddress, serverName, homePage="https://panel.forcad.org/menu.aspx"):
+    def __init__(self, queryAddress, serverName, session=None):
         self.__queryAddress = queryAddress
         self.__serverName = serverName
-        self.__home = homePage
-        self.__pageSource = ""
+        self.__loginPage = "https://panel.forcad.org/"
+        self.__session = session
 
         self.__map = ""
         self.__population = ""
         self.__playerList = None
+
+        self.__pageSource = ""
 
         self.__admins = [
             "Baron voŋ Moorland",
@@ -54,27 +56,49 @@ class ServerInfo:
         ]
 
 
-    def getAll(self):
+    def getSession(self):
+        return self.__session
+
+    def setSession(self, session):
+        self.__session = session
+
+    def closeSession(self):
+        self.__session.close()
+
+    def getAll(self, shareSession=False):
         """
         Gather all server data and return it in a formatted string
-        :return  formatted string with all relevant server data
+        :param shareSession  If True, session will remain open after data is scraped. False will close the session
+        :return              formatted string with all relevant server data
         """
-        session = self.__login(queryLoginUsername, queryLoginPassword)
-        # wait for the login to process before searching for data to scrape
-        WebDriverWait(session, 3).until(EC.presence_of_element_located((By.ID, "ContentPlaceHolder1_div")))
-        pageSource = session.page_source  # store in placeholder variable first, cant be directly made into html object
-        self.__pageSource = html.fromstring(pageSource)
+        if self.__session != None:
+            self.__login(queryLoginUsername, queryLoginPassword)  # open new session if not using pre-existing
+        self.__serverName = "XPATH to server name"
 
-        print(self.__pageSource.xpath("//*[@id='ContentPlaceHolder1_div']/div/text()")[0])  # no server access
+        if self.__isOnline():
+            # open the server query page from the main menu
+            serverButton = self.__session.find_element_by_id("server query button")
+            serverButton.click()
+            pageSource = self.__session.page_source  # store in placeholder variable first, cant be directly made into html object
+            self.__pageSource = html.fromstring(pageSource)
+            if shareSession:
+                self.__session.execute_script("window.history.go(-1)")  # go back to the main menu page
+            else:
+                self.closeSession()
 
-        session.close()
-        # gather all relevant server info and return it after it is formatted
-        serverName = self.__getServerName()
-        map = self.__getMap()
-        playerCount = self.__getPlayerCount()
-        playerList = self.__getPlayerList()
-        serverInfo = self.__formatInfo()
-        return serverInfo
+            # get all server info, format it, and return it for BirbBot to display
+            self.__getServerName()
+            self.__getMap()
+            self.__getPlayerCount()
+            self.__getPlayerList()
+            return self.__formatInfo()
+        else:
+            if shareSession:
+                self.__session.execute_script("window.history.go(-1)")  # go back to the main menu page
+            else:
+                self.closeSession()
+            return "**" + self.__serverName + " appears to be offline!**"
+
 
     def isInServer(self, player):
         """
@@ -108,26 +132,31 @@ class ServerInfo:
         :param password  password for panel.forcad.org account
         :return          the session opened with the provided data
         """
-        browser = webdriver.Chrome()
-        loginUrl = "https://panel.forcad.org/"
-        browser.get(loginUrl)
+        self.__session = webdriver.Chrome()
+        self.__session.get(self.__loginPage)
         # find all login elements
-        usernameBox = browser.find_element_by_id("ContentPlaceHolder1_TextBox1")
-        passwordBox = browser.find_element_by_id("ContentPlaceHolder1_TextBox2")
-        loginButton = browser.find_element_by_id("ContentPlaceHolder1_Button1")
+        usernameBox = self.__session.find_element_by_id("ContentPlaceHolder1_TextBox1")
+        passwordBox = self.__session.find_element_by_id("ContentPlaceHolder1_TextBox2")
+        loginButton = self.__session.find_element_by_id("ContentPlaceHolder1_Button1")
         # input necessary info into login elements and send them
         usernameBox.send_keys(username)
         passwordBox.send_keys(password)
         loginButton.click()
 
-        return browser
+        return self.__session
 
     def __isOnline(self):
         """
         Check if the server is online
         :return  True if online, False if offline
         """
-        serverStatus = "Server is running!"
+        # wait for the login to process before searching for data to scrape
+        WebDriverWait(self.__session, 3).until(EC.presence_of_element_located((By.ID, "XPATH to menu identifier")))
+        # TODO: use XPATH to check if server is online
+        summaryPageSource = self.__session.page_source  # store in placeholder variable first, cant be directly made into html object
+        summaryPageSource = html.fromstring(summaryPageSource)
+
+        serverStatus = summaryPageSource.xpath("XPATH stuff")
         if serverStatus == "Server is running!":
             return True
         else:
