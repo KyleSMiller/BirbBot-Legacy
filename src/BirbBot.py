@@ -33,12 +33,20 @@ async def on_message(message):
             await client.send_message(message.author, "shutting down")
             print("BirbBot shut down by remote command")
             exit(9473)
-        # secret communication commands
-        # if message.content.startswith("!say " + str(adminPassword)):
-        #     targetChannel = message.content.split()[2]
-        #     print(targetChannel)
-        #     msg = message.content.split("\"")[1]
-        #     await client.send_message(targetChannel, msg)
+        if message.content.startswith("!say") and message.author.id == "296335824427941888":
+            targetChannelName = message.content.split(" ")[1]
+            if targetChannelName in recognizedInput.recognizedChannels:
+                try:
+                    targetChannel = recognizedInput.recognizedChannels[targetChannelName]
+                    msgList = message.content.split(" ")[2:]
+                    msg = " ".join(msgList)
+                    whisperChannel = client.get_channel(targetChannel)
+                    await client.send_message(whisperChannel, msg)
+                except:
+                    await client.send_message(message.author, "Something went wrong. "
+                                                              "I probably don't have access to that channel")
+            else:
+                await client.send_message(message.author, "I don't recognize that channel")
 
 
     if message.content.startswith(COMMAND_SYMBOL):

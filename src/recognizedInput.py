@@ -114,10 +114,10 @@ voiceLineCommands = [
 ]
 
 recognizedServers = {
-    "main": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=24", "66.151.138.224:3170", "Gracious Welcome"),
-    "64": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=24", "66.151.138.224:3170", "Gracious Welcome"),
-    "test": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=25", "66.151.138.224:3175", "Moorland Map Testing"),
-    "mord": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=17", "66.151.138.224:13301", "Moordhau Skirmishers")
+    "bigChiv": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=24", "Moorland Skirmishers: Gracious Welcome"),
+    "smallChiv": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=25", "Moorland Skirmishers Map Testing"),
+    "bigMord": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=17", "Moorland Skirmishers ❊ Gracious Welcome"),
+    "smallMord": ServerInfo.ServerInfo("", "Moorland Skirmishers ❊ Intimate Encounters")
 }
 
 allInfoCommands = [  # commands that will return all server info
@@ -129,7 +129,6 @@ checkForCommands = [  # commands that will activate the checkfor feature
 ]
 
 messageCommands = {  # general one-response commands
-    "hello": "Hello, {0.author.mention}",
     "goodnight": "Goodnight, {0.author.mention}",
     "scream": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
     "screm": ":screm:",
@@ -254,5 +253,27 @@ hiddenCommandDict = {  # commands that do not begin with "!"
 }
 
 multiResponseCommands = {  # commands that have more than one possible response
-    "!hello": voiceLines.Hello()
+    "hello": voiceLines.Hello()
+}
+
+recognizedChannels = {
+    "rules-of-engagement": "454804299596169236",
+    "announcements": "517530205750034433",
+    "gracious-welcome": "351239360475168768",
+    "mordhau": "494183423502581761",
+    "events": "494183498769367040",
+    "agatha": "312000965765234691",
+    "mason": "312000920722341894",
+    "server-status": "517530437300518912",
+    "moorland-castle": "524294151211319316",
+    "common-ground": "269236791196909569",
+    "other-games": "551991231333531670",
+    "music": "458070110889050123",
+    "memes": "494183581497819136",
+    "smut-stuff-nsfw": "461067966285611008",
+
+    "documentation": "512750458184531984",
+    "public-bot-testing": "512786062150729728",
+    "private-bot-testing": "511405757783212069",
+    "private-birbbot-usage": "550481595421687810"
 }
