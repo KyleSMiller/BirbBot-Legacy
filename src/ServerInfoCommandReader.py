@@ -19,20 +19,20 @@ class ServerInfoCommandReader:
         :return: String  The formatted information from all moorlands servers
         """
         msg = "**__CHIVALRY: MEDIEVAL WARFARE SEVERS**__\n"
-        msg += recognizedServers["bigChiv"].getAll(shareSession=True) + "\n"
+        msg += recognizedServers["bigChiv"].getAll() + "\n"
 
         recognizedServers["smallChiv"].setSession(recognizedServers["bigChiv"].getSession())
-        msg += recognizedServers["smallChiv"].getAll(shareSession=True) + "\n\n"
+        msg += recognizedServers["smallChiv"].getAll() + "\n\n"
 
         msg += "**__MORDHAU SERVERS**__\n"
 
-        recognizedServers["bigMord"].setSession(recognizedServers["bigChiv"].getSession())
-        msg += recognizedServers["bigMord"].getAll(shareSession=True) + "\n"
+        recognizedServers["bigMord"].setSession(recognizedServers["smallChiv"].getSession())
+        msg += recognizedServers["bigMord"].getAll() + "\n"
 
-        recognizedServers["smallMord"].setSession(recognizedServers["bigChiv"].getSession())
-        msg += recognizedServers["smallMord"].getAll(shareSession=True) + "\n"
+        recognizedServers["smallMord"].setSession(recognizedServers["bigMord"].getSession())
+        msg += recognizedServers["smallMord"].getAll() + "\n"
 
-        recognizedServers["bigChiv"].closeSession()  # this will handle closing all sessions
+        recognizedServers["smallMord"].closeSession()  # this will handle closing all sessions
         return msg
 
     @staticmethod
@@ -47,10 +47,14 @@ class ServerInfoCommandReader:
         if name == "@everyone" or name == "@here":  # prevent @everyone rights bypassing
             return "Try harder, {0.author.mention}"
         elif name == "admin" or name == "admins":  # check for admins
+            adminsOn = "There are admins on "
             for server in recognizedServers:
                 if server.isAdminInServer():
-                    return "There are admins on " + server.getName()
-            return "There are currently no (known) admins on any Moorlands servers"
+                    adminsOn += server.getName()
+            if adminsOn != "There are admins on ":
+                return adminsOn
+            else:
+                return "There are currently no (known) admins on any Moorlands servers"
         else:
             for server in recognizedServers:  # check for generic players
                 if server.isInServer(name):

@@ -1,5 +1,5 @@
-from voiceLines import NoOneHere
 from resources.passwords import queryLoginUsername, queryLoginPassword
+from PlayerList import PlayerList
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -12,21 +12,21 @@ from lxml import html
 # Gracious Welcome:  66.151.138.224:3170  "http://refactor.jp/chivalry/?serverId=1194830"
 # Gracious Map Votes:  66.151.138.198:6000  "http://refactor.jp/chivalry/?serverId=1301262"
 
-noOneHere = NoOneHere()
-
 class ServerInfo:
 
     def __init__(self, queryAddress, serverName, session=None):
-        self.__queryAddress = queryAddress
+        self.__queryAddress = "https://panel.forcad.org/" + queryAddress
         self.__serverName = serverName
+
         self.__loginPage = "https://panel.forcad.org/"
         self.__session = session
 
+        self.__gameType = ""
         self.__map = ""
         self.__population = ""
         self.__playerList = None
 
-        self.__pageSource = ""
+        self.__pageSource = html.fromstring("placeholder")
 
         self.__admins = [
             "Baron voŋ Moorland",
@@ -65,39 +65,25 @@ class ServerInfo:
     def closeSession(self):
         self.__session.close()
 
-    def getAll(self, shareSession=False):
+    def getAll(self):
         """
-        Gather all server data and return it in a formatted string
-        :param shareSession  If True, session will remain open after data is scraped. False will close the session
-        :return              formatted string with all relevant server data
+        Gather a brief summary of server data and return it in a formatted string
+        :param shareSession:
+        :return:
         """
-        if self.__session != None:
-            self.__login(queryLoginUsername, queryLoginPassword)  # open new session if not using pre-existing
-        self.__serverName = "XPATH to server name"
+        if self.__session == None:
+            self.__login(queryLoginUsername, queryLoginPassword)
 
-        if self.__isOnline():
-            # open the server query page from the main menu
-            serverButton = self.__session.find_element_by_id("server query button")
-            serverButton.click()
-            pageSource = self.__session.page_source  # store in placeholder variable first, cant be directly made into html object
-            self.__pageSource = html.fromstring(pageSource)
-            if shareSession:
-                self.__session.execute_script("window.history.go(-1)")  # go back to the main menu page
-            else:
-                self.closeSession()
-
-            # get all server info, format it, and return it for BirbBot to display
-            self.__getServerName()
-            self.__getMap()
-            self.__getPlayerCount()
-            self.__getPlayerList()
-            return self.__formatInfo()
-        else:
-            if shareSession:
-                self.__session.execute_script("window.history.go(-1)")  # go back to the main menu page
-            else:
-                self.closeSession()
-            return "**" + self.__serverName + " appears to be offline!**"
+        self.__query()
+        #if self.__isOnline():
+        self.__findGameType()
+        self.__findServerName()
+        self.__findMap()
+        self.__findPlayerCount()
+        self.__findPlayerList()
+        return self.__formatInfo()
+        # else:
+        #     return "**__" + self.__serverName + "**__ appears to be offline!"
 
 
     def isInServer(self, player):
@@ -145,51 +131,59 @@ class ServerInfo:
 
         return self.__session
 
+    def __query(self):
+        """
+        Open the server query page
+        :return:  the HTML of the query page
+        """
+        self.__session.get(self.__queryAddress)
+        pageSource = self.__session.page_source  # placeholder variable, page_source can't be directly made html object
+        self.__pageSource = html.fromstring(pageSource)
+
+
     def __isOnline(self):
         """
         Check if the server is online
         :return  True if online, False if offline
         """
-        # wait for the login to process before searching for data to scrape
-        WebDriverWait(self.__session, 3).until(EC.presence_of_element_located((By.ID, "XPATH to menu identifier")))
-        # TODO: use XPATH to check if server is online
-        summaryPageSource = self.__session.page_source  # store in placeholder variable first, cant be directly made into html object
-        summaryPageSource = html.fromstring(summaryPageSource)
-
-        serverStatus = summaryPageSource.xpath("XPATH stuff")
+        serverStatus = self.__pageSource.xpath('//*[@id="ContentPlaceHolder1_div"]/div[2]/table/tbody/tr[2]/td[2]/a')
         if serverStatus == "Server is running!":
             return True
         else:
             return False
 
-    def __getServerName(self):
+    def __findServerName(self):
         """
         Get the name of the server
         :return  String of server name
         """
-        return
+        self.__serverName = self.__pageSource.xpath('//*[@id="ContentPlaceHolder1_srvName"]/h4/text()')[0]
 
-    def __getMap(self):
+    def __findGameType(self):
+        """
+        Get the game type of the server
+        """
+        self.__gameType = self.__pageSource.xpath('//*[@id="ContentPlaceHolder1_stuff"]/text()[2]')[0]
+
+
+    def __findMap(self):
         """
         Get the current map the server is running
-        :return  String of the current map
         """
-        return
+        self.__map = self.__pageSource.xpath('//*[@id="ContentPlaceHolder1_stuff"]/text()[1]')[0]
 
-    def __getPlayerCount(self):
+    def __findPlayerCount(self):
         """
         Get the 'activePlayers/MaxPlayers' formatted string of the server population
-        :return  String of activePlayers/maxPlayers
         """
-        return
+        self.__population = self.__pageSource.xpath('//*[@id="ContentPlaceHolder1_stuff"]/text()[3]')[0]
 
     def __getCurrentPlayers(self):
         """
         Get the number of players currently on the server
         :return  int of current players
         """
-        playerCountRaw = self.__getPlayerCount()
-        currentPlayers = playerCountRaw.split("/")[0]
+        currentPlayers = self.__population.split("/")[0]
         return int(currentPlayers)
 
     def __getMaxPlayers(self):
@@ -197,16 +191,22 @@ class ServerInfo:
         Get the maximum number of players the server supports
         :return  int of maximum players allowed on the server
         """
-        playerCountRaw = self.__getPlayerCount()
+        playerCountRaw = self.__findPlayerCount()
         maxPlayers = playerCountRaw.split("/")[1]
         return int(maxPlayers)
 
-    def __getPlayerList(self):
+    def __findPlayerList(self):
         """
         Get a list of all players connected to the server
-        :return  list of strings of player names
         """
-        pass
+        if self.__gameType == "Mordhau":
+            self.__playerList = PlayerList("SKIP")  # Mordhau does not support player list querying
+        else:
+            players = []
+            for row in range(1, self.__getCurrentPlayers() + 4):  # player list starts in 4th row
+                players.append(self.__pageSource.xpath('//*[@id="ContentPlaceHolder1_stuff"]/text()[' + str(row) + ']')[0])
+            self.__playerList = PlayerList(players[3:])  # list cries if you try to start range at 4, so slice list here
+
 
 
     def __formatInfo(self):
@@ -214,16 +214,51 @@ class ServerInfo:
         Format all the retrieved server info into a response for BirbBot
         :return String     the formatted server info response that BirbBot will present
         """
-        formattedInfo = ("**__" + str(self.__serverName) + "__ is playing __"
-                         + str(self.__map) + "__ with a population of __"
-                         + str(self.__population) + "__**\n")
-        if self.__getCurrentPlayers() != 0:
-            formattedInfo += str(self.__playerList)
-        else:
-            formattedInfo += NoOneHere().getResponse()
-
+        formattedInfo = ("**__" + str(self.__serverName) + "__** is playing **__"
+                         + str(self.__map) + "__** with a population of **__"
+                         + str(self.__population) + "__**\n"
+                         + str(self.__playerList))
+        print(formattedInfo)
         return formattedInfo
 
+"""
+This block of code is to get server info including the playerList, but it is depreciated for the time,
+as Mordhau does not support all the query features of Chivalry. Leaving it in it's current state would 
+introduce complexity and inconsistent design
+"""
+# def getAll(self, shareSession=False):
+    #     """
+    #     Gather *all* server data and return it in a formatted string
+    #     :param shareSession  If True, session will remain open after data is scraped. False will close the session
+    #     :return              formatted string with all relevant server data
+    #     """
+    #     if self.__session != None:
+    #         self.__login(queryLoginUsername, queryLoginPassword)  # open new session if not using pre-existing
+    #     self.__serverName = "XPATH to server name"
+    #
+    #     if self.__isOnline():
+    #         # open the server query page from the main menu
+    #         serverButton = self.__session.find_element_by_id("server query button")
+    #         serverButton.click()
+    #         pageSource = self.__session.page_source  # store in placeholder variable first, cant be directly made into html object
+    #         self.__pageSource = html.fromstring(pageSource)
+    #         if shareSession:
+    #             self.__session.execute_script("window.history.go(-1)")  # go back to the main menu page
+    #         else:
+    #             self.closeSession()
+    #
+    #         # get all server info, format it, and return it for BirbBot to display
+    #         self.__getServerName()
+    #         self.__getMap()
+    #         self.__getPlayerCount()
+    #         self.__getPlayerList()
+    #         return self.__formatInfo()
+    #     else:
+    #         if shareSession:
+    #             self.__session.execute_script("window.history.go(-1)")  # go back to the main menu page
+    #         else:
+    #             self.closeSession()
+    #         return "**" + self.__serverName + " appears to be offline!**"
 
-test = ServerInfo("https://panel.forcad.org/query.aspx?id=24", "Gracious Welcome")
-print(test.getAll())
+
+# //*[@id="ContentPlaceHolder1_div"]/div  <-- XPATH to "You don't seem to have access to any game servers." message
