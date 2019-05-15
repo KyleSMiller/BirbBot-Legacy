@@ -61,7 +61,9 @@ async def on_message(message):
             msg = ServerInfoCommandReader.retrieveServerInfo(cmd)
 
         elif cmd in recognizedInput.allInfoCommands:
+            await client.add_reaction(message, "⌛")
             msg = ServerInfoCommandReader.retrieveAllInfo()
+            await client.remove_reaction(message, "⌛", client.user)
 
         elif cmd in recognizedInput.checkForCommands:
             msg = ServerInfoCommandReader.checkFor(message)
