@@ -136,7 +136,11 @@ class ServerInfo:
         Open the server query page
         :return:  the HTML of the query page
         """
-        self.__session.get(self.__queryAddress)
+        try:
+            self.__session.get(self.__queryAddress)
+        except:  # if chrome is closed unexpectedly
+            self.__login(queryLoginUsername, queryLoginPassword)
+            self.__session.get(self.__queryAddress)
         pageSource = self.__session.page_source  # placeholder variable, page_source can't be directly made html object
         self.__pageSource = html.fromstring(pageSource)
 

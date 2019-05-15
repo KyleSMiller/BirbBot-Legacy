@@ -32,7 +32,8 @@ class ServerInfoCommandReader:
         recognizedServers["smallMord"].setSession(recognizedServers["bigMord"].getSession())
         msg += recognizedServers["smallMord"].getAll() + "\n\n"
 
-        recognizedServers["smallMord"].closeSession()  # this will handle closing all sessions
+        # Do not close the session. Performance is improved significantly when BirbBot is used rapidly
+        # recognizedServers["smallMord"].closeSession()  # this will handle closing all sessions
         return msg
 
     @staticmethod
