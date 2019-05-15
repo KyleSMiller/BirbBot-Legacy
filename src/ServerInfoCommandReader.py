@@ -18,19 +18,19 @@ class ServerInfoCommandReader:
         Retrieve the information from all moorlands servers, sharing the same login session
         :return: String  The formatted information from all moorlands servers
         """
-        msg = "**__CHIVALRY: MEDIEVAL WARFARE SEVERS**__\n"
-        msg += recognizedServers["bigChiv"].getAll() + "\n"
+        msg = "**__CHIVALRY: MEDIEVAL WARFARE SEVERS__**\n\n"
+        msg += recognizedServers["bigChiv"].getAll() + "\n\n"
 
         recognizedServers["smallChiv"].setSession(recognizedServers["bigChiv"].getSession())
-        msg += recognizedServers["smallChiv"].getAll() + "\n\n"
+        msg += recognizedServers["smallChiv"].getAll() + "\n\n\n"
 
-        msg += "**__MORDHAU SERVERS**__\n"
+        msg += "**__MORDHAU SERVERS__**\n\n"
 
         recognizedServers["bigMord"].setSession(recognizedServers["smallChiv"].getSession())
-        msg += recognizedServers["bigMord"].getAll() + "\n"
+        msg += recognizedServers["bigMord"].getAll() + "\n\n"
 
         recognizedServers["smallMord"].setSession(recognizedServers["bigMord"].getSession())
-        msg += recognizedServers["smallMord"].getAll() + "\n"
+        msg += recognizedServers["smallMord"].getAll() + "\n\n"
 
         recognizedServers["smallMord"].closeSession()  # this will handle closing all sessions
         return msg

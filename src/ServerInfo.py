@@ -214,51 +214,11 @@ class ServerInfo:
         Format all the retrieved server info into a response for BirbBot
         :return String     the formatted server info response that BirbBot will present
         """
-        formattedInfo = ("**__" + str(self.__serverName) + "__** is playing **__"
-                         + str(self.__map) + "__** with a population of **__"
-                         + str(self.__population) + "__**\n"
+        formattedInfo = ("**" + str(self.__serverName) + "** is playing **"
+                         + str(self.__map) + "** with a population of **"
+                         + str(self.__population) + "**\n"
                          + str(self.__playerList))
         print(formattedInfo)
         return formattedInfo
-
-"""
-This block of code is to get server info including the playerList, but it is depreciated for the time,
-as Mordhau does not support all the query features of Chivalry. Leaving it in it's current state would 
-introduce complexity and inconsistent design
-"""
-# def getAll(self, shareSession=False):
-    #     """
-    #     Gather *all* server data and return it in a formatted string
-    #     :param shareSession  If True, session will remain open after data is scraped. False will close the session
-    #     :return              formatted string with all relevant server data
-    #     """
-    #     if self.__session != None:
-    #         self.__login(queryLoginUsername, queryLoginPassword)  # open new session if not using pre-existing
-    #     self.__serverName = "XPATH to server name"
-    #
-    #     if self.__isOnline():
-    #         # open the server query page from the main menu
-    #         serverButton = self.__session.find_element_by_id("server query button")
-    #         serverButton.click()
-    #         pageSource = self.__session.page_source  # store in placeholder variable first, cant be directly made into html object
-    #         self.__pageSource = html.fromstring(pageSource)
-    #         if shareSession:
-    #             self.__session.execute_script("window.history.go(-1)")  # go back to the main menu page
-    #         else:
-    #             self.closeSession()
-    #
-    #         # get all server info, format it, and return it for BirbBot to display
-    #         self.__getServerName()
-    #         self.__getMap()
-    #         self.__getPlayerCount()
-    #         self.__getPlayerList()
-    #         return self.__formatInfo()
-    #     else:
-    #         if shareSession:
-    #             self.__session.execute_script("window.history.go(-1)")  # go back to the main menu page
-    #         else:
-    #             self.closeSession()
-    #         return "**" + self.__serverName + " appears to be offline!**"
-
 
 # //*[@id="ContentPlaceHolder1_div"]/div  <-- XPATH to "You don't seem to have access to any game servers." message

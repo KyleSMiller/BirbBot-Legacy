@@ -116,7 +116,7 @@ voiceLineCommands = [
 recognizedServers = {
     "bigChiv": ServerInfo.ServerInfo("query.aspx?id=24", "Moorland Skirmishers | Gracious Welcome"),
     "smallChiv": ServerInfo.ServerInfo("query.aspx?id=25", "Moorland Skirmishers | Map Testing"),
-    "bigMord": ServerInfo.ServerInfo("query.aspx?id=17", "Moorland Skirmishers ❊ Gracious Welcome"),
+    "bigMord": ServerInfo.ServerInfo("query.aspx?id=28", "Moorland Skirmishers ❊ Gracious Welcome"),
     "smallMord": ServerInfo.ServerInfo("query.aspx?id=33", "Moorland Skirmishers ❊ Intimate Encounters")
 }
 
