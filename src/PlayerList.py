@@ -1,7 +1,8 @@
+from voiceLines import NoOneHere, Sorry
+
 from tkinter import font
 import tkinter as tk
 import math
-
 
 class PlayerList:
 
@@ -22,10 +23,15 @@ class PlayerList:
         return player in self.__players
 
     def __simpleFormatPlayerList(self):
-        for playerNum, player in enumerate(self.__players):
-            if playerNum % 4 == 0 and playerNum != 0:
-                self.__playerList += "\n"
-            self.__playerList += player + "  |  "
+        if self.__players == "SKIP":  # player list is not supported
+            self.__playerList += Sorry().getResponse() + " Mordhau does not support player list queries!"
+        elif len(self.__players) == 0:  # player list is empty
+            self.__playerList += NoOneHere().getResponse()
+        else:  # player list is populated
+            for playerNum, player in enumerate(self.__players):
+                if playerNum % 4 == 0 and playerNum != 0:
+                    self.__playerList += "\n"
+                self.__playerList += player + "  |  "
 
     def __formatPlayerList(self):
         """
