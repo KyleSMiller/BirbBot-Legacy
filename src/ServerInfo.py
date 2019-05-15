@@ -204,7 +204,10 @@ class ServerInfo:
         else:
             players = []
             for row in range(1, self.__getCurrentPlayers() + 4):  # player list starts in 4th row
-                players.append(self.__pageSource.xpath('//*[@id="ContentPlaceHolder1_stuff"]/text()[' + str(row) + ']')[0])
+                try:
+                    players.append(self.__pageSource.xpath('//*[@id="ContentPlaceHolder1_stuff"]/text()[' + str(row) + ']')[0])
+                except IndexError:
+                    pass  # ignore names that it's can't seem to find
             self.__playerList = PlayerList(players[3:])  # list cries if you try to start range at 4, so slice list here
 
 
@@ -216,9 +219,8 @@ class ServerInfo:
         """
         formattedInfo = ("**" + str(self.__serverName) + "** is playing **"
                          + str(self.__map) + "** with a population of **"
-                         + str(self.__population) + "**\n"
+                         + "(" + str(self.__population) + ")**\n"
                          + str(self.__playerList))
-        print(formattedInfo)
         return formattedInfo
 
 # //*[@id="ContentPlaceHolder1_div"]/div  <-- XPATH to "You don't seem to have access to any game servers." message
