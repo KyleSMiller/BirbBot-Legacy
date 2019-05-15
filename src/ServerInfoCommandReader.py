@@ -18,18 +18,21 @@ class ServerInfoCommandReader:
         Retrieve the information from all moorlands servers, sharing the same login session
         :return: String  The formatted information from all moorlands servers
         """
+        if recognizedServers["bigChiv"].getSession() is None:
+            recognizedServers["bigChiv"].login()
+
         msg = "**__CHIVALRY: MEDIEVAL WARFARE SEVERS__**\n\n"
         msg += recognizedServers["bigChiv"].getAll() + "\n\n"
-
-        recognizedServers["smallChiv"].setSession(recognizedServers["bigChiv"].getSession())
+        recognizedServers["smallChiv"].inheritSession(recognizedServers["bigChiv"].getSession(),
+                                                      recognizedServers["bigChiv"].getTableArray())
         msg += recognizedServers["smallChiv"].getAll() + "\n\n\n"
 
         msg += "**__MORDHAU SERVERS__**\n\n"
-
-        recognizedServers["bigMord"].setSession(recognizedServers["smallChiv"].getSession())
+        recognizedServers["bigMord"].inheritSession(recognizedServers["smallChiv"].getSession(),
+                                                    recognizedServers["smallChiv"].getTableArray())
         msg += recognizedServers["bigMord"].getAll() + "\n\n"
-
-        recognizedServers["smallMord"].setSession(recognizedServers["bigMord"].getSession())
+        recognizedServers["smallMord"].inheritSession(recognizedServers["bigMord"].getSession(),
+                                                      recognizedServers["bigMord"].getTableArray())
         msg += recognizedServers["smallMord"].getAll() + "\n\n"
 
         # Do not close the session. Performance is improved significantly when BirbBot is used rapidly

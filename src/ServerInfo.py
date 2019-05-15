@@ -14,12 +14,14 @@ from lxml import html
 
 class ServerInfo:
 
-    def __init__(self, queryAddress, serverName, session=None):
+    def __init__(self, queryAddress, serverName, serverIP, session=None):
         self.__queryAddress = "https://panel.forcad.org/" + queryAddress
         self.__serverName = serverName
+        self.__serverIP = serverIP
 
         self.__loginPage = "https://panel.forcad.org/"
         self.__session = session
+        self.__tableArray = None
 
         self.__gameType = ""
         self.__map = ""
@@ -56,6 +58,13 @@ class ServerInfo:
         ]
 
 
+    def inheritSession(self, session, tableArray):
+        """
+        Inherit a login session previously opened by another ServerInfo Object
+        """
+        self.__session = session
+        self.__tableArray = tableArray
+
     def getSession(self):
         return self.__session
 
@@ -64,6 +73,13 @@ class ServerInfo:
 
     def closeSession(self):
         self.__session.close()
+
+    def getTableArray(self):
+        return self.__tableArray
+
+    def updateTableArray(self):
+        self.__query()
+        self.__parseMainMenuTable()
 
     def getAll(self):
         """
@@ -74,16 +90,16 @@ class ServerInfo:
         if self.__session == None:
             self.__login(queryLoginUsername, queryLoginPassword)
 
-        self.__query()
-        #if self.__isOnline():
-        self.__findGameType()
-        self.__findServerName()
-        self.__findMap()
-        self.__findPlayerCount()
-        self.__findPlayerList()
-        return self.__formatInfo()
-        # else:
-        #     return "**__" + self.__serverName + "**__ appears to be offline!"
+        if self.__isOnline():
+            self.__query()
+            self.__findGameType()
+            self.__findServerName()
+            self.__findMap()
+            self.__findPlayerCount()
+            self.__findPlayerList()
+            return self.__formatInfo()
+        else:
+            return "**" + self.__serverName + "** appears to be offline!"
 
 
     def isInServer(self, player):
@@ -111,6 +127,9 @@ class ServerInfo:
                 return True
         return False
 
+    def login(self):
+        self.__login(queryLoginUsername, queryLoginPassword)
+
     def __login(self, username, password):
         """
         Open a session with provided login data so the server query data can be accessed
@@ -128,6 +147,8 @@ class ServerInfo:
         usernameBox.send_keys(username)
         passwordBox.send_keys(password)
         loginButton.click()
+        pageSource = self.__session.page_source  # placeholder variable, page_source can't be directly made html object
+        self.__pageSource = html.fromstring(pageSource)
 
         return self.__session
 
@@ -145,16 +166,36 @@ class ServerInfo:
         self.__pageSource = html.fromstring(pageSource)
 
 
+    def __parseMainMenuTable(self):
+        """
+        Parse the table on the main menu by splitting the table into rows based on server
+        :return:  a multi-dimensional list of table rows
+        """
+        if self.__tableArray == None:
+            table = self.__pageSource.xpath('//tr/td//text()')
+            strippedTable = []
+            for element in table:
+                if element != " " and element != "\n" and element != "RCON":
+                    strippedTable.append(element)
+            tableArray = [strippedTable[i:i + 7] for i in range(0, len(strippedTable), 7)]
+            self.__tableArray = tableArray
+        else:
+            pass  # only update table array if it does not currently exist
+
     def __isOnline(self):
         """
         Check if the server is online
         :return  True if online, False if offline
         """
-        serverStatus = self.__pageSource.xpath('//*[@id="ContentPlaceHolder1_div"]/div[2]/table/tbody/tr[2]/td[2]/a')
-        if serverStatus == "Server is running!":
-            return True
-        else:
-            return False
+        self.__parseMainMenuTable()
+        print("with server " + self.__serverName + " the table is " + str(self.__tableArray))
+        for row in self.__tableArray:
+            if self.__serverIP in row:  # identify the row the server is located on in the table
+                if "No Response" in row:  # check if the server is online
+                    return False
+                else:
+                    return True
+        return False
 
     def __findServerName(self):
         """
