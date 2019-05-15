@@ -114,10 +114,10 @@ voiceLineCommands = [
 ]
 
 recognizedServers = {
-    "bigChiv": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=24", "Moorland Skirmishers: Gracious Welcome"),
-    "smallChiv": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=25", "Moorland Skirmishers Map Testing"),
-    "bigMord": ServerInfo.ServerInfo("https://panel.forcad.org/query.aspx?id=17", "Moorland Skirmishers ❊ Gracious Welcome"),
-    "smallMord": ServerInfo.ServerInfo("", "Moorland Skirmishers ❊ Intimate Encounters")
+    "bigChiv": ServerInfo.ServerInfo("query.aspx?id=24", "Moorland Skirmishers | Gracious Welcome"),
+    "smallChiv": ServerInfo.ServerInfo("query.aspx?id=25", "Moorland Skirmishers | Map Testing"),
+    "bigMord": ServerInfo.ServerInfo("query.aspx?id=17", "Moorland Skirmishers ❊ Gracious Welcome"),
+    "smallMord": ServerInfo.ServerInfo("query.aspx?id=33", "Moorland Skirmishers ❊ Intimate Encounters")
 }
 
 allInfoCommands = [  # commands that will return all server info
