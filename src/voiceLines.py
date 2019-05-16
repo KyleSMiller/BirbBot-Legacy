@@ -885,7 +885,7 @@ chivVoices = [
 ]
 
 mordVoices = [
-    Barbarian(), Commoner(), Cruel(), Eager(), Foppish(), Raider(), Young()
+    Barbarian(), Commoner(), Cruel(), Eager(), Foppish(), Knight(), Plain(), Raider(), Young()
 ]
 
 

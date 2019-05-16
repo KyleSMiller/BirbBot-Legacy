@@ -16,6 +16,8 @@ rosters = {
     "__default__": ""  # will store the default roster used in !join
 
 }
+
+
 voices = {
     "agathaarcher": voiceLines.AgathaArcher(),
     "agathamaa": voiceLines.AgathaManAtArms(),
@@ -28,6 +30,15 @@ voices = {
     "masonvanguard": voiceLines.MasonVanguard(),
     "masonknight": voiceLines.MasonKnight(),
     "unused": voiceLines.UnusedVoice(),
+    "barbarian": voiceLines.Barbarian(),
+    "commoner": voiceLines.Commoner(),
+    "cruel": voiceLines.Cruel(),
+    "eager": voiceLines.Eager(),
+    "foppish": voiceLines.Foppish(),
+    "knight": voiceLines.Knight(),
+    "plain": voiceLines.Plain(),
+    "raider": voiceLines.Raider(),
+    "young": voiceLines.Young()
 }
 
 
