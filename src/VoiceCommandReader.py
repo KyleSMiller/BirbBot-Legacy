@@ -32,7 +32,7 @@ class VoiceCommandReader:
 
         # determine if special response is needed
         if self.__isSpecialResponseName(name.lower()):
-            msg += self.__getSpecialResponse(name.lower(), voices, voice)
+            msg += self.__getSpecialResponse(self.__findSpecialResponseName(name.lower()), voices, voice)
         else:
             if name != "":
                 msg = name + ", "
@@ -56,14 +56,39 @@ class VoiceCommandReader:
         :param name  the name to check
         :return      boolean of if name is a name with a special response
         """
+        nameList = name.split(" ")
+        for i in nameList:  # check if one name of many is special response name
+            if i == self.__author or i == self.__authorID:
+                return True
+            elif i in recognizedInput.specialResponseNames.keys():
+                return True
+            elif i in recognizedInput.forbiddenNames:
+                return True
+        # find if a string of names is a special response name
         if name == self.__author or name == self.__authorID:
             return True
         elif name in recognizedInput.specialResponseNames.keys():
             return True
         elif name in recognizedInput.forbiddenNames:
             return True
-        else:
-            return False
+
+        return False
+
+    def __findSpecialResponseName(self, name):
+        """
+        Find the name in the name list that is considered special response
+        :param name:     The name the user provided
+        :return: String  The special response name
+        """
+        nameList = name.split(" ")
+        for i in nameList:
+            if i == self.__author or i == self.__authorID:
+                return i
+            elif i in recognizedInput.specialResponseNames.keys():
+                return i
+            elif i in recognizedInput.forbiddenNames:
+                return i
+        return name
 
     def __getSpecialResponse(self, name, voices, voice):
         """
