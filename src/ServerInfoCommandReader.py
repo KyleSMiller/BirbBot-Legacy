@@ -37,8 +37,12 @@ class ServerInfoCommandReader:
         msg += bigMordSummary + "\n\n"
         msg += smallMordSummary + "\n\n"
 
-        # Do not close the session. Performance is improved significantly when BirbBot is used rapidly
-        # recognizedServers["smallMord"].closeSession()  # this will handle closing all sessions
+        recognizedServers["bigChiv"].closeSession()  # this will handle closing of all sessions
+        recognizedServers["bigChiv"].setSession(None)
+        recognizedServers["smallChiv"].setSession(None)
+        recognizedServers["bigMord"].setSession(None)
+        recognizedServers["smallMord"].setSession(None)
+
         return msg
 
     @staticmethod

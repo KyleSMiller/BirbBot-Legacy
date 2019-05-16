@@ -89,16 +89,20 @@ class ServerInfo:
         if self.__session == None:
             self.__login(queryLoginUsername, queryLoginPassword)
 
-        if self.__isOnline():
-            self.__query()
-            self.__findGameType()
-            self.__findServerName()
-            self.__findMap()
-            self.__findPlayerCount()
-            self.__findPlayerList()
-            return self.__formatInfo(playerList=True)
-        else:
-            return "**" + self.__serverName + "** appears to be offline!"
+        try:
+            if self.__isOnline():
+                self.__query()
+                self.__findGameType()
+                self.__findServerName()
+                self.__findMap()
+                self.__findPlayerCount()
+                self.__findPlayerList()
+                return self.__formatInfo(playerList=True)
+            else:
+                return "**" + self.__serverName + "** appears to be offline!"
+        except IndexError:
+            self.__login(queryLoginUsername, queryLoginPassword)
+            self.getAll()
 
     def getSummary(self):
         """
