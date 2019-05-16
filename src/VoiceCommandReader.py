@@ -31,7 +31,7 @@ class VoiceCommandReader:
         msg = ""
 
         # determine if special response is needed
-        if self.__isSpecialResponseName(name.lower()):
+        if self.__isSpecialResponseName(name.lower()) and self.__command != "taunt":
             msg += self.__getSpecialResponse(name.lower(), voices, voice)
         else:
             if name != "":
@@ -82,9 +82,6 @@ class VoiceCommandReader:
             else:
                 return msg
         elif name in recognizedInput.forbiddenNames:
-            if self.__command != "taunt":
-                return "no"
-            else:
-                return voices[voice].getResponse(voice)
+            return "no"
         else:
             return "something went wrong, please contact Raysparks <Exception: \"special response not found\">"
