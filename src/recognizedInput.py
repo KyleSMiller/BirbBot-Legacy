@@ -92,6 +92,22 @@ specialResponseNames = {
                  "respect": "Thank you, {0.author.mention} :hearts:",
                  "thank": "You are very welcome, {0.author.mention} :hugging:"
                  },
+
+    "birdbot":  {"taunt": "That's not my name, {0.author.mention}, but regardless, >:(",
+                 "respect": "That's not my name, {0.author.mention}, but regardless, :hearts:",
+                 "thank": "That's not my name, {0.author.mention}, but regardless, :hugging:"
+                 },
+
+    "bird bot":  {"taunt": "That's not my name, {0.author.mention}, but regardless, >:(",
+                 "respect": "That's not my name, {0.author.mention}, but regardless, :hearts:",
+                 "thank": "That's not my name, {0.author.mention}, but regardless, :hugging:"
+                 },
+
+    "bird_bot":  {"taunt": "That's not my name, {0.author.mention}, but regardless, >:(",
+                 "respect": "That's not my name, {0.author.mention}, but regardless, :hearts:",
+                 "thank": "That's not my name, {0.author.mention}, but regardless, :hugging:"
+                 },
+
     "<@511403822418231296>": {"taunt": voiceLines.BirbBotSnark(),
                               "respect": "Thank you, {0.author.mention} :hearts:",
                               "thank": "You are very welcome, {0.author.mention} :hugging:"},
