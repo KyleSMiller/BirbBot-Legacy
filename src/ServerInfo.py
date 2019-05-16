@@ -189,16 +189,13 @@ class ServerInfo:
         Parse the table on the main menu by splitting the table into rows based on server
         :return:  a multi-dimensional list of table rows
         """
-        if self.__tableArray == None:
-            table = self.__pageSource.xpath('//tr/td//text()')
-            strippedTable = []
-            for element in table:
-                if element != " " and element != "\n" and element != "RCON":
-                    strippedTable.append(element)
-            tableArray = [strippedTable[i:i + 7] for i in range(0, len(strippedTable), 7)]
-            self.__tableArray = tableArray
-        else:
-            pass  # only update table array if it does not currently exist
+        table = self.__pageSource.xpath('//tr/td//text()')
+        strippedTable = []
+        for element in table:
+            if element != " " and element != "\n" and element != "RCON":
+                strippedTable.append(element)
+        tableArray = [strippedTable[i:i + 7] for i in range(0, len(strippedTable), 7)]
+        self.__tableArray = tableArray
 
     def __isOnline(self):
         """
@@ -206,11 +203,13 @@ class ServerInfo:
         :return  True if online, False if offline
         """
         self.__session.get("https://panel.forcad.org/menu.aspx")
+        pageSource = self.__session.page_source  # placeholder variable, page_source can't be directly made html object
+        self.__pageSource = html.fromstring(pageSource)
         self.__parseMainMenuTable()
         # print("with server " + self.__serverName + " the table is " + str(self.__tableArray))
         for row in self.__tableArray:
             if self.__serverIP in row:  # identify the row the server is located on in the table
-                if "No Response" in row:  # check if the server is online
+                if "No Response" in row or "" in row:  # check if the server is online
                     return False
                 else:
                     return True

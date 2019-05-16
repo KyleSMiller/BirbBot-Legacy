@@ -18,10 +18,10 @@ class ServerInfoCommandReader:
         Retrieve the information from all moorlands servers, sharing the same login session
         :return: String  The formatted information from all moorlands servers
         """
-        bigMordSummary = recognizedServers["bigMord"].getAll()
+        bigMordSummary = recognizedServers["bigMord"].getSummary()
         recognizedServers["smallMord"].inheritSession(recognizedServers["bigMord"].getSession(),
                                                       recognizedServers["bigMord"].getTableArray())
-        smallMordSummary = recognizedServers["smallMord"].getAll()
+        smallMordSummary = recognizedServers["smallMord"].getSummary()
         recognizedServers["bigChiv"].inheritSession(recognizedServers["smallMord"].getSession(),
                                                     recognizedServers["smallMord"].getTableArray())
         bigChivSummary = recognizedServers["bigChiv"].getAll()
@@ -37,11 +37,11 @@ class ServerInfoCommandReader:
         msg += bigMordSummary + "\n\n"
         msg += smallMordSummary + "\n\n"
 
-        recognizedServers["bigChiv"].closeSession()  # this will handle closing of all sessions
-        recognizedServers["bigChiv"].setSession(None)
-        recognizedServers["smallChiv"].setSession(None)
-        recognizedServers["bigMord"].setSession(None)
-        recognizedServers["smallMord"].setSession(None)
+        # recognizedServers["bigChiv"].closeSession()  # this will handle closing of all sessions
+        # recognizedServers["bigChiv"].setSession(None)
+        # recognizedServers["smallChiv"].setSession(None)
+        # recognizedServers["bigMord"].setSession(None)
+        # recognizedServers["smallMord"].setSession(None)
 
         return msg
 
