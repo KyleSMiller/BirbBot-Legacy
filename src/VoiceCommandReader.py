@@ -20,13 +20,13 @@ class VoiceCommandReader:
         # extract the desired voice and name from the command
         if len(self.__message.content.lower().split()) > 1:  # if more than the base command is provided
             voice = (self.__message.content.lower().split()[1] if self.__message.content.lower().split()[1] in voices.keys()
-                     else None)
-            nameList = (self.__message.content.split()[1:] if voice == None
+                     else "")
+            nameList = (self.__message.content.split()[1:] if voice == ""
                         else self.__message.content.split()[2:])
             name = " ".join(nameList)
         else:
-            voice = None
-            name = None
+            voice = ""
+            name = ""
 
         msg = ""
 
@@ -34,12 +34,18 @@ class VoiceCommandReader:
         if self.__isSpecialResponseName(name.lower()):
             msg += self.__getSpecialResponse(name.lower(), voices, voice)
         else:
-            if name != None and name != "":
+            if name != "":
                 msg = name + ", "
-            if voice != None:
-                msg += voices[voice].getResponse(self.__command)
+            if voice != "":
+                if msg == "":
+                    msg += voices[voice].getResponse(self.__command).capitalize()
+                else:
+                    msg += voices[voice].getResponse(self.__command)
             else:
-                msg += random.choice(allVoices).getResponse(self.__command)
+                if msg == "":
+                    msg += random.choice(allVoices).getResponse(self.__command).capitalize()
+                else:
+                    msg += random.choice(allVoices).getResponse(self.__command)
         return msg
 
 

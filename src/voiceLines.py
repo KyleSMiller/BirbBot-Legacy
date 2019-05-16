@@ -460,7 +460,7 @@ class Cruel(Voice):
             "serfs don't belong on the battlefield!",
             "you bastard!",
             "I've seen cripples and lepers more capable!",
-            "unkempt, unclean, and unworthy of existing!",
+            "you're unkempt, unclean, and unworthy of existing!",
             "I can smell the shit from your trousers, you quivering coward!"
         ]
 
@@ -519,7 +519,7 @@ class Eager(Voice):
             "you are too kind, sir!",
             "I thank thee, sir!",
             "you are as kind as you are generous!",
-            "much obliged, good sir!",
+            "much obliged, good sir!"
         ]
 
     # @Override
@@ -620,7 +620,7 @@ class Plain(Voice):
             "Is that all you got?!",
             "Not exactly cut out for this, are you?",
             "You sure like your armor, what are you hiding?!",
-            "You're pretty decked out mate, compensating for something?!"
+            "You're pretty decked out mate, compensating for something?!",
             "you're all hat and not cattle!"
         ]
 
@@ -700,7 +700,7 @@ class Young(Voice):
         self.__taunts = [
             "my nan could fight better than that!",
             "knave!",
-            "bollocks!"
+            "bollocks!",
             "Foul cur!",
             "I'm a fookin' legend!",
             "you're a fool, init?",
