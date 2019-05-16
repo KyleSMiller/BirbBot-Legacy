@@ -18,22 +18,24 @@ class ServerInfoCommandReader:
         Retrieve the information from all moorlands servers, sharing the same login session
         :return: String  The formatted information from all moorlands servers
         """
-        if recognizedServers["bigChiv"].getSession() is None:
-            recognizedServers["bigChiv"].login()
-
-        msg = "**__CHIVALRY: MEDIEVAL WARFARE SEVERS__**\n\n"
-        msg += recognizedServers["bigChiv"].getAll() + "\n\n"
-        recognizedServers["smallChiv"].inheritSession(recognizedServers["bigChiv"].getSession(),
-                                                      recognizedServers["bigChiv"].getTableArray())
-        msg += recognizedServers["smallChiv"].getAll() + "\n\n\n"
-
-        msg += "**__MORDHAU SERVERS__**\n\n"
-        recognizedServers["bigMord"].inheritSession(recognizedServers["smallChiv"].getSession(),
-                                                    recognizedServers["smallChiv"].getTableArray())
-        msg += recognizedServers["bigMord"].getAll() + "\n\n"
+        bigMordSummary = recognizedServers["bigMord"].getAll()
         recognizedServers["smallMord"].inheritSession(recognizedServers["bigMord"].getSession(),
                                                       recognizedServers["bigMord"].getTableArray())
-        msg += recognizedServers["smallMord"].getAll() + "\n\n"
+        smallMordSummary = recognizedServers["smallMord"].getAll()
+        recognizedServers["bigChiv"].inheritSession(recognizedServers["smallMord"].getSession(),
+                                                    recognizedServers["smallMord"].getTableArray())
+        bigChivSummary = recognizedServers["bigChiv"].getAll()
+        recognizedServers["smallChiv"].inheritSession(recognizedServers["bigChiv"].getSession(),
+                                                  recognizedServers["bigChiv"].getTableArray())
+        smallChivSummary = recognizedServers["smallChiv"].getAll()
+
+
+        msg = "**__CHIVALRY: MEDIEVAL WARFARE SEVERS__**\n\n"
+        msg += bigChivSummary + "\n\n"
+        msg += smallChivSummary + "\n\n\n"
+        msg += "**__MORDHAU SERVERS__**\n\n"
+        msg += bigMordSummary + "\n\n"
+        msg += smallMordSummary + "\n\n"
 
         # Do not close the session. Performance is improved significantly when BirbBot is used rapidly
         # recognizedServers["smallMord"].closeSession()  # this will handle closing all sessions

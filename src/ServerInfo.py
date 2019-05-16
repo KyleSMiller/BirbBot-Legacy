@@ -83,9 +83,8 @@ class ServerInfo:
 
     def getAll(self):
         """
-        Gather a brief summary of server data and return it in a formatted string
-        :param shareSession:
-        :return:
+        Gather server name, map, population, gameType, and playerList and return it in a formatted string
+        :return:  Formatted string of server info
         """
         if self.__session == None:
             self.__login(queryLoginUsername, queryLoginPassword)
@@ -97,7 +96,22 @@ class ServerInfo:
             self.__findMap()
             self.__findPlayerCount()
             self.__findPlayerList()
-            return self.__formatInfo()
+            return self.__formatInfo(playerList=True)
+        else:
+            return "**" + self.__serverName + "** appears to be offline!"
+
+    def getSummary(self):
+        """
+        Gather server map and population
+        :return: formatted string of server info
+        """
+        if self.__session == None:
+            self.__login(queryLoginUsername, queryLoginPassword)
+
+        if self.__isOnline():
+            self.__findMapBrief()
+            self.__findPlayerCountBrief()
+            return self.__formatInfo(playerList=False)
         else:
             return "**" + self.__serverName + "** appears to be offline!"
 
@@ -187,8 +201,9 @@ class ServerInfo:
         Check if the server is online
         :return  True if online, False if offline
         """
+        self.__session.get("https://panel.forcad.org/menu.aspx")
         self.__parseMainMenuTable()
-        print("with server " + self.__serverName + " the table is " + str(self.__tableArray))
+        # print("with server " + self.__serverName + " the table is " + str(self.__tableArray))
         for row in self.__tableArray:
             if self.__serverIP in row:  # identify the row the server is located on in the table
                 if "No Response" in row:  # check if the server is online
@@ -255,17 +270,30 @@ class ServerInfo:
                     pass  # ignore names that it's can't seem to find
             self.__playerList = PlayerList(players[3:])  # list cries if you try to start range at 4, so slice list here
 
-
-
-    def __formatInfo(self):
+    def __formatInfo(self, playerList=False):
         """
         Format all the retrieved server info into a response for BirbBot
         :return String     the formatted server info response that BirbBot will present
         """
         formattedInfo = ("**" + str(self.__serverName) + "** is playing **"
                          + str(self.__map) + "** with a population of **"
-                         + "(" + str(self.__population) + ")**\n"
-                         + str(self.__playerList))
+                         + "(" + str(self.__population) + ")**")
+        if playerList:
+            formattedInfo += "\n" + str(self.__playerList)
+        else:
+            formattedInfo += "\n" + str(PlayerList("SKIP"))
         return formattedInfo
+
+    def __findMapBrief(self):
+        for row in self.__tableArray:
+            if self.__serverIP in row:
+                mapPop = row[5]  # map (pop/maxPop) format string
+                self.__map = mapPop.split("(")[0].strip()
+
+    def __findPlayerCountBrief(self):
+        for row in self.__tableArray:
+            if self.__serverIP in row:
+                mapPop = row[5]  # map (pop/maxPop) format string
+                self.__population = mapPop.split("(")[1][:-1]
 
 # //*[@id="ContentPlaceHolder1_div"]/div  <-- XPATH to "You don't seem to have access to any game servers." message
