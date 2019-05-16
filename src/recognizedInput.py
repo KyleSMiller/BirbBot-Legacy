@@ -114,10 +114,10 @@ voiceLineCommands = [
 ]
 
 recognizedServers = {
-    "bigChiv": ServerInfo.ServerInfo("query.aspx?id=24", "Moorland Skirmishers | Gracious Welcome"),
-    "smallChiv": ServerInfo.ServerInfo("query.aspx?id=25", "Moorland Skirmishers | Map Testing"),
-    "bigMord": ServerInfo.ServerInfo("query.aspx?id=28", "Moorland Skirmishers ❊ Gracious Welcome"),
-    "smallMord": ServerInfo.ServerInfo("query.aspx?id=33", "Moorland Skirmishers ❊ Intimate Encounters")
+    "bigChiv": ServerInfo.ServerInfo("query.aspx?id=24", "Moorland Skirmishers | Gracious Welcome", "66.151.138.224:3170"),
+    "smallChiv": ServerInfo.ServerInfo("query.aspx?id=25", "Moorland Skirmishers | Map Testing", "66.151.138.224:3175"),
+    "bigMord": ServerInfo.ServerInfo("query.aspx?id=28", "Moorland Skirmishers ❊ Gracious Welcome", "66.151.138.224:13301"),
+    "smallMord": ServerInfo.ServerInfo("query.aspx?id=33", "Moorland Skirmishers ❊ Intimate Encounters", "66.151.138.224:13306")
 }
 
 allInfoCommands = [  # commands that will return all server info
@@ -139,6 +139,8 @@ messageCommands = {  # general one-response commands
     "quadfeint": "Sorry, this move is usable only by god himself",
     "sheildjump": "Reported for hacks",
     "z4": "KILL THOSE ARCHERS!",
+    "flourish": "*twirls*",
+    "comeatme": "GIVE ME A HUG!",
     "help": "Documentation has been sent to you. If you did not receive it, please make your DM's public"
 }
 
