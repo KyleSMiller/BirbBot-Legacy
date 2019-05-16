@@ -376,6 +376,370 @@ class MasonKnight(Voice):
         return self.__thanks
 
 
+class Barbarian(Voice):
+    def __init__(self):
+        self.__taunts = [
+            "you scum sucking dog!",
+            "your skull is even softer than your belly!",
+            "you pathetic piece of trash!",
+            "you scum!",
+            "pathetic filth!",
+            "weakling!",
+            "you make me sick!",
+            "***S T O P***! In the name of the ***L A W***!"
+        ]
+
+        self.__respects = [
+            "who *are* you?",
+            "amazing!",
+            "insane!",
+            "woah!",
+        ]
+
+        self.__thanks = [
+            "thank you!",
+            "great job!",
+            "thanks!",
+        ]
+
+    # @Override
+    def getTaunt(self):
+        return self.__taunts
+
+    # @Override
+    def getRespect(self):
+        return self.__respects
+
+    # @Override
+    def getThank(self):
+        return self.__thanks
+
+
+class Commoner(Voice):
+    def __init__(self):
+        self.__taunts = [
+            "take your practice swings and call me when you're ready to fight!",
+            "look, I haven't got all day!",
+            "tell me you didn't just wet yourself",
+            "uh... you're doing fine, really",
+            "look, it wouldn't hurt to wipe once in a while"
+        ]
+
+        self.__respects = [
+            "you don't fight well, but you fight with honor!",
+            "hey, you're not bad!",
+            "how did you do that!?",
+            "you're not half-bad!"
+        ]
+
+        self.__thanks = [
+            "thanks!",
+            "I owe you one!",
+            "and they say chivalry's dead!",
+            "aww, thanks!"
+        ]
+
+    # @Override
+    def getTaunt(self):
+        return self.__taunts
+
+    # @Override
+    def getRespect(self):
+        return self.__respects
+
+    # @Override
+    def getThank(self):
+        return self.__thanks
+
+
+class Cruel(Voice):
+    def __init__(self):
+        self.__taunts = [
+            "laughable!",
+            "not even your own mother would want such a hideous fiend!",
+            "serfs don't belong on the battlefield!",
+            "you bastard!",
+            "I've seen cripples and lepers more capable!",
+            "unkempt, unclean, and unworthy of existing!",
+            "I can smell the shit from your trousers, you quivering coward!"
+        ]
+
+        self.__respects = [
+            "you'd be a worthy servant",
+            "you're lacking finesse, but you get the job done",
+            "well, count me impressed!",
+            "Someone worth a damn on this battlefield, well done",
+            "You're not as pathetic as some of these peasants"
+        ]
+
+        self.__thanks = [
+            "...thank you",
+            "good, you've served me well",
+            "my thanks to thee",
+            "you've earned my praise, for now",
+            "someone useful for a change"
+        ]
+
+    # @Override
+    def getTaunt(self):
+        return self.__taunts
+
+    # @Override
+    def getRespect(self):
+        return self.__respects
+
+    # @Override
+    def getThank(self):
+        return self.__thanks
+
+
+class Eager(Voice):
+    def __init__(self):
+        self.__taunts = [
+            "you're terrible! Look men! Look how terrible he is!",
+            "you swing well, but miss terribly!",
+            "ha! Your sword's looking a little short, sir!",
+            "thy defense has more holes than my mother's swiss cheese!",
+            "maybe you should take up farming!",
+            "you embarrass yourself!",
+            "hah! Is that all?",
+            "art thou mad, brother?"
+        ]
+
+        self.__respects = [
+            "you go, sir!"
+            "never before have I seen such skill!",
+            "I am humbled by your skill, sir!",
+            "my compliments!",
+            "what grace! What skill!",
+            "it is an honor to fight at your side!"
+        ]
+
+        self.__thanks = [
+            "you are too kind, sir!",
+            "I thank thee, sir!",
+            "you are as kind as you are generous!",
+            "much obliged, good sir!",
+        ]
+
+    # @Override
+    def getTaunt(self):
+        return self.__taunts
+
+    # @Override
+    def getRespect(self):
+        return self.__respects
+
+    # @Override
+    def getThank(self):
+        return self.__thanks
+
+
+class Foppish(Voice):
+    def __init__(self):
+        self.__taunts = [
+            "ugh, shaking it more than twice is playing with it!",
+            "look don't feel bad, maybe you just don't cut out to be... much of anything.",
+            "are you just pretending to be a soldier?",
+            "you do actually know how to use that thing?",
+            "you sir, are by far the worst soldier I have ever... smelled!",
+            "no! By all means, keep swinging away! You'll eventually hit something.",
+            "no, no! You point it this way, you idiot.",
+            "you sir, smell like something that was ejected from the backside of a diuretic horse!",
+        ]
+
+        self.__respects = [
+            "your form and execution are exquisite!",
+            "not a bad move!",
+            "you know, it's not every day I get to face a worthy opponent!"
+        ]
+
+        self.__thanks = [
+            "what I'm trying to say is, uhh... thank you",
+            "thank you!",
+            "thank you most kindly!",
+            "you have my thanks!"
+        ]
+
+    # @Override
+    def getTaunt(self):
+        return self.__taunts
+
+    # @Override
+    def getRespect(self):
+        return self.__respects
+
+    # @Override
+    def getThank(self):
+        return self.__thanks
+
+
+class Knight(Voice):
+    def __init__(self):
+        self.__taunts = [
+            "*you*, get the better of *me*? HA! Unlikely!",
+            "you stand no chance!",
+            "you move with the grace of a drunken peasant!",
+            "your wife provided a fitter challenge!",
+            "you cannot match my superior training!"
+        ]
+
+        self.__respects = [
+            "such gallantry!",
+            "you have my respect!",
+            "your form is impeccable!",
+            "to you, my good fellow!",
+            "a fine display!",
+            "it is an honor to meet such a fine combatant!"
+        ]
+
+        self.__thanks = [
+            "thank you, squire",
+            "how gracious of you",
+            "you have my gratitude",
+            "you honor me sir",
+            "much obliged"
+        ]
+
+    # @Override
+    def getTaunt(self):
+        return self.__taunts
+
+    # @Override
+    def getRespect(self):
+        return self.__respects
+
+    # @Override
+    def getThank(self):
+        return self.__thanks
+
+class Plain(Voice):
+    def __init__(self):
+        self.__taunts = [
+            "I don't know what's going through your head pal, but you can forget it!",
+            "Is that all you got?!",
+            "Not exactly cut out for this, are you?",
+            "You sure like your armor, what are you hiding?!",
+            "You're pretty decked out mate, compensating for something?!"
+            "you're all hat and not cattle!"
+        ]
+
+        self.__respects = [
+            "not bad!",
+            "you might actually be worth the effort!",
+            "well, well, you actually know how to use that weapon",
+            "hey! You're pretty good!"
+        ]
+
+        self.__thanks = [
+            "I didn't think anyone cared!",
+            "thanks for that, mate!",
+            "thanks for that!",
+            "many thanks!",
+            "ta, mate!",
+            "cheers!",
+        ]
+
+    # @Override
+    def getTaunt(self):
+        return self.__taunts
+
+    # @Override
+    def getRespect(self):
+        return self.__respects
+
+    # @Override
+    def getThank(self):
+        return self.__thanks
+
+
+class Raider(Voice):
+    def __init__(self):
+        self.__taunts = [
+            "ah bugger off, ya sack of shite!",
+            "aww, look at you! A wee nipper playing soldier!",
+            "ye teat suckin' blaggart!",
+            "ye ain't nothing but a dunderhead bastard son of a codpiece!",
+            "i wonder how yer wife's doin'? I've not seen her since... Oh I don't know... last night!",
+            "you dozy muppets couldn't hit the broad side of a barn!",
+            "you're nae danger mate. You're just next in line.",
+            "I've had jobbies tougher than you!"
+        ]
+
+        self.__respects = [
+            "ho ho ho ho! Fuckin savage!",
+            "love it!",
+            "and I had you down for being flaccid!",
+            "and that's why you're the boss, mate",
+            "you just earned yourself a drink!",
+            "I like you, you kill things!"
+        ]
+
+        self.__thanks = [
+            "ta, mate!",
+            "pure magic mate, ta!",
+            "thank ya kindly!",
+            "aw, you've done me a solid there, pal!"
+        ]
+
+    # @Override
+    def getTaunt(self):
+        return self.__taunts
+
+    # @Override
+    def getRespect(self):
+        return self.__respects
+
+    # @Override
+    def getThank(self):
+        return self.__thanks
+
+
+class Young(Voice):
+    def __init__(self):
+        self.__taunts = [
+            "my nan could fight better than that!",
+            "knave!",
+            "bollocks!"
+            "Foul cur!",
+            "I'm a fookin' legend!",
+            "you're a fool, init?",
+            "you bloody oaf!",
+            "you're a bloody idiot, aren't you?",
+            "can we even count you as a soldier?"
+        ]
+
+        self.__respects = [
+            "you're a god amongst men",
+            "never have I seen such honorable folk!",
+            "you lot are good bloody chaps!",
+            "you're right good at this, aren't you?",
+            "I've never been prouder in my life, serving alongside you!",
+            "teach me!",
+            "your skills are laudable!"
+        ]
+
+        self.__thanks = [
+            "my gratitude",
+            "thank you",
+            "much obliged",
+            "good on you, lad!",
+            "much appreciated"
+        ]
+
+    # @Override
+    def getTaunt(self):
+        return self.__taunts
+
+    # @Override
+    def getRespect(self):
+        return self.__respects
+
+    # @Override
+    def getThank(self):
+        return self.__thanks
+
+
 class UnusedVoice(Voice):
     def __init__(self):
         self.__taunts = [
@@ -419,9 +783,6 @@ class UnusedVoice(Voice):
         ]
 
 
-allVoices = [AgathaArcher(), AgathaManAtArms(), AgathaVanguard(), AgathaKnight(),
-             MasonArcher(), MasonManAtArms(), MasonVanguard(), MasonKnight()]
-
 class NoOneHere:
 
     def __init__(self):
@@ -450,6 +811,27 @@ class NoOneHere:
     def getResponse(self, voice=None):
         return random.choice(self.__noOneHere)
 
+class Sorry:
+
+    def __init__(self):
+        self.__sorry = [
+            "My apologies!",
+            "Sorry!",
+            "Whoops!",
+            "Oh god!",
+            "Walk it off!",
+            "Sorry!",
+            "Sorry!",
+            "Deepest apologies!",
+            "Uh... the red looked blue!",
+            "Uh... I didn't mean it!",
+            "Walk it off!",
+            "Whoopsies!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__sorry)
+
 
 class BirbBotSnark:
 
@@ -473,13 +855,49 @@ class BirbBotSnark:
     def getResponse(self):
         return random.choice(self.__refuseSelfInsult)
 
-class Error:
-    def __init__(self):
 
-        pass
+class Hello:
+    def __init__(self):
+        self.__helloLines = [
+            "Well, hello!",
+            "Hello!",
+            "Hail!",
+            "How's it goin'?",
+            "Pleased to meet you, I'm sure.",
+            "Hey there.",
+            "Touch me and I'll eviscerate you.",
+            "Hullo",
+        ]
 
     def getResponse(self):
-        return "If this triggers, something you did seriously confused me. Please tell Raysparks <EC:2>"
+        return random.choice(self.__helloLines)
 
-    def getServerError(self):
-        return "Something went wrong while pinging the server! Either the requested server is offline, or Raysparks is an idiot! <EC:1>"
+
+allVoices = [
+    AgathaArcher(), AgathaManAtArms(), AgathaVanguard(), AgathaKnight(),
+    MasonArcher(), MasonManAtArms(), MasonVanguard(), MasonKnight(),
+    Barbarian(), Commoner(), Cruel(), Eager(), Foppish(), Raider(), Young()
+]
+
+chivVoices = [
+    AgathaArcher(), AgathaManAtArms(), AgathaVanguard(), AgathaKnight(),
+    MasonArcher(), MasonManAtArms(), MasonVanguard(), MasonKnight()
+]
+
+mordVoices = [
+    Barbarian(), Commoner(), Cruel(), Eager(), Foppish(), Raider(), Young()
+]
+
+
+
+
+# class Error:
+#     def __init__(self):
+#
+#         pass
+#
+#     def getResponse(self):
+#         return "If this triggers, something you did seriously confused me. Please tell Raysparks <EC:2>"
+#
+#     def getServerError(self):
+#         return "Something went wrong while pinging the server! Either the requested server is offline, or Raysparks is an idiot! <EC:1>"
