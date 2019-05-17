@@ -418,25 +418,28 @@ class Barbarian(Voice):
 class Commoner(Voice):
     def __init__(self):
         self.__taunts = [
-            "take your practice swings and call me when you're ready to fight!",
-            "look, I haven't got all day!",
-            "tell me you didn't just wet yourself",
-            "uh... you're doing fine, really",
-            "look, it wouldn't hurt to wipe once in a while"
+            "I don't know what's going through your head pal, but you can forget it!",
+            "Is that all you got?!",
+            "Not exactly cut out for this, are you?",
+            "You sure like your armor, what are you hiding?!",
+            "You're pretty decked out mate, compensating for something?!",
+            "you're all hat and not cattle!"
         ]
 
         self.__respects = [
-            "you don't fight well, but you fight with honor!",
-            "hey, you're not bad!",
-            "how did you do that!?",
-            "you're not half-bad!"
+            "not bad!",
+            "you might actually be worth the effort!",
+            "well, well, you actually know how to use that weapon",
+            "hey! You're pretty good!"
         ]
 
         self.__thanks = [
-            "thanks!",
-            "I owe you one!",
-            "and they say chivalry's dead!",
-            "aww, thanks!"
+            "I didn't think anyone cared!",
+            "thanks for that, mate!",
+            "thanks for that!",
+            "many thanks!",
+            "ta, mate!",
+            "cheers!",
         ]
 
     # @Override
@@ -616,28 +619,25 @@ class Knight(Voice):
 class Plain(Voice):
     def __init__(self):
         self.__taunts = [
-            "I don't know what's going through your head pal, but you can forget it!",
-            "Is that all you got?!",
-            "Not exactly cut out for this, are you?",
-            "You sure like your armor, what are you hiding?!",
-            "You're pretty decked out mate, compensating for something?!",
-            "you're all hat and not cattle!"
+            "take your practice swings and call me when you're ready to fight!",
+            "look, I haven't got all day!",
+            "tell me you didn't just wet yourself",
+            "uh... you're doing fine, really",
+            "look, it wouldn't hurt to wipe once in a while"
         ]
 
         self.__respects = [
-            "not bad!",
-            "you might actually be worth the effort!",
-            "well, well, you actually know how to use that weapon",
-            "hey! You're pretty good!"
+            "you don't fight well, but you fight with honor!",
+            "hey, you're not bad!",
+            "how did you do that!?",
+            "you're not half-bad!"
         ]
 
         self.__thanks = [
-            "I didn't think anyone cared!",
-            "thanks for that, mate!",
-            "thanks for that!",
-            "many thanks!",
-            "ta, mate!",
-            "cheers!",
+            "thanks!",
+            "I owe you one!",
+            "and they say chivalry's dead!",
+            "aww, thanks!"
         ]
 
     # @Override
