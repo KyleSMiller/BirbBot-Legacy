@@ -136,8 +136,14 @@ selfResponseDict = {
 
 voiceLineCommands = [
     "taunt",
+    "xx3",
+    "x8"
     "respect",
-    "thank"
+    "xx1",
+    "x0",
+    "thank",
+    "x5",
+    "xx6"
 ]
 
 recognizedServers = {
