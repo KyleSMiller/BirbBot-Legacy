@@ -166,14 +166,15 @@ messageCommands = {  # general one-response commands
     "scream": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
     "screm": ":screm:",
     "kiss": ":kissing_heart:",
-    "arrest": ":police_car:",
+    "arrest": ":police_car::police_car::police_car::police_car::police_car::police_car:",
     "f10": "I'm calling the police, {0.author.mention}",
     "c": "AAAARRRRRRRRRRRGGGGGGGGGGGGGGG",
     "quadfeint": "Sorry, this move is usable only by god himself",
     "sheildjump": "Reported for hacks",
     "flourish": "*twirls*",
     "comeatme": "GIVE ME A HUG!",
-    "help": "Documentation has been sent to you. If you did not receive it, please make your DM's public"
+    "hug": ":hugging:"
+    # "help": "Documentation has been sent to you. If you did not receive it, please make your DM's public"
 }
 
 dmCommands = {  # commands that will result in a DM response
@@ -185,17 +186,14 @@ dmCommands = {  # commands that will result in a DM response
             "```Command                    | Result\n"
             "--------------------------------------------------------\n"
             "!hello                     | Say hello\n"
-            "![server]                  | Return server info\n"
             "!ms                        | Return info from all Moorland Skirmishers servers\n"
-            "!checkfor [name]           | Search for player or group\n"
 
             "!taunt <class> <name>      | Say a taunt line\n"
             "!respect <class> <name>    | Say a respect line\n"
-            "!thank <class> <name>      | Say a thanks line ``` \n"
-
-            "\n__**Server Names**__\n"
-            "**64** : Main 64 slot Chivalry server\n"
-            "**62** : Secondary 62 slot Chivalry server\n"
+            "!thank <class> <name>      | Say a thanks line\n"
+            "!x<number 0 - 9>           | Say a chivalry voice line\n"
+            "!z<number 0 - 9>           | Say a chivalry tactical line\n"
+            "```"
 
             "\n__**Class Names**__\n"
             "agathaMAA\n"
@@ -206,57 +204,61 @@ dmCommands = {  # commands that will result in a DM response
             "masonArcher\n"
             "masonVan\n"
             "masonKnight\n"
-
-            "\n__**CheckFor Function [Names]**__\n"
-            "admins   --->   states if there are any admins on the specified server\n"
-            "skirmishers   --->   states if there are any Moorland Skirmishers on the specified server\n"
-            "Baron   --->   states if Baron Von Moorland is on the specified server\n"
-            "<name>   --->   any name you want to search. You do not need to enter the  •҉   symbol, but other special characters will need to be accounted for\n"
+            "barbarian\n"
+            "commoner\n"
+            "cruel\n"
+            "eager\n"
+            "foppish\n"
+            "knight\n"
+            "plain\n"
+            "raider\n"
+            "young\n"
 
             "\n__**Notes**__\n"
             "Capitalization does not matter\n"
-            "BirbBot has a large number of commands not listed in documentation, *most* of which are not triggered with \"![command]\". They will likely reveal themselves in time\n"
+            "The x and z voice commands can be \"flipped\" like in chiv. x9 == xx2\n"
+            "BirbBot has a large number of commands not listed in documentation, some of which are not triggered with \"![command]\". They will likely reveal themselves in time\n"
             "Report any bugs found to Raysparks\n"
 
             "\n__**Examples**__\n"
-            "!ms \"Mooland Skirmishers: Gracious Welcome is playing aocffa-moor_p with a population... \""
-            "!checkFor admins   --->   \"There are currently admins on Gracious Welcome!\"\n"
+            "!ms   --->   \"Mooland Skirmishers: Gracious Welcome is playing aocffa-moor_p with a population... \"\n"
             "!taunt  --->   \"Your wife is a hobby horse!\"\n"
             "!thank Malric   --->   \"Malric, thank you brother!\"\n"
-            "!respect agathaVan Baron Von Moorland    --->   \"Baron Von Moorland, I dare say you matched even my own skills\"\n\n"
-            "Note: Roster commands have been depreciated at this time and will not function. Let Raysparks know if you want to see their return",
+            "!respect agathaVan Baron Von Moorland    --->   \"Baron Von Moorland, I dare say you matched even my own skills\"\n"
+            "xx2   --->   \"HA HA HA!\"\n\n"
+            "Final Note: Roster and checkfor commands and have been depreciated at this time and will not function. Let Raysparks know if you want to see their return",
 
-    "rosterhelp": "__**THESE COMMANDS HAVE BEEN DEPRECIATED DUE TO GENERAL BUGGINESS AND LACK OF USE**__\n\n"
-                  "__**BIRB BOT ROSTER COMMAND DOCUMENTATION**__\n"
-                  "<> : signifies optional parameter\n"
-                  "[]: signifies required parameter\n"
-                  "__*Do not include brackets when entering command*__\n\n"
-
-                  "**__BASIC COMMANDS__**\n"
-                  "```Command                          | Result\n"
-                  "--------------------------------------------------------\n"
-                  "!<rosterName> join               | Join the most recent roster. Specify name to join a specific roster\n"
-                  "!<rosterName> leave              | Leave the most recent roster. Specify name to join a specific roster```\n\n"
-                   
-                  "**__CREATOR COMMANDS__**\n"
-                  "```Command                       | Result\n"
-                  "--------------------------------------------------------\n"
-                  "!newRoster [size] [name]         | Create a new roster of the specified size with the specified name\n"
-                  "![rosterName] show               | Display the specified roster\n"
-                  "![rosterName] alert              | Alert all members of the specified roster\n"
-                  "CREATOR-ONLY COMMANDS            | These commands cannot be used by anyone but the person who created the roster\n"
-                  "![rosterName] setSlots [size]    | Change the roster size to the newly specified size\n"
-                  "![rosterName] register [@][name] | Register a new member that is not yourself. An [@] must be provided for \"!alert\" to alert them\n"
-                  "![rosterName] remove [@]||[name] | Remove a member that is not yourself. Name or [@] is accepted\n"
-                  "![rosterName] delete             | Permanently delete the specified roster\n\n```"
-    
-                  "\n**Examples:**\n"
-                  "!newRoster 5 exampleRoster   --->   creates a new roster named \"exampleRoster\" of size 5\n"
-                  "!newRoster join   --->   join newRoster\n"
-                  "!exampleRoster register Birb @birb#1234   --->   registers a new member named Birb with an @ of @birb#1234\n"
-                  "!exampleRoster register Birb   --->   registers a new member named Birb that will not be alerted\n"
-                  "!exampleRoster remove Birb   --->   removes Birb from the roster. Also works provided the @\n"
-                  "!exampleRoster setSlots 10   --->   changes the roster size to 10 with 5 waiting list slots"
+    # "rosterhelp": "__**THESE COMMANDS HAVE BEEN DEPRECIATED DUE TO GENERAL BUGGINESS AND LACK OF USE**__\n\n"
+    #               "__**BIRB BOT ROSTER COMMAND DOCUMENTATION**__\n"
+    #               "<> : signifies optional parameter\n"
+    #               "[]: signifies required parameter\n"
+    #               "__*Do not include brackets when entering command*__\n\n"
+    #
+    #               "**__BASIC COMMANDS__**\n"
+    #               "```Command                          | Result\n"
+    #               "--------------------------------------------------------\n"
+    #               "!<rosterName> join               | Join the most recent roster. Specify name to join a specific roster\n"
+    #               "!<rosterName> leave              | Leave the most recent roster. Specify name to join a specific roster```\n\n"
+    #
+    #               "**__CREATOR COMMANDS__**\n"
+    #               "```Command                       | Result\n"
+    #               "--------------------------------------------------------\n"
+    #               "!newRoster [size] [name]         | Create a new roster of the specified size with the specified name\n"
+    #               "![rosterName] show               | Display the specified roster\n"
+    #               "![rosterName] alert              | Alert all members of the specified roster\n"
+    #               "CREATOR-ONLY COMMANDS            | These commands cannot be used by anyone but the person who created the roster\n"
+    #               "![rosterName] setSlots [size]    | Change the roster size to the newly specified size\n"
+    #               "![rosterName] register [@][name] | Register a new member that is not yourself. An [@] must be provided for \"!alert\" to alert them\n"
+    #               "![rosterName] remove [@]||[name] | Remove a member that is not yourself. Name or [@] is accepted\n"
+    #               "![rosterName] delete             | Permanently delete the specified roster\n\n```"
+    #
+    #               "\n**Examples:**\n"
+    #               "!newRoster 5 exampleRoster   --->   creates a new roster named \"exampleRoster\" of size 5\n"
+    #               "!newRoster join   --->   join newRoster\n"
+    #               "!exampleRoster register Birb @birb#1234   --->   registers a new member named Birb with an @ of @birb#1234\n"
+    #               "!exampleRoster register Birb   --->   registers a new member named Birb that will not be alerted\n"
+    #               "!exampleRoster remove Birb   --->   removes Birb from the roster. Also works provided the @\n"
+    #               "!exampleRoster setSlots 10   --->   changes the roster size to 10 with 5 waiting list slots"
 }
 
 hiddenCommandDict = {  # commands that do not begin with "!"
