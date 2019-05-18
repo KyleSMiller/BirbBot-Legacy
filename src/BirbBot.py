@@ -58,8 +58,8 @@ async def on_message(message):
             voiceCommandReader = VoiceCommandReader(message, msgAuthor, msgAuthorID, cmd)
             msg = voiceCommandReader.retrieveVoiceCommand(recognizedInput.voices)
 
-        elif cmd in recognizedInput.recognizedServers:
-            msg = ServerInfoCommandReader.retrieveServerInfo(cmd)
+        # elif cmd in recognizedInput.recognizedServers:
+        #     msg = ServerInfoCommandReader.retrieveServerInfo(cmd)
 
         elif cmd in recognizedInput.allInfoCommands:
             await client.add_reaction(message, "⌛")
