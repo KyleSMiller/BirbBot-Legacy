@@ -107,7 +107,7 @@ class VoiceCommandReader:
             else:
                 return msg
         elif name in recognizedInput.forbiddenNames:
-            if self.__command == "taunt":
+            if self.__command == "taunt" or self.__command == "xx2" or self.__command == "x8":
                 if voice == "":
                     return name + ", " + random.choice(allVoices).getResponse(self.__command)
                 else:
