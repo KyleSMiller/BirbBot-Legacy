@@ -15,11 +15,11 @@ class Voice:
         raise NotImplementedError("Voice is an abstract class and cannot be directly instantiated")
 
     def getResponse(self, lineType):
-        if lineType == "taunt":
+        if lineType == "taunt" or lineType == "xx3" or lineType == "x8":
             return random.choice(self.getTaunt())
-        elif lineType == "respect":
+        elif lineType == "respect" or lineType == "xx1" or lineType == "x0":
             return random.choice(self.getRespect())
-        elif lineType == "thank":
+        elif lineType == "thank" or lineType == "x5" or lineType == "xx6":
             return random.choice(self.getThank())
         else:
             return "something went wrong while processing the command, please alert Raysparks. " \
@@ -549,6 +549,7 @@ class Foppish(Voice):
             "no! By all means, keep swinging away! You'll eventually hit something.",
             "no, no! You point it this way, you idiot.",
             "you sir, smell like something that was ejected from the backside of a diuretic horse!",
+            "um, the dung-covered peasant convention is *that* way!"
         ]
 
         self.__respects = [
@@ -783,7 +784,324 @@ class UnusedVoice(Voice):
         ]
 
 
-class NoOneHere:
+class BirbBotSnark:
+
+    def __init__(self):
+
+        self.__refuseSelfInsult = [
+            "BirbBot is very handsome and wonderful and not at all like that idiot {0.author.mention}",
+            "Inciting self-abuse is not a joke, {0.author.mention}",
+            "Fuck you, {0.author.mention}",
+            "I work day and night for you, {0.author.mention}, and this is how you choose to repay me?",
+            "Mother fucker . Catch these boots, {0.author.mention}",
+            "{0.author.mention}, square up, bitch.",
+            "{0.author.mention} >:(",
+            "I'll whip your ass, {0.author.mention}",
+            "{0.author.mention} *angry birb noises*",
+            "This is going to HR, {0.author.mention}",
+            "Ask not for whom the ban hammer comes, {0.author.mention}. It comes for thee."
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__refuseSelfInsult)
+
+
+class SimpleVoice:
+    def getResponse(self):
+        raise NotImplementedError("SimpleVoice is an abstract class and cannot be directly instantiated")
+
+
+class Hello(SimpleVoice):
+    def __init__(self):
+        self.__helloLines = [
+            "Well, hello!",
+            "Hello!",
+            "Hail!",
+            "How's it goin'?",
+            "Pleased to meet you, I'm sure.",
+            "Hey there.",
+            "Touch me and I'll eviscerate you.",
+            "Hullo",
+            "https://www.youtube.com/watch?v=B7Jh3jm1jKc",
+            "Hi there!",
+            "Hello, {0.author.mention}!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__helloLines)
+
+
+class Yes(SimpleVoice):
+    def __init__(self):
+        self.__yesLines = [
+            "Yes!",
+            "Of course!",
+            "Certainly!",
+            "Yeah!",
+            "Yes!",
+            "Without a doubt!",
+            "Aye!",
+            "Aye, sir!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__yesLines)
+
+
+class No(SimpleVoice):
+    def __init__(self):
+        self.__noLines = [
+            "No!",
+            "Certainly not!",
+            "Of course not!",
+            "Are you out of your mind?!",
+            "Never!",
+            "Absolutely not!",
+            "NO!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__noLines)
+
+
+class Help(SimpleVoice):
+    def __init__(self):
+        self.__helpLines = [
+            "Help!",
+            "Help me!",
+            "Help me please!",
+            "HELP!",
+            "HELP, HELP!",
+            "I NEED HELP!",
+            "Don't just stand there! Help me!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__helpLines)
+
+
+class WithYou(SimpleVoice):
+    def __init__(self):
+        self.__withYouLines = [
+            "I'm with you!",
+            "I've got your back!",
+            "I'm here!",
+            "Never fear, I am here!",
+            "I'll be by your side!",
+            "I'll stay by your side!",
+            "I'll fight with you!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__withYouLines)
+
+
+class Welcome(SimpleVoice):
+    def __init__(self):
+        self.__welcomeLines = [
+            "You owe me!",
+            "You're welcome!",
+            "Forget about it!",
+            "It was my duty!",
+            "Not a problem!",
+            "Glad I could help!",
+            "You owe me one!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__welcomeLines)
+
+
+class Sorry(SimpleVoice):
+    def __init__(self):
+        self.__sorryLines = [
+            "My apologies!",
+            "Sorry!",
+            "Whoops!",
+            "Oh god!",
+            "Walk it off!",
+            "Sorry!",
+            "Sorry!",
+            "Deepest apologies!",
+            "Uh... the red looked blue!",
+            "Uh... I didn't mean it!",
+            "Walk it off!",
+            "Whoopsies!",
+            "Uh... It wasn't me!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__sorryLines)
+
+
+class Laugh(SimpleVoice):
+    def __init__(self):
+        self.__laughLines = [
+            "HAHAHA!",
+            "HA! HA HA HA!",
+            "AH HA HA HA!",
+            "Hehehehehehehe!",
+            "HA HA HA! Hoo boy!",
+            "HA HA HA, HE HE HE!",
+            "Hehe!",
+            "Ha ha ha ha ha ha!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__laughLines)
+
+
+class Follow(SimpleVoice):
+    def __init__(self):
+        self.__followLines = [
+            "Follow me!",
+            "With me, follow me!",
+            "Follow!",
+            "Come hither!",
+            "With me!",
+            "On me, men!",
+            "Follow my lead!",
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__followLines)
+
+
+class Forward(SimpleVoice):
+    def __init__(self):
+        self.__forwardLines = [
+            "Forward!",
+            "Move forward!",
+            "March forwards!",
+            "Keep going!",
+            "ONWARDS!",
+            "Move! Move!",
+            "Let's go!",
+            "Onward to the light, brothers!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__forwardLines)
+
+
+class Retreat(SimpleVoice):
+    def __init__(self):
+        self.__retreatLines = [
+            "Fall back!",
+            "Retreat!",
+            "Fall baaaack!",
+            "The light fades, fall back!",
+            "We have to get out of here!",
+            "Run away!",
+            "The light is fading!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__retreatLines)
+
+
+class Archers(SimpleVoice):
+    def __init__(self):
+        self.__archerLines = [
+            "Kill those archers!",
+            "Kill the archers first!",
+            "They have range!",
+            "Focus on the archers!",
+            "Archers! They have archers!",
+            "KILL THOSE ARCHERS!",
+            "***KILL THE ARCHERS***"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__archerLines)
+
+
+class Objective(SimpleVoice):
+    def __init__(self):
+        self.__objectiveLines = [
+            "Come hither",
+            "Free the slaves!",
+            "The rebellion ends when Malric's head rolls!",
+            "WE'REGONNANEEDTHATGRAIN! PROTECT THE FARM!",
+            "Burn the farm! Burn it all!",
+            "Take the cart up to the gate!",
+            "Feydrid is the last remaining heir! He must not fall!",
+            "We end this war now! Charge the citadel, and ***kill*** the false king!",
+            "We wont be finished until the usurpers head is on a PIKE!",
+            "Agatha takes the knee!",
+            "Put those peasants out of their misery!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__objectiveLines)
+
+
+class Hold(SimpleVoice):
+    def __init__(self):
+        self.__holdLines = [
+            "We must hold this ground!",
+            "Here! We hold them here!",
+            "Hold here!",
+            "We stand and fight here!",
+            "Here we make our stand!",
+            "Hold your ground, men!",
+            "Do not give up this land!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__holdLines)
+
+
+class DefendMe(SimpleVoice):
+    def __init__(self):
+        self.__defendMeLines = [
+            "Protect me!",
+            "Me! To me!",
+            "Defend me!",
+            "To me men, this is important!",
+            "On me!",
+            "Don't let them near me!",
+            "Keep them off of me!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__defendMeLines)
+
+
+class Incoming(SimpleVoice):
+    def __init__(self):
+        self.__incomingLines = [
+            "Incoming!",
+            "Here they come, lads!",
+            "They're coming right for us!",
+            "The Masons, they come!",
+            "Here they come!",
+            "The fight comes to us!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__incomingLines)
+
+class BehindUs(SimpleVoice):
+    def __init__(self):
+        self.__behindUsLines = [
+            "Behind us!",
+            "Behind you!",
+            "Watch your arses men, they come from behind!",
+            "They come from our sides!",
+            "Watch your back!",
+            "They are behind us!",
+            "Turn around men! They mean to take our rears!",
+            "They flank us!",
+            "Behind us, men! They are behind us!",
+            "They've gotten around our sides!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__behindUsLines)
+
+
+class NoOneHere(SimpleVoice):
 
     def __init__(self):
 
@@ -811,66 +1129,6 @@ class NoOneHere:
     def getResponse(self, voice=None):
         return random.choice(self.__noOneHere)
 
-class Sorry:
-
-    def __init__(self):
-        self.__sorry = [
-            "My apologies!",
-            "Sorry!",
-            "Whoops!",
-            "Oh god!",
-            "Walk it off!",
-            "Sorry!",
-            "Sorry!",
-            "Deepest apologies!",
-            "Uh... the red looked blue!",
-            "Uh... I didn't mean it!",
-            "Walk it off!",
-            "Whoopsies!"
-        ]
-
-    def getResponse(self, voice=None):
-        return random.choice(self.__sorry)
-
-
-class BirbBotSnark:
-
-    def __init__(self):
-
-        self.__refuseSelfInsult = [
-            "BirbBot is very handsome and wonderful and not at all like that idiot {0.author.mention}",
-            "Inciting self-abuse is not a joke, {0.author.mention}",
-            "Fuck you, {0.author.mention}",
-            "I work day and night for you, {0.author.mention}, and this is how you choose to repay me?",
-            "Mother fucker . Catch these boots, {0.author.mention}",
-            "{0.author.mention}, square up, bitch.",
-            "{0.author.mention} >:(",
-            "I'll whip your ass, {0.author.mention}",
-            "{0.author.mention} *angry birb noises*",
-            "This is going to HR, {0.author.mention}",
-            "Ask not for whom the ban hammer comes, {0.author.mention}. It comes for thee."
-        ]
-
-
-    def getResponse(self):
-        return random.choice(self.__refuseSelfInsult)
-
-
-class Hello:
-    def __init__(self):
-        self.__helloLines = [
-            "Well, hello!",
-            "Hello!",
-            "Hail!",
-            "How's it goin'?",
-            "Pleased to meet you, I'm sure.",
-            "Hey there.",
-            "Touch me and I'll eviscerate you.",
-            "Hullo",
-        ]
-
-    def getResponse(self):
-        return random.choice(self.__helloLines)
 
 
 allVoices = [

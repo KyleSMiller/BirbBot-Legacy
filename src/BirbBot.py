@@ -6,6 +6,7 @@ import discord
 import recognizedInput
 from VoiceCommandReader import VoiceCommandReader
 from ServerInfoCommandReader import ServerInfoCommandReader
+from voiceLines import SimpleVoice, Voice
 
 from resources.passwords import adminPassword
 
@@ -65,8 +66,8 @@ async def on_message(message):
             msg = ServerInfoCommandReader.retrieveAllInfo()
             await client.remove_reaction(message, "⌛", client.user)
 
-        elif cmd in recognizedInput.checkForCommands:
-            msg = ServerInfoCommandReader.checkFor(message)
+        # elif cmd in recognizedInput.checkForCommands:
+        #     msg = ServerInfoCommandReader.checkFor(message)
 
         elif cmd in recognizedInput.messageCommands:
             msg = recognizedInput.messageCommands[cmd]
@@ -88,6 +89,11 @@ async def on_message(message):
     # hidden commands
     elif message.content.lower() in recognizedInput.hiddenCommandDict:
         msg = recognizedInput.hiddenCommandDict[message.content.lower()]
+        if isinstance(msg, SimpleVoice):
+            msg = msg.getResponse()
+        if isinstance(msg, Voice):
+            voiceCommandReader = VoiceCommandReader(message, msgAuthor, msgAuthorID, message.content)
+            msg = voiceCommandReader.retrieveVoiceCommand(recognizedInput.voices)
         await client.send_message(message.channel, msg)
 
     # feint complaint commands
