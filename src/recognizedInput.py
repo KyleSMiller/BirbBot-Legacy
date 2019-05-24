@@ -137,13 +137,16 @@ selfResponseDict = {
 voiceLineCommands = [
     "taunt",
     "xx3",
-    "x8"
+    "x8",
     "respect",
     "xx1",
     "x0",
     "thank",
     "x5",
-    "xx6"
+    "xx6",
+    "c4",
+    "cc3",
+    "ccc4"
 ]
 
 recognizedServers = {
@@ -328,7 +331,22 @@ hiddenCommandDict = {  # commands that do not begin with "!"
     "z9": voiceLines.BehindUs(),
     "zz2": voiceLines.BehindUs(),
     "z0": voiceLines.NoOneHere(),
-    "zz1": voiceLines.NoOneHere()
+    "zz1": voiceLines.NoOneHere(),
+    "c1": voiceLines.Yes(),
+    "c2": voiceLines.No(),
+    "c3": voiceLines.Help(),
+    "c4": voiceLines.Voice(),
+    "c5": voiceLines.Intimidate(),
+    "cc1": voiceLines.Sorry(),
+    "cc2": voiceLines.Laugh(),
+    "cc3": voiceLines.Voice(),
+    "cc4": voiceLines.Friendlies(),
+    "cc5": voiceLines.Retreat(),
+    "ccc1": voiceLines.Hold(),
+    "ccc2": voiceLines.Hello(),
+    "ccc3": voiceLines.Follow(),
+    "ccc4": voiceLines.Voice(),
+    "ccc5": voiceLines.Charge()
 }
 
 multiResponseCommands = {  # commands that have more than one possible response
@@ -371,7 +389,22 @@ multiResponseCommands = {  # commands that have more than one possible response
     "z9": voiceLines.BehindUs(),
     "zz2": voiceLines.BehindUs(),
     "z0": voiceLines.NoOneHere(),
-    "zz1": voiceLines.NoOneHere()
+    "zz1": voiceLines.NoOneHere(),
+    "c1": voiceLines.Yes(),
+    "c2": voiceLines.No(),
+    "c3": voiceLines.Help(),
+    # c4 handled in voiceLines
+    "c5": voiceLines.Intimidate(),
+    "cc1": voiceLines.Sorry(),
+    "cc2": voiceLines.Laugh(),
+    # cc3 handled in voiceLines
+    "cc4": voiceLines.Friendlies(),
+    "cc5": voiceLines.Retreat(),
+    "ccc1": voiceLines.Hold(),
+    "ccc2": voiceLines.Hello(),
+    "ccc3": voiceLines.Follow(),
+    # ccc4 handled in voiceLines
+    "ccc5": voiceLines.Charge()
 }
 
 recognizedChannels = {

@@ -15,11 +15,11 @@ class Voice:
         raise NotImplementedError("Voice is an abstract class and cannot be directly instantiated")
 
     def getResponse(self, lineType):
-        if lineType == "taunt" or lineType == "xx3" or lineType == "x8":
+        if lineType == "taunt" or lineType == "xx3" or lineType == "x8" or lineType == "c4":
             return random.choice(self.getTaunt())
-        elif lineType == "respect" or lineType == "xx1" or lineType == "x0":
+        elif lineType == "respect" or lineType == "xx1" or lineType == "x0" or lineType == "ccc4":
             return random.choice(self.getRespect())
-        elif lineType == "thank" or lineType == "x5" or lineType == "xx6":
+        elif lineType == "thank" or lineType == "x5" or lineType == "xx6" or lineType == "cc3":
             return random.choice(self.getThank())
         else:
             return "something went wrong while processing the command, please alert Raysparks. " \
@@ -385,8 +385,7 @@ class Barbarian(Voice):
             "you scum!",
             "pathetic filth!",
             "weakling!",
-            "you make me sick!",
-            "***S T O P***! In the name of the ***L A W***!"
+            "you make me sick!"
         ]
 
         self.__respects = [
@@ -823,8 +822,7 @@ class Hello(SimpleVoice):
             "Touch me and I'll eviscerate you.",
             "Hullo",
             "https://www.youtube.com/watch?v=B7Jh3jm1jKc",
-            "Hi there!",
-            "Hello, {0.author.mention}!"
+            "Hi there!"
         ]
 
     def getResponse(self, voice=None):
@@ -1128,6 +1126,64 @@ class NoOneHere(SimpleVoice):
 
     def getResponse(self, voice=None):
         return random.choice(self.__noOneHere)
+
+# Mordhau lines
+class Intimidate(SimpleVoice):
+    def __init__(self):
+
+        self.__intimidate = [
+            "That's not an army! I've seen bigger book clubs!",
+            "WE SHALL IMPALE THEM!",
+            "Do we really have to kill all of them? I was hoping to be done before tea.",
+            "I love me a good execution!",
+            "I'll bash your fuckin' head in!",
+            "You cannot escape me!",
+            "I'll kill ya!",
+            "We will eviscerate you",
+            "This is too easy!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__intimidate)
+
+
+class Friendlies(SimpleVoice):
+    def __init__(self):
+
+        self.__frendlies = [
+            "Who's side are you on?!",
+            "I'm on your side, ya moppit!",
+            "Bloody treason!",
+            "Ow! You did that on purpose!",
+            "***S T O P,*** IN THE NAME OF THE ***L A W***",
+            "Hey! I'm on your side!",
+            "Watch where you aim that thing!",
+            "Do you seriously not recognize this fuckin' face?!",
+            "You imbecile! I'm on your side!",
+            "Be careful with that!"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__frendlies)
+
+
+class Charge(SimpleVoice):
+    def __init__(self):
+
+        self.__charge = [
+            "***AAARRRGGGGG***",
+            "***FOOOOORWAAAAAARD!***",
+            "***DODGE THIS YOU BASTAAAAAAAARDS!***",
+            "***AAAAAAAAAAAAAAAAAA***",
+            "***GO! GO!***",
+            "***WE SHALL IMPALE THEM!***",
+            "***YAAAAAAAAAAAAAAAA***",
+            "***GAAAAAAAHHHHHHHH***",
+            "***RAAAAAAAAHHHHHHHH***"
+        ]
+
+    def getResponse(self, voice=None):
+        return random.choice(self.__charge)
 
 
 

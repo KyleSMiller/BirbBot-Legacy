@@ -94,7 +94,10 @@ async def on_message(message):
         if isinstance(msg, Voice):
             voiceCommandReader = VoiceCommandReader(message, msgAuthor, msgAuthorID, message.content)
             msg = voiceCommandReader.retrieveVoiceCommand(recognizedInput.voices)
-        await client.send_message(message.channel, msg)
+        try:
+            await client.send_message(message.channel, msg.format(message))
+        except KeyError:  # if message contains text between {braces} that causes errors with .format()
+            await client.send_message(message.channel, msg)
 
     # feint complaint commands
     elif "feint" in message.content or "feinted" in message.content or "feints" in message.content:
@@ -103,7 +106,10 @@ async def on_message(message):
                 msg = ("Oh no! Have you been feinted in Torn Banner's 2012 action slasher game, "
                        "\"Chivalry: Medieval Warfare\"? Don't worry, you aren't alone, and help *is* out there. "
                        "Please, take the time to talk to someone. http://tornbanner.com/contact/")
-                await client.send_message(message.channel, msg)
+                try:
+                    await client.send_message(message.channel, msg.format(message))
+                except KeyError:  # if message contains text between {braces} that causes errors with .format()
+                    await client.send_message(message.channel, msg)
 
 
 
