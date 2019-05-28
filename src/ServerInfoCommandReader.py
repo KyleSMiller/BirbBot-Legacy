@@ -30,7 +30,7 @@ class ServerInfoCommandReader:
         smallChivSummary = recognizedServers["smallChiv"].getAll()
 
 
-        msg = "**__CHIVALRY: MEDIEVAL WARFARE SEVERS__**\n\n"
+        msg = "**__CHIVALRY: MEDIEVAL WARFARE SERVERS__**\n\n"
         msg += bigChivSummary + "\n\n"
         msg += smallChivSummary + "\n\n\n"
         msg += "**__MORDHAU SERVERS__**\n\n"
