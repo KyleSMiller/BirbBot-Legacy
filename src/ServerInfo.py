@@ -148,15 +148,21 @@ class ServerInfo:
     def login(self):
         self.__login(queryLoginUsername, queryLoginPassword)
 
+    def __openSession(self):
+        """
+        Open a new Chrome session
+        """
+        self.__session = webdriver.Chrome()
+        self.__session.get(self.__loginPage)
+
     def __login(self, username, password):
         """
-        Open a session with provided login data so the server query data can be accessed
+        Login to the currently open session with the provided username and password
         :param username  username for panel.forcad.org account
         :param password  password for panel.forcad.org account
         :return          the session opened with the provided data
         """
-        self.__session = webdriver.Chrome()
-        self.__session.get(self.__loginPage)
+        self.__openSession()
         # find all login elements
         usernameBox = self.__session.find_element_by_id("ContentPlaceHolder1_TextBox1")
         passwordBox = self.__session.find_element_by_id("ContentPlaceHolder1_TextBox2")
@@ -165,6 +171,11 @@ class ServerInfo:
         usernameBox.send_keys(username)
         passwordBox.send_keys(password)
         loginButton.click()
+
+        # wait for the login to load and confirm it was successful
+        loginConfirmation = WebDriverWait(self.__session, 10).until(
+        EC.presence_of_element_located((By.ID, "ContentPlaceHolder1_div")))
+
         pageSource = self.__session.page_source  # placeholder variable, page_source can't be directly made html object
         self.__pageSource = html.fromstring(pageSource)
 
@@ -213,7 +224,10 @@ class ServerInfo:
                     return False
                 else:
                     return True
-        return False
+        # panel.forcad.org will occasionally log the user out, this will re-perform the login should that happen
+        self.__session.close()
+        self.__login(queryLoginUsername, queryLoginPassword)
+        return self.__isOnline()
 
     def __findServerName(self):
         """
