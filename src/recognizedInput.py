@@ -150,10 +150,14 @@ voiceLineCommands = [
 ]
 
 recognizedServers = {
-    "bigChiv": ServerInfo.ServerInfo("query.aspx?id=24", "Moorland Skirmishers | Gracious Welcome", "66.151.138.224:3170"),
-    "smallChiv": ServerInfo.ServerInfo("query.aspx?id=25", "Moorland Skirmishers | Map Testing", "66.151.138.224:3175"),
-    "bigMord": ServerInfo.ServerInfo("query.aspx?id=28", "Moorland Skirmishers ❊ Gracious Welcome", "66.151.138.224:13301"),
-    "smallMord": ServerInfo.ServerInfo("query.aspx?id=33", "Moorland Skirmishers ❊ Intimate Encounters", "66.151.138.224:13306")
+    "bigChiv": ServerInfo.ServerInfo("query.aspx?id=24", "Moorland Skirmishers | Gracious Welcome",
+                                     "66.151.138.224:3170", "Chivalry: Medieval Warfare"),
+    "smallChiv": ServerInfo.ServerInfo("query.aspx?id=25", "Moorland Skirmishers | Map Testing",
+                                       "66.151.138.224:3175", "Chivalry: Medieval Warfare"),
+    "bigMord": ServerInfo.ServerInfo("query.aspx?id=28", "Moorland Skirmishers ❊ The Moor Wild West",
+                                     "66.151.138.224:13301", "Mordhau"),
+    "smallMord": ServerInfo.ServerInfo("query.aspx?id=33", "Moorland Skirmishers ❊ Gracious Welcome",
+                                       "66.151.138.224:13306", "Mordhau")
 }
 
 allInfoCommands = [  # commands that will return all server info
