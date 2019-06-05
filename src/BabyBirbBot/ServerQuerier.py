@@ -58,7 +58,7 @@ class ServerQuerier:
                 self.__findMap()
                 self.__findPlayerCount()
                 self.__findPlayerList()
-                return self.__formatInfo(playerList=True)
+                return self.__writeToJson()
             else:
                 return "**" + self.__serverName + "** appears to be offline!"
         except IndexError:
@@ -176,3 +176,12 @@ class ServerQuerier:
                 except IndexError:
                     pass  # ignore names that it's can't seem to find
             self.__playerList = players[3:]  # list cries if you try to start range at 4, so slice list here
+
+    def __writeToJson(self):
+        """
+        Write all gathered info to a .json file
+        :return:  the .json file
+        """
+        pass
+
+# //*[@id="ContentPlaceHolder1_div"]/div  <-- XPATH to "You don't seem to have access to any game servers." message
