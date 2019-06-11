@@ -24,7 +24,7 @@ class PlayerList:
 
     def __simpleFormatPlayerList(self):
         if self.__players == "SKIP":  # player list is not supported
-            self.__playerList += Sorry().getResponse() + " Mordhau does not currently support player list queries!"
+            self.__playerList += Sorry().getResponse() + " This server not currently support player list queries!"
         elif len(self.__players) == 0:  # player list is empty
             self.__playerList += NoOneHere().getResponse()
         else:  # player list is populated
