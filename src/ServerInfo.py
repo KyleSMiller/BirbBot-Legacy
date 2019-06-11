@@ -1,6 +1,5 @@
 from resources.passwords import queryLoginUsername, queryLoginPassword
 from PlayerList import PlayerList
-from BabyBirbBot.ServerQuerier import ServerQuerier
 
 import json
 
@@ -9,15 +8,39 @@ import json
 
 class ServerInfo:
 
-    def __init__(self, queryAddress, serverName, serverIP, gameType, session=None):
-        self.__queryAddress = queryAddress
-        self.__serverName = serverName
-        self.__serverIP = serverIP
-        self.__gameType = gameType
-        self.__session = session
-        self.__map = "UNKNOWN"
-        self.__population = "?/?"
-        self.__playerList = None
+    def __init__(self, dataDict):
+        """
+        Gather all provided data from the passed in dictionary, filling in the gaps when necessary
+        :param dataDict:  dictionary of server data
+        """
+        if "IP" in dataDict.keys():
+            self.__ip = dataDict["IP"]
+        else:
+            self.__ip = "Unknown IP"
+        if "Name" in dataDict.keys():
+            self.__name = dataDict["Name"]
+        else:
+            self.__name = "Unknown Server"
+        if "Game" in dataDict.keys():
+            self.__game = dataDict["Game"]
+        else:
+            self.__game = "Unknown Game"
+        if "Gametype" in dataDict.keys():
+            self.__gameType = dataDict["Gametype"]
+        else:
+            self.__gameType = "Unknown Gametype"
+        if "Map" in dataDict.keys():
+            self.__map = dataDict["Map"]
+        else:
+            self.__map = "Unknown Map"
+        if "Population" in dataDict.keys():
+            self.__population = dataDict["Population"]
+        else:
+            self.__population = "?/?"
+        if "Player List" in dataDict.keys():
+            self.__playerList = dataDict["Player List"]
+        else:
+            self.__playerList = []
 
         self.__admins = [
             "Baron voŋ Moorland",
@@ -46,21 +69,18 @@ class ServerInfo:
             "ムgòn Đominus"
         ]
 
-
-    def getServerInfo(self):
+    def __str__(self):
         """
         Gather server name, map, population, gameType, and playerList and return it in a formatted string
         :return:  Formatted string of server info
         """
-        self.__serverQuerier = ServerQuerier(self.__queryAddress, self.__serverName, self.__serverIP, self.__session)
-        self.__serverInfo = self.__serverQuerier.getAll()
         return self.__formatInfo()
 
-    def closeQuerier(self):
-        """
-        Close the browser session of the querier
-        """
-        self.__serverQuerier.closeSession()
+    def getName(self):
+        return self.__name
+
+    def getGame(self):
+        return self.__game
 
     def isInServer(self, player):
         """
@@ -87,20 +107,6 @@ class ServerInfo:
                 return True
         return False
 
-    def __readJsonFile(self):
-        """
-        Read the .json file created by the ServerQuerier object
-        :return:
-        """
-        with open("./resources/testJson.json") as jsonFile:
-            data = json.load(jsonFile)
-            for server in data[self.__gameType]:
-                if server["IP"] == self.__serverIP:
-                    self.__serverName = server["Name"]
-                    self.__map = server["Map"]
-                    self.__population = server["Population"]
-                    self.__playerList = PlayerList(server["Player List"])
-
     def __getCurrentPlayers(self):
         """
         Get the number of players currently on the server
@@ -123,7 +129,7 @@ class ServerInfo:
         Format all the retrieved server info into a response for BirbBot
         :return String     the formatted server info response that BirbBot will present
         """
-        formattedInfo = ("**" + str(self.__serverName) + "** is playing **"
+        formattedInfo = ("**" + str(self.__name) + "** is playing **"
                          + str(self.__map) + "** with a population of **"
                          + "(" + str(self.__population) + ")**")
         if playerList:
