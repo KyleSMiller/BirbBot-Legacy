@@ -74,7 +74,10 @@ class ServerInfo:
         Gather server name, map, population, gameType, and playerList and return it in a formatted string
         :return:  Formatted string of server info
         """
-        return self.__formatInfo()
+        if self.__game != "Mordhau":  # TODO: Logic for detecting no player list support. This is a hack job
+            return self.__formatInfo()
+        else:
+            return self.__formatInfo(False)
 
     def getName(self):
         return self.__name
