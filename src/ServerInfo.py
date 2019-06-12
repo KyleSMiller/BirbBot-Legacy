@@ -13,6 +13,10 @@ class ServerInfo:
         Gather all provided data from the passed in dictionary, filling in the gaps when necessary
         :param dataDict:  dictionary of server data
         """
+        if "Status" in dataDict.keys():
+            self.__status = dataDict["Status"]
+        else:
+            self.__status = "Unknown Status"
         if "IP" in dataDict.keys():
             self.__ip = dataDict["IP"]
         else:
@@ -38,7 +42,7 @@ class ServerInfo:
         else:
             self.__population = "?/?"
         if "Player List" in dataDict.keys():
-            self.__playerList = dataDict["Player List"]
+            self.__playerList = PlayerList(dataDict["Player List"])
         else:
             self.__playerList = []
 
@@ -74,10 +78,10 @@ class ServerInfo:
         Gather server name, map, population, gameType, and playerList and return it in a formatted string
         :return:  Formatted string of server info
         """
-        if self.__game != "Mordhau":  # TODO: Logic for detecting no player list support. This is a hack job
-            return self.__formatInfo()
+        if self.getGame() == "Mordhau":  # TODO: Logic for detecting no player list support. This is a hack job
+            return self.__formatInfo(playerList=False)
         else:
-            return self.__formatInfo(False)
+            return self.__formatInfo(playerList=True)
 
     def getName(self):
         return self.__name
@@ -132,6 +136,8 @@ class ServerInfo:
         Format all the retrieved server info into a response for BirbBot
         :return String     the formatted server info response that BirbBot will present
         """
+        if self.__status == "Offline":
+            return "**" + str(self.__name) + "** appears to be offline!"
         formattedInfo = ("**" + str(self.__name) + "** is playing **"
                          + str(self.__map) + "** with a population of **"
                          + "(" + str(self.__population) + ")**")
