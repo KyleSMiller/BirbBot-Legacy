@@ -18,6 +18,9 @@ class PlayerList:
     def __str__(self):
         return self.__playerList
 
+    def getPlayers(self):
+        return self.__players
+
     def checkFor(self, player):
         # check if player is in the player list
         return player in self.__players
