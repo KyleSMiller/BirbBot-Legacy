@@ -44,7 +44,7 @@ class ServerInfo:
         if "Player List" in dataDict.keys():
             self.__playerList = PlayerList(dataDict["Player List"])
         else:
-            self.__playerList = []
+            self.__playerList = PlayerList("SKIP")
 
         self.__admins = [
             "Baron voŋ Moorland",
@@ -78,10 +78,18 @@ class ServerInfo:
         Gather server name, map, population, gameType, and playerList and return it in a formatted string
         :return:  Formatted string of server info
         """
-        if self.getGame() == "Mordhau":  # TODO: Logic for detecting no player list support. This is a hack job
-            return self.__formatInfo(playerList=False)
-        else:
-            return self.__formatInfo(playerList=True)
+        return self.__formatInfo(playerList=(self.getGame() != "Mordhau"))
+        # TODO: working logic to determine if game supports player list queries
+        # playerListSupported = False
+        # if self.__playerList.getPlayers() == 0:
+        #     if self.__game != "Mordhau":
+        #         playerListSupported = True
+        # for player in self.__playerList.getPlayers():
+        #     if player != "":  # if list is only empty strings, player list queries are not supported
+        #         playerListSupported = True
+        # return self.__formatInfo(playerList=playerListSupported)
+
+
 
     def getName(self):
         return self.__name
