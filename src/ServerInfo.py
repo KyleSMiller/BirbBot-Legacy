@@ -29,10 +29,10 @@ class ServerInfo:
             self.__game = dataDict["Game"]
         else:
             self.__game = "Unknown Game"
-        if "Gametype" in dataDict.keys():
-            self.__gameType = dataDict["Gametype"]
+        if "Game Type" in dataDict.keys():
+            self.__gameType = dataDict["Game Type"]
         else:
-            self.__gameType = "Unknown Gametype"
+            self.__gameType = ""
         if "Map" in dataDict.keys():
             self.__map = dataDict["Map"]
         else:
@@ -147,10 +147,12 @@ class ServerInfo:
         if self.__status == "Offline":
             return "**" + str(self.__name) + "** appears to be offline!"
         formattedInfo = ("**" + str(self.__name) + "** is playing **"
-                         + str(self.__map) + "** with a population of **"
+                         + str(self.__gameType) + str(self.__map) + "** with a population of **"
                          + "(" + str(self.__population) + ")**")
         if playerList:
             formattedInfo += "\n" + str(self.__playerList)
         else:
-            formattedInfo += "\n" + str(PlayerList("SKIP"))
+            # This is a hackney thing but who cares
+            formattedInfo += "\nJoin it with **open " + str(self.__ip) + "**"
+            # formattedInfo += "\n" + str(PlayerList("SKIP"))
         return formattedInfo
