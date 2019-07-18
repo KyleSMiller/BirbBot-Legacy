@@ -73,29 +73,38 @@ class ServerInfo:
             "ムgòn Đominus"
         ]
 
-    def __str__(self):
-        """
-        Gather server name, map, population, gameType, and playerList and return it in a formatted string
-        :return:  Formatted string of server info
-        """
-        return self.__formatInfo(playerList=(self.getGame() != "Mordhau"))
-        # TODO: working logic to determine if game supports player list queries
-        # playerListSupported = False
-        # if self.__playerList.getPlayers() == 0:
-        #     if self.__game != "Mordhau":
-        #         playerListSupported = True
-        # for player in self.__playerList.getPlayers():
-        #     if player != "":  # if list is only empty strings, player list queries are not supported
-        #         playerListSupported = True
-        # return self.__formatInfo(playerList=playerListSupported)
 
+    def getStatus(self):
+        return self.__status
 
+    def getIP(self):
+        return self.__ip
 
     def getName(self):
         return self.__name
 
     def getGame(self):
         return self.__game
+
+    def getGameType(self):
+        return self.__gameType
+
+    def getMap(self):
+        return self.__map
+
+    def getPopulation(self):
+        return self.__population
+
+    def getPlayerList(self):
+        return self.__playerList
+
+
+    def __str__(self):
+        """
+        Gather server name, map, population, gameType, and playerList and return it in a formatted string
+        :return:  Formatted string of server info
+        """
+        return self.__formatInfo()
 
     def isInServer(self, player):
         """
@@ -139,7 +148,7 @@ class ServerInfo:
         maxPlayers = playerCountRaw.split("/")[1]
         return int(maxPlayers)
 
-    def __formatInfo(self, playerList=False):
+    def __formatInfo(self):
         """
         Format all the retrieved server info into a response for BirbBot
         :return String     the formatted server info response that BirbBot will present
@@ -149,10 +158,67 @@ class ServerInfo:
         formattedInfo = ("**" + str(self.__name) + "** is playing **"
                          + str(self.__gameType) + str(self.__map) + "** with a population of **"
                          + "(" + str(self.__population) + ")**")
-        if playerList:
-            formattedInfo += "\n" + str(self.__playerList)
-        else:
-            # This is a hackney thing but who cares
-            formattedInfo += "\nJoin it with **open " + str(self.__ip) + "**"
-            # formattedInfo += "\n" + str(PlayerList("SKIP"))
+        formattedInfo += "\n" + str(self.__playerList)
         return formattedInfo
+
+
+
+class ChivalryServerInfo(ServerInfo):
+    def __init__(self, dataDict):
+        super(ChivalryServerInfo, self).__init__(dataDict)
+
+    @staticmethod
+    def getGameName():
+        """
+        :return: String  The name of the game this ServerInfo class is designed for
+        """
+        return "Chivalry: Medieval Warfare"
+
+    def __str__(self):
+        return self.__formatInfo()
+
+    def __formatInfo(self):
+        """
+        Format all the retrieved server info into a response for BirbBot
+        :return String     the formatted server info response that BirbBot will present
+        """
+        if self.getStatus() == "Offline":
+            return "**" + str(self.getName()) + "** appears to be offline!"
+        formattedInfo = ("**" + str(self.getName()) + "** is playing **"
+                         + str(self.getMap()) + "** with a population of **"
+                         + "(" + str(self.getPopulation()) + ")**")
+        formattedInfo += "\n" + str(self.getPlayerList())
+        return formattedInfo
+
+
+
+class MordhauServerInfo(ServerInfo):
+    def __init__(self, dataDict):
+        super(MordhauServerInfo, self).__init__(dataDict)
+
+    @staticmethod
+    def getGameName():
+        """
+        :return: String  The name of the game this ServerInfo class is designed for
+        """
+        return "Mordhau"
+
+    def __str__(self):
+        return self.__formatInfo()
+
+    def __formatInfo(self):
+        """
+        Format all the retrieved server info into a response for BirbBot
+        :return String     the formatted server info response that BirbBot will present
+        """
+        if self.getStatus() == "Offline":
+            return "**" + str(self.getName()) + "** appears to be offline!"
+        formattedInfo = ("**" + str(self.getName()) + "** is playing **"
+                         + str(self.getGameType()) + str(self.getMap()) + "** with a population of **"
+                         + "(" + str(self.getPopulation()) + ")**")
+        formattedInfo += "\nJoin it with **open " + str(self.getIP()) + "**"
+        return formattedInfo
+
+
+
+serverInfoTypes = [ChivalryServerInfo, MordhauServerInfo]

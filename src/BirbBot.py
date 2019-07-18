@@ -63,7 +63,8 @@ async def on_message(message):
 
         elif cmd in recognizedInput.allInfoCommands:
             await client.add_reaction(message, "⌛")
-            msg = ServerInfoCommandReader.retrieveAllInfo()
+            serverCommandReader = ServerInfoCommandReader("C:\\Users\\raysp\\Desktop\\Python\\Personal\\SteamServerQuerier\\src\\ServerQueryData.json")
+            msg = serverCommandReader.getAllInfo()
             await client.remove_reaction(message, "⌛", client.user)
 
         # elif cmd in recognizedInput.checkForCommands:

@@ -19,9 +19,7 @@ class PlayerList:
         return player in self.__players
 
     def __formatPlayerList(self):
-        if self.__players == "SKIP":  # player list is not supported
-            self.__playerList += Sorry().getResponse() + " This server not currently support player list queries!"
-        elif len(self.__players) == 0:  # player list is empty
+        if len(self.__players) == 0:  # player list is empty
             self.__playerList += NoOneHere().getResponse()
         else:  # player list is populated
             for playerNum, player in enumerate(self.__players):

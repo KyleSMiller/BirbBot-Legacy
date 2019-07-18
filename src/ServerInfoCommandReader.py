@@ -1,65 +1,56 @@
-from ServerInfo import ServerInfo
-# from recognizedInput import recognizedServers
+from ServerInfo import *
 
 import json
 
-# Gracious Welcome:  66.151.138.224:3170  "http://refactor.jp/chivalry/?serverId=1194830"
-# Gracious Map Votes:  66.151.138.198:6000  "http://refactor.jp/chivalry/?serverId=1301262"
-
 class ServerInfoCommandReader:
+    def __init__(self, serverDataFile):
+        self.__serverDataFile = serverDataFile
+        self.__servers = []
 
-    # @staticmethod
-    # def retrieveServerInfo(target):
-    #     targetServer = recognizedServers[target]
-    #     msg = targetServer.getAll()
-    #     return msg
-
-    @staticmethod
-    def retrieveAllInfo():
+    def getAllInfo(self):
         """
-        Retrieve the information from all moorlands servers, sharing the same login session
-        :return: String  The formatted information from all moorlands servers
+        Retrieve the information from a set of servers
+        :return: String  The formatted information from all servers
         """
-        # read in the server data
-        with open(("C:\\Users\\raysp\\Desktop\\Python\\Personal\\SteamServerQuerier\\src\\ServerQueryData.json")) as serverData:
-            data = json.load(serverData)
-            servers = []
-            for server in data["Server Data"]:
-                servers.append(ServerInfo(server))
+        self.__readServerData()
+        return self.__formatServerDataSet()
 
-        # create BirbBot's response
+    def __formatServerDataSet(self):
+        """
+        Format the set of server data objects into a single string
+        :return: String  The formatted data
+        """
         msg = ""
         games = []
-        for server in servers:
+        for server in self.__servers:
+            """
+            Currently, order matters in the .json data files. Games will be displayed in the order they are stored,
+            and if games of the same type are not next to one another, they will not be properly sorted.
+            """
+            # TODO: fix that
             if server.getGame() not in games:
                 games.append(server.getGame())
                 msg += "\n**__" + str(server.getGame().upper()) + " SERVERS__**\n\n"
             msg += str(server) + "\n\n"
-
         return msg
 
-    # @staticmethod
-    # def checkFor(message):
-    #     """
-    #     Parse a message desiring to check the server for a player
-    #     :param message:  the discord message
-    #     :return: String  is the desired person on the server
-    #     """
-    #     nameList = message.content.split()[1:]
-    #     name = " ".join(nameList)
-    #     if name == "@everyone" or name == "@here":  # prevent @everyone rights bypassing
-    #         return "Try harder, {0.author.mention}"
-    #     elif name == "admin" or name == "admins":  # check for admins
-    #         adminsOn = "There are admins on "
-    #         for server in recognizedServers:
-    #             if server.isAdminInServer():
-    #                 adminsOn += server.getName()
-    #         if adminsOn != "There are admins on ":
-    #             return adminsOn
-    #         else:
-    #             return "There are currently no (known) admins on any Moorlands servers"
-    #     else:
-    #         for server in recognizedServers:  # check for generic players
-    #             if server.isInServer(name):
-    #                 return str(name) + " is on " + server.getName()
-    #         return str(name) + " is not on and Moorlands server at the momement"
+    def __readServerData(self):
+        """
+        Read in the .json file of server data
+        :return:
+        """
+        with open((self.__serverDataFile)) as serverData:
+            data = json.load(serverData)
+            for server in data["Server Data"]:
+                # create an appropriate ServerInfo object for the data.
+                # Default to ServerInfo class if game does not have it's own ServerInfo subclass
+                serverInfoObject = ServerInfo  # default ServerInfo type
+                for gameType in serverInfoTypes:
+                    if server["Game"] == gameType.getGameName():
+                        serverInfoObject = gameType
+                        break
+                self.__servers.append(serverInfoObject(server))
+
+
+
+# C:\\Users\\raysp\\Desktop\\Python\\Personal\\SteamServerQuerier\\src\\ServerQueryData.json
