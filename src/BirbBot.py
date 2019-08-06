@@ -25,7 +25,7 @@ class BirbBot(discord.Client):
             self.__voiceCommands = self.__loadVoiceIO(data["IO Paths"]["Voice Commands"])
             # self.__specialNames = self.__loadIO(data["IO Paths"]["Special Names"])
 
-            # self.__voices = self.__loadVoices(data["Voice Line Paths"])
+            self.__voices = self.__loadVoices(data["Voice Line Paths"])
 
     def getToken(self):
         return self.__token
@@ -61,13 +61,6 @@ class BirbBot(discord.Client):
     def __loadVoices(self, voicePaths):
         voices = []
         for voicePath in voicePaths.values():
-
-            # with open(voicePath) as screm:
-            #     print(screm)
-            #     # data = json.load(screm)
-            #     # print(data["Character Names"])
-
-            print(voicePath)
             voices.append(Voice(voicePath))
         return voices
 
@@ -95,9 +88,9 @@ async def on_message(message):
             msg = birbBot.getPublicCommands().getResponse(cmd)
             await birbBot.send_message(message.channel, msg)
 
-        if cmd in birbBot.getHiddenCommands().getCommands():
-            msg = birbBot.getHiddenCommands().getResponse(cmd)
-            await birbBot.send_message(message.channel, msg)
+    if message.content in birbBot.getHiddenCommands().getCommands():
+        msg = birbBot.getHiddenCommands().getResponse(message.content)
+        await birbBot.send_message(message.channel, msg)
 
     # if message.content == "!reload":
     #     birbBot = BirbBot("C:\\Users\\raysp\\Desktop\\Python\\Personal\\BirbBot\\resources\\BirbBotConfig.json")
