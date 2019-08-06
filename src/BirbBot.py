@@ -3,127 +3,111 @@
 # Work with Python 3.5
 
 import discord
-import recognizedInput
-from VoiceCommandReader import VoiceCommandReader
-from ServerInfoCommandReader import ServerInfoCommandReader
-from voiceLines import SimpleVoice, Voice
+import json
 
-from resources.passwords import adminPassword
+from InputOutput import InputOutput
+from Voice import Voice
 
-botTokentxt = open("botToken.txt")
-TOKEN = botTokentxt.readline().strip()
+class BirbBot(discord.Client):
+    def __init__(self, configFilePath):
+        super().__init__()
+        with open(configFilePath) as configFile:
+            data = json.load(configFile)
 
-client = discord.Client()
+            self.__token = data["Token"]
+            self.__commandSymbol = data["Command Symbol"]
+            self.__adminPassword = data["Admin Password"]
+            self.__botDescription = data["Bot Description"]
+
+            self.__dmCommands = InputOutput(data["IO Paths"]["DM Commands"])
+            self.__publicCommands = InputOutput(data["IO Paths"]["Public Commands"])
+            self.__hiddenCommands = InputOutput(data["IO Paths"]["Hidden Commands"])
+            self.__voiceCommands = self.__loadVoiceIO(data["IO Paths"]["Voice Commands"])
+            # self.__specialNames = self.__loadIO(data["IO Paths"]["Special Names"])
+
+            # self.__voices = self.__loadVoices(data["Voice Line Paths"])
+
+    def getToken(self):
+        return self.__token
+
+    def getCommandSymbol(self):
+        return self.__commandSymbol
+
+    def getDmCommands(self):
+        return self.__dmCommands
+
+    def getPublicCommands(self):
+        return self.__publicCommands
+
+    def getHiddenCommands(self):
+        return self.__hiddenCommands
+
+    def getVoiceCommands(self):
+        return self.__voiceCommands
+
+    def getSpecialNames(self):
+        return self.__specialNames
+
+    def __loadIO(self, IoPath):
+        IoDict = {}
+        with open(IoPath) as IoFile:
+            data = json.load(IoFile)
+            IoDict = data["InputOutput"]
+        return IoDict
+
+    def __loadVoiceIO(self, IoPath):
+        pass
+
+    def __loadVoices(self, voicePaths):
+        voices = []
+        for voicePath in voicePaths.values():
+
+            # with open(voicePath) as screm:
+            #     print(screm)
+            #     # data = json.load(screm)
+            #     # print(data["Character Names"])
+
+            print(voicePath)
+            voices.append(Voice(voicePath))
+        return voices
 
 
-COMMAND_SYMBOL = "!"  # character that signifies the start of a BirbBot command
+birbBot = BirbBot("C:\\Users\\raysp\\Desktop\\Python\\Personal\\BirbBot\\resources\\BirbBotConfig.json")
 
-
-@client.event
+@birbBot.event
 async def on_message(message):
-    # we do not want the bot to reply to itself
-    if message.author == client.user:
+    global birbBot
+    if message.author == birbBot.user:  # prevent the bot from replying to itself
         return
 
-    msgAuthor = str(message.author.display_name)
-    msgAuthorID = "<@" + message.author.id + ">"
+    authorName = str(message.author.display_name)
+    authorID = "<@" + message.author.id + ">"
+    msg = ""
 
-    # direct message commands
-    if str(message.channel.type) == "private":
-        if message.content.startswith("!shutdown " + str(adminPassword)):
-            await client.send_message(message.author, "shutting down")
-            print("BirbBot shut down by remote command")
-            exit(9473)
-        if message.content.startswith("!say") and message.author.id == "296335824427941888":
-            targetChannelName = message.content.split(" ")[1]
-            if targetChannelName in recognizedInput.recognizedChannels:
-                try:
-                    targetChannel = recognizedInput.recognizedChannels[targetChannelName]
-                    msgList = message.content.split(" ")[2:]
-                    msg = " ".join(msgList)
-                    whisperChannel = client.get_channel(targetChannel)
-                    await client.send_message(whisperChannel, msg)
-                except:
-                    await client.send_message(message.author, "Something went wrong. "
-                                                              "I probably don't have access to that channel")
-            else:
-                await client.send_message(message.author, "I don't recognize that channel")
+    if message.content.startswith(birbBot.getCommandSymbol()):
+        cmd = message.content.lower().split()[0][len(birbBot.getCommandSymbol()):]  # get the first word and remove command symbol
+
+        if cmd in birbBot.getDmCommands().getCommands():
+            msg = birbBot.getDmCommands().getResponse(cmd)
+            await birbBot.send_message(message.author, msg)
+
+        if cmd in birbBot.getPublicCommands().getCommands():
+            msg = birbBot.getPublicCommands().getResponse(cmd)
+            await birbBot.send_message(message.channel, msg)
+
+        if cmd in birbBot.getHiddenCommands().getCommands():
+            msg = birbBot.getHiddenCommands().getResponse(cmd)
+            await birbBot.send_message(message.channel, msg)
+
+    # if message.content == "!reload":
+    #     birbBot = BirbBot("C:\\Users\\raysp\\Desktop\\Python\\Personal\\BirbBot\\resources\\BirbBotConfig.json")
 
 
-    if message.content.startswith(COMMAND_SYMBOL):
-        cmd = message.content.lower().split()[0][len(COMMAND_SYMBOL):]  # get the first word and remove COMMAND_SYMBOL
-        msg = ""
-
-        if cmd in recognizedInput.voiceLineCommands:
-            voiceCommandReader = VoiceCommandReader(message, msgAuthor, msgAuthorID, cmd)
-            msg = voiceCommandReader.retrieveVoiceCommand(recognizedInput.voices)
-
-        # elif cmd in recognizedInput.recognizedServers:
-        #     msg = ServerInfoCommandReader.retrieveServerInfo(cmd)
-
-        elif cmd in recognizedInput.allInfoCommands:
-            await client.add_reaction(message, "⌛")
-            serverCommandReader = ServerInfoCommandReader("C:\\Users\\raysp\\Desktop\\Python\\Personal\\SteamServerQuerier\\src\\ServerQueryData.json")
-            msg = serverCommandReader.getAllInfo()
-            await client.remove_reaction(message, "⌛", client.user)
-
-        # elif cmd in recognizedInput.checkForCommands:
-        #     msg = ServerInfoCommandReader.checkFor(message)
-
-        elif cmd in recognizedInput.messageCommands:
-            msg = recognizedInput.messageCommands[cmd]
-
-        elif cmd in recognizedInput.multiResponseCommands:
-            msg = recognizedInput.multiResponseCommands[cmd].getResponse()
-
-        elif cmd in recognizedInput.dmCommands:
-            await client.send_message(message.author, recognizedInput.dmCommands[cmd])
-
-
-        if msg != "":
-            try:
-                await client.send_message(message.channel, msg.format(message))
-            except KeyError:  # if message contains text between {braces} that causes errors with .format()
-                await client.send_message(message.channel, msg)
-
-
-    # hidden commands
-    elif message.content.lower() in recognizedInput.hiddenCommandDict:
-        msg = recognizedInput.hiddenCommandDict[message.content.lower()]
-        if isinstance(msg, SimpleVoice):
-            msg = msg.getResponse()
-        if isinstance(msg, Voice):
-            voiceCommandReader = VoiceCommandReader(message, msgAuthor, msgAuthorID, message.content)
-            msg = voiceCommandReader.retrieveVoiceCommand(recognizedInput.voices)
-        try:
-            await client.send_message(message.channel, msg.format(message))
-        except KeyError:  # if message contains text between {braces} that causes errors with .format()
-            await client.send_message(message.channel, msg)
-
-    # feint complaint commands
-    elif "feint" in message.content or "feinted" in message.content or "feints" in message.content:
-        for i in recognizedInput.feintLines:
-            if message.content.find(i) != -1:
-                msg = ("Oh no! Have you been feinted in Torn Banner's 2012 action slasher game, "
-                       "\"Chivalry: Medieval Warfare\"? Don't worry, you aren't alone, and help *is* out there. "
-                       "Please, take the time to talk to someone. http://tornbanner.com/contact/")
-                try:
-                    await client.send_message(message.channel, msg.format(message))
-                except KeyError:  # if message contains text between {braces} that causes errors with .format()
-                    await client.send_message(message.channel, msg)
-
-
-
-
-
-
-
-
-@client.event
+@birbBot.event
 async def on_ready():
     print('Logged in as')
-    print(client.user.name)
-    print(client.user.id)
+    print(birbBot.user.name)
+    print(birbBot.user.id)
     print('------')
 
-client.run(TOKEN)
+birbBot.run(birbBot.getToken())
