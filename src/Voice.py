@@ -4,7 +4,9 @@ import json
 from InputOutput import InputOutput
 
 class Voice:
-
+    """
+    A voice is paired with a set of voice lines. Calling a voice will select a response from its list of lines
+    """
     def __init__(self, voiceJson):
         self.__voiceJson = voiceJson
         self.__voiceNames = []
@@ -19,9 +21,16 @@ class Voice:
 
     def getVoiceNames(self):
         """
-        :return:  list of name that can be used to call the voice
+        :return:  list of names that can be used to call the voice
         """
         return self.__voiceNames
+
+    def getResponse(self, command):
+        """
+        :param command:  the command the user is invoking
+        :return: String  a voice line matching the command invoked
+        """
+        return self.__voiceLines.getResponse(command)
 
     def __parseVoiceFile(self):
         """
