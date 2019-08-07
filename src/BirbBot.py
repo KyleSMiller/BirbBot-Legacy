@@ -3,10 +3,14 @@
 # Work with Python 3.5
 
 import discord
+import logging
+
 import json
 
 from InputOutput import InputOutput
 from Voice import Voice
+
+logging.basicConfig(level=logging.INFO)
 
 class BirbBot(discord.Client):
     def __init__(self, configFilePath):
@@ -22,7 +26,8 @@ class BirbBot(discord.Client):
             self.__dmCommands = InputOutput(data["IO Paths"]["DM Commands"])
             self.__publicCommands = InputOutput(data["IO Paths"]["Public Commands"])
             self.__hiddenCommands = InputOutput(data["IO Paths"]["Hidden Commands"])
-            self.__voiceCommands = self.__loadVoiceIO(data["IO Paths"]["Voice Commands"])
+            self.__publicVoiceCommands = self.__loadVoiceMap(data["IO Paths"]["Voice Commands"], "public")
+            self.__hiddenVoiceCommands = self.__loadVoiceMap(data["IO Paths"]["Voice Commands"], "hidden")
             # self.__specialNames = self.__loadIO(data["IO Paths"]["Special Names"])
 
             self.__voices = self.__loadVoices(data["Voice Line Paths"])
@@ -48,15 +53,34 @@ class BirbBot(discord.Client):
     def getSpecialNames(self):
         return self.__specialNames
 
-    def __loadIO(self, IoPath):
+    def isPublicVoiceCommand(self, cmd):
+        for commandSynonyms in self.__publicVoiceCommands.values():
+            if cmd in commandSynonyms:
+                return True
+        return False
+
+    def isHiddenVoiceCommand(self, cmd):
+        for commandSynonyms in self.__hiddenVoiceCommands.values():
+            if cmd in commandSynonyms:
+                return True
+        return False
+
+    def __loadIO(self, ioPath):
         IoDict = {}
-        with open(IoPath) as IoFile:
+        with open(ioPath) as IoFile:
             data = json.load(IoFile)
             IoDict = data["InputOutput"]
         return IoDict
 
-    def __loadVoiceIO(self, IoPath):
-        pass
+    def __loadVoiceMap(self, voicePath, commandType):
+        voiceMap = {}
+        with open(voicePath) as voiceFile:
+            data = json.load(voiceFile)
+            for command in data[commandType].keys():
+                if command == "usage":
+                    continue
+                voiceMap[command] = data[commandType][command]
+        return voiceMap
 
     def __loadVoices(self, voicePaths):
         voices = []
@@ -84,12 +108,20 @@ async def on_message(message):
             msg = birbBot.getDmCommands().getResponse(cmd)
             await birbBot.send_message(message.author, msg)
 
-        if cmd in birbBot.getPublicCommands().getCommands():
+        elif cmd in birbBot.getPublicCommands().getCommands():
             msg = birbBot.getPublicCommands().getResponse(cmd)
+            await birbBot.send_message(message.channel, msg)
+
+        elif birbBot.isPublicVoiceCommand(cmd):
+            msg = "aaaaaa"
             await birbBot.send_message(message.channel, msg)
 
     if message.content in birbBot.getHiddenCommands().getCommands():
         msg = birbBot.getHiddenCommands().getResponse(message.content)
+        await birbBot.send_message(message.channel, msg)
+
+    elif birbBot.isHiddenVoiceCommand(message.content):
+        msg = "hidden aaaaaa"
         await birbBot.send_message(message.channel, msg)
 
     # if message.content == "!reload":
