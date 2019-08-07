@@ -39,7 +39,7 @@ class ServerInfoCommandReader:
         Read in the .json file of server data
         :return:
         """
-        with open((self.__serverDataFile)) as serverData:
+        with open(self.__serverDataFile) as serverData:
             data = json.load(serverData)
             for server in data["Server Data"]:
                 # create an appropriate ServerInfo object for the data.
@@ -50,7 +50,3 @@ class ServerInfoCommandReader:
                         serverInfoObject = gameType
                         break
                 self.__servers.append(serverInfoObject(server))
-
-
-
-# C:\\Users\\raysp\\Desktop\\Python\\Personal\\SteamServerQuerier\\src\\ServerQueryData.json
