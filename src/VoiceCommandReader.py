@@ -1,11 +1,15 @@
 import random
 from Voice import Voice
+from InputOutput import InputOutput
+from StringTuple import StringTuple
 import json
 
 
 class VoiceCommandReader:
-
-    def __init__(self, voicePaths, voiceCommandPaths):
+    """
+    Class to handle the parsing of all voice commands
+    """
+    def __init__(self, voicePaths, voiceCommandPaths, specialResponsePaths):
         self.__message = None
         self.__author = None
         self.__authorID = None
@@ -13,10 +17,11 @@ class VoiceCommandReader:
 
         self.__voice = ""
         self.__target = ""
-        self.__msg = ""
 
         self.__publicVoiceCommands = self.__loadVoiceMap(voiceCommandPaths, "public")
         self.__hiddenVoiceCommands = self.__loadVoiceMap(voiceCommandPaths, "hidden")
+
+        self.__specialResponseDict = self.__loadSpecialResponses(specialResponsePaths)
 
         self.__voices = self.__loadVoices(voicePaths)
 
@@ -30,42 +35,50 @@ class VoiceCommandReader:
         self.__message = message
         self.__author = message.author
         self.__authorID = message.author.id
-        self.__command = self.__identifyCommand(command)
-        self.__msg = ""
+        self.__command = self.__matchValueToKey(command, [self.__publicVoiceCommands, self.__hiddenVoiceCommands])
+        msg = ""
         self.__extractVoiceAndTarget()
 
-        # if  # special response
-        # else:
-        if self.__target != "":  # append target
-            self.__msg = self.__target + ", "
-        # append voice line
-        if isinstance(self.__voice, Voice):
-            line = (self.__voice.getResponse(self.__command) if self.__msg != "" else
-                    self.__voice.getResponse(self.__command).capitalize())
-            self.__msg += line
+        if self.__isSpecialResponseName(self.__target):
+            msg = self.__getSpecialResponse(self.__target, self.__command)
+
         else:
-            responseVoice = random.choice(self.__voices)
-            line = (responseVoice.getResponse(self.__command) if self.__msg != "" else
-                    responseVoice.getResponse(self.__command).capitalize())
-            self.__msg += line
+            if self.__target != "":  # append target
+                msg = self.__target + ", "
+            # append voice line
+            if isinstance(self.__voice, Voice):
+                line = (self.__voice.getResponse(self.__command) if msg != "" else
+                        self.__voice.getResponse(self.__command).capitalize())
+                msg += line
+            else:
+                responseVoice = random.choice(self.__voices)
+                line = (responseVoice.getResponse(self.__command) if msg != "" else
+                        responseVoice.getResponse(self.__command).capitalize())
+                msg += line
 
-        return self.__msg
+        return msg
 
-    def __identifyCommand(self, command):
+    def __matchValueToKey(self, command: str, dicts: list):
         """
-        match the command given with it's official name as listed in the voice line config files
-        :return:  the "official" name of the command recognized listed BirbBot in other configs
+        match the command given with it's key as listed in the config files
+        :param command:  the command to match to a key
+        :param dicts:    the dictionaries to search for a matching key in
+        :return:         the "official" name of the value as listed in other BirbBot configs
         """
         cmd = command
-        for officialCommand in self.__publicVoiceCommands.keys():
-            if cmd in self.__publicVoiceCommands[officialCommand]:
-                cmd = officialCommand
-        for officialCommand in self.__hiddenVoiceCommands.keys():
-            if cmd in self.__hiddenVoiceCommands[officialCommand]:
-                cmd = officialCommand
+        for dict in dicts:
+            for key in dict.keys():
+                if cmd in dict[key]:
+                    cmd = key
         return cmd
 
     def __loadVoiceMap(self, voicePath, commandType):
+        """
+        create a dictionary from the config file that specifies alternative keywords to invoke voice commands with
+        :param voicePath:    the path to the voice command config file
+        :param commandType:  specifies whether to read from the hidden or public portion of the config file
+        :return:  The created dictionary of commands and alternative invocations
+        """
         voiceMap = {}
         with open(voicePath) as voiceFile:
             data = json.load(voiceFile)
@@ -74,6 +87,19 @@ class VoiceCommandReader:
                     continue
                 voiceMap[command] = data[commandType][command]
         return voiceMap
+
+    def __loadSpecialResponses(self, specialResponseJson):
+        """
+        read the .json file that specifies special response names and the lines to respond to those names with
+        :param specialResponseJson:  the .json file with special response data
+        :return:  a dictionary with names as keys and responses as values
+        """
+        specialResponseDict = {}
+        with open(specialResponseJson) as responseJson:
+            data = json.load(responseJson)
+            for name in data["Special Names"].keys():
+                specialResponseDict[StringTuple(name).getTuple()] = data["Special Names"][name]
+        return specialResponseDict
 
     def __loadVoices(self, voicePaths):
         """
@@ -100,8 +126,27 @@ class VoiceCommandReader:
             self.__target = " ".join(self.__target).strip()  # change target from list of strings into single string
 
 
+    def __isSpecialResponseName(self, name):
+        """
+        Check if a provided name is a special response name
+        :param name:  the name to check
+        :return:  boolean
+        """
+        for names in self.__specialResponseDict.keys():
+            if name.lower() in names:
+                return True
+        return False
 
-
+    def __getSpecialResponse(self, name, command):
+        """
+        Get the appropriate special response line for the provided name
+        :param name:     the name to fetch the line for
+        :param command:  the command the name was intended for
+        :return:         the special response line
+        """
+        for names in self.__specialResponseDict.keys():
+            if name.lower() in names:
+                return random.choice(self.__specialResponseDict[names][command])
 
 
 
