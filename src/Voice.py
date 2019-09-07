@@ -2,6 +2,7 @@ import random
 import json
 
 from InputOutput import InputOutput
+from StringTuple import StringTuple
 
 class Voice:
     """
@@ -31,6 +32,12 @@ class Voice:
         :return: String  a voice line matching the command invoked
         """
         return self.__voiceLines.getResponse(command)
+
+    def getVoiceLines(self):
+        """
+        :return:  The InputOutput object of all the voice's commands and lines
+        """
+        return self.__voiceLines
 
     def __parseVoiceFile(self):
         """

@@ -28,7 +28,6 @@ class BirbBot(discord.Client):
             self.__hiddenCommands = InputOutput(data["IO Paths"]["Hidden Commands"])
 
             self.__voiceCommands = VoiceCommandReader(data["Voice Line Paths"],
-                                                      data["IO Paths"]["Voice Commands"],
                                                       data["IO Paths"]["Special Responses"])
 
 
@@ -59,17 +58,16 @@ class BirbBot(discord.Client):
     def parseVoiceCommand(self, message, command):
         return self.__voiceCommands.parseCommand(message, command)
 
-    def isPublicVoiceCommand(self, cmd):
-        for commandSynonyms in self.__voiceCommands.getPublicVoiceCommands().values():
-            if cmd in commandSynonyms:
+    def isVoiceCommand(self, cmd):
+        for voice in self.__voiceCommands.getVoices():
+            if voice.getVoiceLines().isValidInput(cmd):
                 return True
         return False
 
-    def isHiddenVoiceCommand(self, cmd):
-        for commandSynonyms in self.__voiceCommands.getHiddenVoiceCommands().values():
-            if cmd in commandSynonyms:
-                return True
-        return False
+        # for commandSynonyms in self.__voiceCommands.getVoiceCommands().values():
+        #     if cmd in commandSynonyms:
+        #         return True
+        # return False
 
     def __loadIO(self, ioPath):
         IoDict = {}
@@ -108,7 +106,7 @@ async def on_message(message):
             except KeyError:  # if message contains text between {braces} that causes errors with .format()
                 await birbBot.send_message(message.channel, msg)
 
-        elif birbBot.isPublicVoiceCommand(cmd):
+        elif birbBot.isVoiceCommand(cmd):
             msg = birbBot.parseVoiceCommand(message, cmd)
             try:
                 await birbBot.send_message(message.channel, msg.format(message))
@@ -122,7 +120,7 @@ async def on_message(message):
         except KeyError:  # if message contains text between {braces} that causes errors with .format()
             await birbBot.send_message(message.channel, msg)
 
-    elif birbBot.isHiddenVoiceCommand(message.content):
+    elif birbBot.isVoiceCommand(message.content):
         cmd = message.content.lower().split()[0]
         msg = birbBot.parseVoiceCommand(message, cmd)
         try:
